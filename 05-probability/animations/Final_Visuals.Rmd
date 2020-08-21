@@ -312,7 +312,7 @@ saveGIF(
     
     # ggplot of bayes plot
     
-    plot(bayes_scatter_1)
+    plot(heads_plot)
     
     # blue hist3d from above
     
@@ -326,7 +326,7 @@ saveGIF(
     
     hist3D(z = z_factor, border = "black",
        curtain = F, 
-       colvar = colvar,col = jet.col(21),
+       colvar = colvar, col = jet.col(21),
        theta = 0, phi = 90,
        space = .25,
        colkey = FALSE)

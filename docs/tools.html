@@ -183,7 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a href="tools.html#style-guide">Style guide</a><br>
 </li>
 <li>
-<a href="#how-to-use-Rpubs">How to use Rpubs</a><br>
+<a href="tools.html#how-to-use-rpubs">How to use Rpubs</a><br>
 </li>
 <li><a href="tools.html#how-to-get-help">How to get help</a></li>
 </ul>
@@ -244,7 +244,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>
 <code>cp</code>: Copying files</h3>
 <p>Copying files is very similar to moving files in the Terminal. Using the previous example, if we wanted to copy test.txt into the Gov-50 folder but not delete the original test.txt file, we just replace <code>mv</code> with <code>cp</code> (copy paste):</p>
-<div class="sourceCode" id="cb1103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1103-1"><a href="tools.html#cb1103-1"></a>cp test.txt Gov<span class="dv">-50</span><span class="op">/</span></span></code></pre></div>
+<div class="sourceCode" id="cb1086"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1086-1"><a href="tools.html#cb1086-1"></a>cp test.txt Gov<span class="dv">-50</span><span class="op">/</span></span></code></pre></div>
 </div>
 <div id="rm-removing-files" class="section level3 unnumbered">
 <h3>
@@ -318,8 +318,8 @@ git config --global user.mail "your@email.com"</code></pre>
 <li><p>Making PDF files may just “work,” especially if you are using a Mac. Give it a try!</p></li>
 <li><p>If it doesn’t just work, we <em>strongly</em> recommend using the <strong><a href="https://yihui.org/tinytex/">tinytex</a></strong> R package. Type these commands:</p></li>
 </ol>
-<div class="sourceCode" id="cb1105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1105-1"><a href="tools.html#cb1105-1"></a><span class="kw">install.packages</span>(<span class="st">'tinytex'</span>)</span>
-<span id="cb1105-2"><a href="tools.html#cb1105-2"></a>tinytex<span class="op">::</span><span class="kw">install_tinytex</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1088"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1088-1"><a href="tools.html#cb1088-1"></a><span class="kw">install.packages</span>(<span class="st">'tinytex'</span>)</span>
+<span id="cb1088-2"><a href="tools.html#cb1088-2"></a>tinytex<span class="op">::</span><span class="kw">install_tinytex</span>()</span></code></pre></div>
 <p>Restart R and everything should just work.</p>
 <ol start="3" style="list-style-type: decimal">
 <li><p>You can just generate an html file, open it in Chrome, select <em>Print . . .</em> from the drop-down menu. You will get a pop-up window. Click the down arrow to the right of <em>Destination</em> and choose <em>Save as PDF</em> in the drop-down menu. You’ll see a preview. Choose the <em>Save as PDF</em> option. This is not a convenient workflow but, if disaster strikes and the problem set is due in 10 minutes, it is a reasonable option.</p></li>
@@ -343,126 +343,126 @@ git config --global user.mail "your@email.com"</code></pre>
 <div id="whitespace" class="section level4 unnumbered">
 <h4>Whitespace</h4>
 <p><code>%&gt;%</code> should always have a space before it, and should usually be followed by a new line. After the first step, each line should be indented by two spaces. This structure makes it easier to add new steps (or rearrange existing steps) and harder to overlook a step.</p>
-<div class="sourceCode" id="cb1106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1106-1"><a href="tools.html#cb1106-1"></a><span class="co"># Good</span></span>
-<span id="cb1106-2"><a href="tools.html#cb1106-2"></a></span>
-<span id="cb1106-3"><a href="tools.html#cb1106-3"></a>iris <span class="op">%&gt;%</span></span>
-<span id="cb1106-4"><a href="tools.html#cb1106-4"></a><span class="st">  </span><span class="kw">group_by</span>(Species) <span class="op">%&gt;%</span></span>
-<span id="cb1106-5"><a href="tools.html#cb1106-5"></a><span class="st">  </span><span class="kw">summarize_if</span>(is.numeric, mean) <span class="op">%&gt;%</span></span>
-<span id="cb1106-6"><a href="tools.html#cb1106-6"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb1106-7"><a href="tools.html#cb1106-7"></a><span class="st">  </span><span class="kw">gather</span>(measure, value, <span class="op">-</span>Species) <span class="op">%&gt;%</span></span>
-<span id="cb1106-8"><a href="tools.html#cb1106-8"></a><span class="st">  </span><span class="kw">arrange</span>(value)</span>
-<span id="cb1106-9"><a href="tools.html#cb1106-9"></a></span>
-<span id="cb1106-10"><a href="tools.html#cb1106-10"></a><span class="co"># Bad</span></span>
-<span id="cb1106-11"><a href="tools.html#cb1106-11"></a></span>
-<span id="cb1106-12"><a href="tools.html#cb1106-12"></a>iris <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Species) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarize_all</span>(mean) <span class="op">%&gt;%</span></span>
-<span id="cb1106-13"><a href="tools.html#cb1106-13"></a>ungroup <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(measure, value, <span class="op">-</span>Species) <span class="op">%&gt;%</span></span>
-<span id="cb1106-14"><a href="tools.html#cb1106-14"></a><span class="kw">arrange</span>(value)</span></code></pre></div>
+<div class="sourceCode" id="cb1089"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1089-1"><a href="tools.html#cb1089-1"></a><span class="co"># Good</span></span>
+<span id="cb1089-2"><a href="tools.html#cb1089-2"></a></span>
+<span id="cb1089-3"><a href="tools.html#cb1089-3"></a>iris <span class="op">%&gt;%</span></span>
+<span id="cb1089-4"><a href="tools.html#cb1089-4"></a><span class="st">  </span><span class="kw">group_by</span>(Species) <span class="op">%&gt;%</span></span>
+<span id="cb1089-5"><a href="tools.html#cb1089-5"></a><span class="st">  </span><span class="kw">summarize_if</span>(is.numeric, mean) <span class="op">%&gt;%</span></span>
+<span id="cb1089-6"><a href="tools.html#cb1089-6"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1089-7"><a href="tools.html#cb1089-7"></a><span class="st">  </span><span class="kw">gather</span>(measure, value, <span class="op">-</span>Species) <span class="op">%&gt;%</span></span>
+<span id="cb1089-8"><a href="tools.html#cb1089-8"></a><span class="st">  </span><span class="kw">arrange</span>(value)</span>
+<span id="cb1089-9"><a href="tools.html#cb1089-9"></a></span>
+<span id="cb1089-10"><a href="tools.html#cb1089-10"></a><span class="co"># Bad</span></span>
+<span id="cb1089-11"><a href="tools.html#cb1089-11"></a></span>
+<span id="cb1089-12"><a href="tools.html#cb1089-12"></a>iris <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Species) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarize_all</span>(mean) <span class="op">%&gt;%</span></span>
+<span id="cb1089-13"><a href="tools.html#cb1089-13"></a>ungroup <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(measure, value, <span class="op">-</span>Species) <span class="op">%&gt;%</span></span>
+<span id="cb1089-14"><a href="tools.html#cb1089-14"></a><span class="kw">arrange</span>(value)</span></code></pre></div>
 </div>
 <div id="commas" class="section level4 unnumbered">
 <h4>Commas</h4>
 <p>Always put a space after a comma, never before, just like in regular English.</p>
-<div class="sourceCode" id="cb1107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1107-1"><a href="tools.html#cb1107-1"></a><span class="co"># Good</span></span>
-<span id="cb1107-2"><a href="tools.html#cb1107-2"></a></span>
-<span id="cb1107-3"><a href="tools.html#cb1107-3"></a>x[, <span class="dv">1</span>]</span>
-<span id="cb1107-4"><a href="tools.html#cb1107-4"></a></span>
-<span id="cb1107-5"><a href="tools.html#cb1107-5"></a><span class="co"># Bad</span></span>
-<span id="cb1107-6"><a href="tools.html#cb1107-6"></a></span>
-<span id="cb1107-7"><a href="tools.html#cb1107-7"></a>x[,<span class="dv">1</span>]</span>
-<span id="cb1107-8"><a href="tools.html#cb1107-8"></a>x[ ,<span class="dv">1</span>]</span>
-<span id="cb1107-9"><a href="tools.html#cb1107-9"></a>x[ , <span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb1090"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1090-1"><a href="tools.html#cb1090-1"></a><span class="co"># Good</span></span>
+<span id="cb1090-2"><a href="tools.html#cb1090-2"></a></span>
+<span id="cb1090-3"><a href="tools.html#cb1090-3"></a>x[, <span class="dv">1</span>]</span>
+<span id="cb1090-4"><a href="tools.html#cb1090-4"></a></span>
+<span id="cb1090-5"><a href="tools.html#cb1090-5"></a><span class="co"># Bad</span></span>
+<span id="cb1090-6"><a href="tools.html#cb1090-6"></a></span>
+<span id="cb1090-7"><a href="tools.html#cb1090-7"></a>x[,<span class="dv">1</span>]</span>
+<span id="cb1090-8"><a href="tools.html#cb1090-8"></a>x[ ,<span class="dv">1</span>]</span>
+<span id="cb1090-9"><a href="tools.html#cb1090-9"></a>x[ , <span class="dv">1</span>]</span></code></pre></div>
 </div>
 <div id="parentheses" class="section level4 unnumbered">
 <h4>Parentheses</h4>
 <p>Do not put spaces inside or outside parentheses for regular function calls.</p>
-<div class="sourceCode" id="cb1108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1108-1"><a href="tools.html#cb1108-1"></a><span class="co"># Good</span></span>
-<span id="cb1108-2"><a href="tools.html#cb1108-2"></a></span>
-<span id="cb1108-3"><a href="tools.html#cb1108-3"></a><span class="kw">mean</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1108-4"><a href="tools.html#cb1108-4"></a></span>
-<span id="cb1108-5"><a href="tools.html#cb1108-5"></a><span class="co"># Bad</span></span>
-<span id="cb1108-6"><a href="tools.html#cb1108-6"></a></span>
-<span id="cb1108-7"><a href="tools.html#cb1108-7"></a><span class="kw">mean</span> (x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1108-8"><a href="tools.html#cb1108-8"></a><span class="kw">mean</span>( x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span> )</span></code></pre></div>
+<div class="sourceCode" id="cb1091"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1091-1"><a href="tools.html#cb1091-1"></a><span class="co"># Good</span></span>
+<span id="cb1091-2"><a href="tools.html#cb1091-2"></a></span>
+<span id="cb1091-3"><a href="tools.html#cb1091-3"></a><span class="kw">mean</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1091-4"><a href="tools.html#cb1091-4"></a></span>
+<span id="cb1091-5"><a href="tools.html#cb1091-5"></a><span class="co"># Bad</span></span>
+<span id="cb1091-6"><a href="tools.html#cb1091-6"></a></span>
+<span id="cb1091-7"><a href="tools.html#cb1091-7"></a><span class="kw">mean</span> (x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1091-8"><a href="tools.html#cb1091-8"></a><span class="kw">mean</span>( x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span> )</span></code></pre></div>
 <p>Place a space before and after <code>()</code> when used with <code>if</code>, <code>for</code>, or <code>while</code>.</p>
-<div class="sourceCode" id="cb1109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1109-1"><a href="tools.html#cb1109-1"></a><span class="co"># Good</span></span>
-<span id="cb1109-2"><a href="tools.html#cb1109-2"></a></span>
-<span id="cb1109-3"><a href="tools.html#cb1109-3"></a><span class="cf">if</span> (debug) {</span>
-<span id="cb1109-4"><a href="tools.html#cb1109-4"></a>  <span class="kw">show</span>(x)</span>
-<span id="cb1109-5"><a href="tools.html#cb1109-5"></a>}</span>
-<span id="cb1109-6"><a href="tools.html#cb1109-6"></a></span>
-<span id="cb1109-7"><a href="tools.html#cb1109-7"></a><span class="co"># Bad</span></span>
-<span id="cb1109-8"><a href="tools.html#cb1109-8"></a></span>
-<span id="cb1109-9"><a href="tools.html#cb1109-9"></a><span class="cf">if</span>(debug){</span>
-<span id="cb1109-10"><a href="tools.html#cb1109-10"></a>  <span class="kw">show</span>(x)</span>
-<span id="cb1109-11"><a href="tools.html#cb1109-11"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1092"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1092-1"><a href="tools.html#cb1092-1"></a><span class="co"># Good</span></span>
+<span id="cb1092-2"><a href="tools.html#cb1092-2"></a></span>
+<span id="cb1092-3"><a href="tools.html#cb1092-3"></a><span class="cf">if</span> (debug) {</span>
+<span id="cb1092-4"><a href="tools.html#cb1092-4"></a>  <span class="kw">show</span>(x)</span>
+<span id="cb1092-5"><a href="tools.html#cb1092-5"></a>}</span>
+<span id="cb1092-6"><a href="tools.html#cb1092-6"></a></span>
+<span id="cb1092-7"><a href="tools.html#cb1092-7"></a><span class="co"># Bad</span></span>
+<span id="cb1092-8"><a href="tools.html#cb1092-8"></a></span>
+<span id="cb1092-9"><a href="tools.html#cb1092-9"></a><span class="cf">if</span>(debug){</span>
+<span id="cb1092-10"><a href="tools.html#cb1092-10"></a>  <span class="kw">show</span>(x)</span>
+<span id="cb1092-11"><a href="tools.html#cb1092-11"></a>}</span></code></pre></div>
 </div>
 <div id="infix-operators" class="section level4 unnumbered">
 <h4>Infix operators</h4>
 <p>Most infix operators (<code>==</code>, <code>+</code>, <code>-</code>, <code>&lt;-</code>, etc.) should always be surrounded by spaces:</p>
-<div class="sourceCode" id="cb1110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1110-1"><a href="tools.html#cb1110-1"></a><span class="co"># Good</span></span>
-<span id="cb1110-2"><a href="tools.html#cb1110-2"></a></span>
-<span id="cb1110-3"><a href="tools.html#cb1110-3"></a>height &lt;-<span class="st"> </span>(feet <span class="op">*</span><span class="st"> </span><span class="dv">12</span>) <span class="op">+</span><span class="st"> </span>inches</span>
-<span id="cb1110-4"><a href="tools.html#cb1110-4"></a><span class="kw">mean</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1110-5"><a href="tools.html#cb1110-5"></a></span>
-<span id="cb1110-6"><a href="tools.html#cb1110-6"></a><span class="co"># Bad</span></span>
-<span id="cb1110-7"><a href="tools.html#cb1110-7"></a></span>
-<span id="cb1110-8"><a href="tools.html#cb1110-8"></a>height&lt;-feet<span class="op">*</span><span class="dv">12</span><span class="op">+</span>inches</span>
-<span id="cb1110-9"><a href="tools.html#cb1110-9"></a><span class="kw">mean</span>(x, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1093"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1093-1"><a href="tools.html#cb1093-1"></a><span class="co"># Good</span></span>
+<span id="cb1093-2"><a href="tools.html#cb1093-2"></a></span>
+<span id="cb1093-3"><a href="tools.html#cb1093-3"></a>height &lt;-<span class="st"> </span>(feet <span class="op">*</span><span class="st"> </span><span class="dv">12</span>) <span class="op">+</span><span class="st"> </span>inches</span>
+<span id="cb1093-4"><a href="tools.html#cb1093-4"></a><span class="kw">mean</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb1093-5"><a href="tools.html#cb1093-5"></a></span>
+<span id="cb1093-6"><a href="tools.html#cb1093-6"></a><span class="co"># Bad</span></span>
+<span id="cb1093-7"><a href="tools.html#cb1093-7"></a></span>
+<span id="cb1093-8"><a href="tools.html#cb1093-8"></a>height&lt;-feet<span class="op">*</span><span class="dv">12</span><span class="op">+</span>inches</span>
+<span id="cb1093-9"><a href="tools.html#cb1093-9"></a><span class="kw">mean</span>(x, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)</span></code></pre></div>
 <p>There are a few exceptions, which should never be surrounded by spaces:</p>
 <ul>
 <li>The operators with <a href="https://rdrr.io/r/base/Syntax.html">high precedence</a>: <code>::</code>, <code>:::</code>, <code>$</code>, <code>@</code>, <code>[</code>, <code>[[</code>, <code>^</code>, unary <code>-</code>, unary <code>+</code>,<br>
 and <code>:</code>.</li>
 </ul>
-<div class="sourceCode" id="cb1111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1111-1"><a href="tools.html#cb1111-1"></a><span class="co"># Good</span></span>
-<span id="cb1111-2"><a href="tools.html#cb1111-2"></a></span>
-<span id="cb1111-3"><a href="tools.html#cb1111-3"></a><span class="kw">sqrt</span>(x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>y<span class="op">^</span><span class="dv">2</span>)</span>
-<span id="cb1111-4"><a href="tools.html#cb1111-4"></a>df<span class="op">$</span>z</span>
-<span id="cb1111-5"><a href="tools.html#cb1111-5"></a>x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span></span>
-<span id="cb1111-6"><a href="tools.html#cb1111-6"></a></span>
-<span id="cb1111-7"><a href="tools.html#cb1111-7"></a><span class="co"># Bad</span></span>
-<span id="cb1111-8"><a href="tools.html#cb1111-8"></a></span>
-<span id="cb1111-9"><a href="tools.html#cb1111-9"></a><span class="kw">sqrt</span>(x <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>y <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)</span>
-<span id="cb1111-10"><a href="tools.html#cb1111-10"></a>df <span class="op">$</span><span class="st"> </span>z</span>
-<span id="cb1111-11"><a href="tools.html#cb1111-11"></a>x &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">:</span><span class="st"> </span><span class="dv">10</span></span></code></pre></div>
+<div class="sourceCode" id="cb1094"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1094-1"><a href="tools.html#cb1094-1"></a><span class="co"># Good</span></span>
+<span id="cb1094-2"><a href="tools.html#cb1094-2"></a></span>
+<span id="cb1094-3"><a href="tools.html#cb1094-3"></a><span class="kw">sqrt</span>(x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>y<span class="op">^</span><span class="dv">2</span>)</span>
+<span id="cb1094-4"><a href="tools.html#cb1094-4"></a>df<span class="op">$</span>z</span>
+<span id="cb1094-5"><a href="tools.html#cb1094-5"></a>x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span></span>
+<span id="cb1094-6"><a href="tools.html#cb1094-6"></a></span>
+<span id="cb1094-7"><a href="tools.html#cb1094-7"></a><span class="co"># Bad</span></span>
+<span id="cb1094-8"><a href="tools.html#cb1094-8"></a></span>
+<span id="cb1094-9"><a href="tools.html#cb1094-9"></a><span class="kw">sqrt</span>(x <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>y <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)</span>
+<span id="cb1094-10"><a href="tools.html#cb1094-10"></a>df <span class="op">$</span><span class="st"> </span>z</span>
+<span id="cb1094-11"><a href="tools.html#cb1094-11"></a>x &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">:</span><span class="st"> </span><span class="dv">10</span></span></code></pre></div>
 <ul>
 <li>Single-sided formulas when the right-hand side is a single identifier:</li>
 </ul>
-<div class="sourceCode" id="cb1112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1112-1"><a href="tools.html#cb1112-1"></a><span class="co"># Good</span></span>
-<span id="cb1112-2"><a href="tools.html#cb1112-2"></a></span>
-<span id="cb1112-3"><a href="tools.html#cb1112-3"></a><span class="op">~</span>foo</span>
-<span id="cb1112-4"><a href="tools.html#cb1112-4"></a><span class="kw">tribble</span>(<span class="op">~</span>col1, <span class="op">~</span>col2,</span>
-<span id="cb1112-5"><a href="tools.html#cb1112-5"></a>         <span class="st">"a"</span>,   <span class="st">"b"</span>)</span>
-<span id="cb1112-6"><a href="tools.html#cb1112-6"></a></span>
-<span id="cb1112-7"><a href="tools.html#cb1112-7"></a><span class="co"># Bad</span></span>
-<span id="cb1112-8"><a href="tools.html#cb1112-8"></a></span>
-<span id="cb1112-9"><a href="tools.html#cb1112-9"></a><span class="op">~</span><span class="st"> </span>foo</span>
-<span id="cb1112-10"><a href="tools.html#cb1112-10"></a><span class="kw">tribble</span>( <span class="op">~</span><span class="st"> </span>col1, <span class="op">~</span><span class="st"> </span>col2,</span>
-<span id="cb1112-11"><a href="tools.html#cb1112-11"></a>        <span class="st">"a"</span>, <span class="st">"b"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1095"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1095-1"><a href="tools.html#cb1095-1"></a><span class="co"># Good</span></span>
+<span id="cb1095-2"><a href="tools.html#cb1095-2"></a></span>
+<span id="cb1095-3"><a href="tools.html#cb1095-3"></a><span class="op">~</span>foo</span>
+<span id="cb1095-4"><a href="tools.html#cb1095-4"></a><span class="kw">tribble</span>(<span class="op">~</span>col1, <span class="op">~</span>col2,</span>
+<span id="cb1095-5"><a href="tools.html#cb1095-5"></a>         <span class="st">"a"</span>,   <span class="st">"b"</span>)</span>
+<span id="cb1095-6"><a href="tools.html#cb1095-6"></a></span>
+<span id="cb1095-7"><a href="tools.html#cb1095-7"></a><span class="co"># Bad</span></span>
+<span id="cb1095-8"><a href="tools.html#cb1095-8"></a></span>
+<span id="cb1095-9"><a href="tools.html#cb1095-9"></a><span class="op">~</span><span class="st"> </span>foo</span>
+<span id="cb1095-10"><a href="tools.html#cb1095-10"></a><span class="kw">tribble</span>( <span class="op">~</span><span class="st"> </span>col1, <span class="op">~</span><span class="st"> </span>col2,</span>
+<span id="cb1095-11"><a href="tools.html#cb1095-11"></a>        <span class="st">"a"</span>, <span class="st">"b"</span>)</span></code></pre></div>
 <p>Note that single-sided formulas with a complex right-hand side do need a space:</p>
-<div class="sourceCode" id="cb1113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1113-1"><a href="tools.html#cb1113-1"></a><span class="co"># Good</span></span>
-<span id="cb1113-2"><a href="tools.html#cb1113-2"></a></span>
-<span id="cb1113-3"><a href="tools.html#cb1113-3"></a><span class="op">~</span><span class="st"> </span>.x <span class="op">+</span><span class="st"> </span>.y</span>
-<span id="cb1113-4"><a href="tools.html#cb1113-4"></a></span>
-<span id="cb1113-5"><a href="tools.html#cb1113-5"></a><span class="co"># Bad</span></span>
-<span id="cb1113-6"><a href="tools.html#cb1113-6"></a></span>
-<span id="cb1113-7"><a href="tools.html#cb1113-7"></a><span class="op">~</span>.x <span class="op">+</span><span class="st"> </span>.y</span></code></pre></div>
+<div class="sourceCode" id="cb1096"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1096-1"><a href="tools.html#cb1096-1"></a><span class="co"># Good</span></span>
+<span id="cb1096-2"><a href="tools.html#cb1096-2"></a></span>
+<span id="cb1096-3"><a href="tools.html#cb1096-3"></a><span class="op">~</span><span class="st"> </span>.x <span class="op">+</span><span class="st"> </span>.y</span>
+<span id="cb1096-4"><a href="tools.html#cb1096-4"></a></span>
+<span id="cb1096-5"><a href="tools.html#cb1096-5"></a><span class="co"># Bad</span></span>
+<span id="cb1096-6"><a href="tools.html#cb1096-6"></a></span>
+<span id="cb1096-7"><a href="tools.html#cb1096-7"></a><span class="op">~</span>.x <span class="op">+</span><span class="st"> </span>.y</span></code></pre></div>
 <ul>
 <li>The help operator</li>
 </ul>
-<div class="sourceCode" id="cb1114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1114-1"><a href="tools.html#cb1114-1"></a><span class="co"># Good</span></span>
-<span id="cb1114-2"><a href="tools.html#cb1114-2"></a></span>
-<span id="cb1114-3"><a href="tools.html#cb1114-3"></a>package?stats</span>
-<span id="cb1114-4"><a href="tools.html#cb1114-4"></a>?mean</span>
-<span id="cb1114-5"><a href="tools.html#cb1114-5"></a></span>
-<span id="cb1114-6"><a href="tools.html#cb1114-6"></a><span class="co"># Bad</span></span>
-<span id="cb1114-7"><a href="tools.html#cb1114-7"></a></span>
-<span id="cb1114-8"><a href="tools.html#cb1114-8"></a>package ? stats</span>
-<span id="cb1114-9"><a href="tools.html#cb1114-9"></a>? mean</span></code></pre></div>
+<div class="sourceCode" id="cb1097"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1097-1"><a href="tools.html#cb1097-1"></a><span class="co"># Good</span></span>
+<span id="cb1097-2"><a href="tools.html#cb1097-2"></a></span>
+<span id="cb1097-3"><a href="tools.html#cb1097-3"></a>package?stats</span>
+<span id="cb1097-4"><a href="tools.html#cb1097-4"></a>?mean</span>
+<span id="cb1097-5"><a href="tools.html#cb1097-5"></a></span>
+<span id="cb1097-6"><a href="tools.html#cb1097-6"></a><span class="co"># Bad</span></span>
+<span id="cb1097-7"><a href="tools.html#cb1097-7"></a></span>
+<span id="cb1097-8"><a href="tools.html#cb1097-8"></a>package ? stats</span>
+<span id="cb1097-9"><a href="tools.html#cb1097-9"></a>? mean</span></code></pre></div>
 </div>
 <div id="extra-spaces" class="section level4 unnumbered">
 <h4>Extra spaces</h4>
 <p>You may add extra spaces if it improves alignment of <code>=</code> or <code>&lt;-</code>.</p>
-<div class="sourceCode" id="cb1115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1115-1"><a href="tools.html#cb1115-1"></a><span class="kw">list</span>(<span class="dt">total =</span> a <span class="op">+</span><span class="st"> </span>b <span class="op">+</span><span class="st"> </span>c,</span>
-<span id="cb1115-2"><a href="tools.html#cb1115-2"></a>     <span class="dt">mean =</span> (a <span class="op">+</span><span class="st"> </span>b <span class="op">+</span><span class="st"> </span>c) <span class="op">/</span><span class="st"> </span>n)</span></code></pre></div>
+<div class="sourceCode" id="cb1098"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1098-1"><a href="tools.html#cb1098-1"></a><span class="kw">list</span>(<span class="dt">total =</span> a <span class="op">+</span><span class="st"> </span>b <span class="op">+</span><span class="st"> </span>c,</span>
+<span id="cb1098-2"><a href="tools.html#cb1098-2"></a>     <span class="dt">mean =</span> (a <span class="op">+</span><span class="st"> </span>b <span class="op">+</span><span class="st"> </span>c) <span class="op">/</span><span class="st"> </span>n)</span></code></pre></div>
 <p>Do not add extra spaces to places where space is not usually allowed.</p>
 </div>
 </div>
@@ -552,7 +552,7 @@ and <code>:</code>.</li>
 <a href="shiny.html"><button class="btn btn-default">Next</button></a>
 </p>
 <p class="build-date">Page built: 
-2020-08-17
+2020-08-21
 </p>
 </div>
 </div>

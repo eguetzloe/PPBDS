@@ -194,10 +194,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>
 <span class="header-section-number">7.1.1</span> To the Bank</h3>
 <p>As we did in Chapter <a href="one-parameter.html#one-parameter">6</a>, we’ll begin with a hands-on tactile activity. We almost always need the <strong>tidyverse</strong> package.</p>
-<div class="sourceCode" id="cb813"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb813-1"><a href="two-parameters.html#cb813-1"></a><span class="kw">library</span>(PPBDS.data)</span>
-<span id="cb813-2"><a href="two-parameters.html#cb813-2"></a><span class="kw">library</span>(rsample)</span>
-<span id="cb813-3"><a href="two-parameters.html#cb813-3"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb813-4"><a href="two-parameters.html#cb813-4"></a><span class="kw">library</span>(skimr)</span></code></pre></div>
+<div class="sourceCode" id="cb796"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb796-1"><a href="two-parameters.html#cb796-1"></a><span class="kw">library</span>(PPBDS.data)</span>
+<span id="cb796-2"><a href="two-parameters.html#cb796-2"></a><span class="kw">library</span>(rsample)</span>
+<span id="cb796-3"><a href="two-parameters.html#cb796-3"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb796-4"><a href="two-parameters.html#cb796-4"></a><span class="kw">library</span>(skimr)</span></code></pre></div>
 <p><strong>PPBDS.data</strong> includes the data sets for this book. <strong>rsample</strong> includes functions for bootstrapping, the main statistical tool which will we use in this chapter.</p>
 </div>
 <div id="what-is-the-average-year-on-us-pennies-in-2019" class="section level3">
@@ -206,14 +206,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Try to imagine all the pennies being used in the United States in 2019. That’s a lot of pennies! Now say we’re interested in the average year of minting of <em>all</em> these pennies. One way to compute this value would be to gather up all pennies being used in the US, record the year, and compute the average. However, this would be near impossible! So instead, let’s collect a <em>sample</em> of 50 pennies from a local bank in downtown Northampton, Massachusetts, USA as seen in Figure <a href="#fig:resampling-exercise-a"><strong>??</strong></a>.</p>
 <!-- CB: I think it would help  with the Preceptor table concept to ask the question of 'If we are given a random penny in 2019, what would we predict the year to be on that penny?' And that way you can tie in and reinforce the idea of the predictive model which is introduced in my chapter like we talked about. Either introduce here or around line 246? -->
 <div class="figure">
-<span id="fig:unnamed-chunk-591-1"></span>
+<span id="fig:unnamed-chunk-597-1"></span>
 <p class="caption marginnote shownote">
 FIGURE 7.1: Collecting a sample of 50 US pennies from a local bank.
 </p>
 <img src="07-two-parameters/images/bank.jpg" alt="Collecting a sample of 50 US pennies from a local bank." width="2016">
 </div>
 <div class="figure">
-<span id="fig:unnamed-chunk-591-2"></span>
+<span id="fig:unnamed-chunk-597-2"></span>
 <p class="caption marginnote shownote">
 FIGURE 7.2: Collecting a sample of 50 US pennies from a local bank.
 </p>
@@ -221,23 +221,23 @@ FIGURE 7.2: Collecting a sample of 50 US pennies from a local bank.
 </div>
 <p>An image of these 50 pennies can be seen in Figure <a href="#fig:resampling-exercise-c"><strong>??</strong></a>. For each of the 50 pennies starting in the top left, progressing row-by-row, and ending in the bottom right, note there is an “ID” identification variable printed in black and the year of minting printed in white.</p>
 <div class="figure">
-<span id="fig:unnamed-chunk-592"></span>
+<span id="fig:unnamed-chunk-598"></span>
 <p class="caption marginnote shownote">
 FIGURE 7.3: 50 US pennies labelled.
 </p>
 <img src="07-two-parameters/images/3.jpg" alt="50 US pennies labelled." width="804">
 </div>
 <p>Run the <code>pennies_sample</code> code below to extract our 50 sampled pennies.</p>
-<div class="sourceCode" id="cb814"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb814-1"><a href="two-parameters.html#cb814-1"></a>pennies_sample &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">ID =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>), </span>
-<span id="cb814-2"><a href="two-parameters.html#cb814-2"></a>                         <span class="dt">year =</span> <span class="kw">c</span>(<span class="dv">2002</span>, <span class="dv">1986</span>, <span class="dv">2017</span>, <span class="dv">1988</span>, <span class="dv">2008</span>, <span class="dv">1983</span>, <span class="dv">2008</span>, </span>
-<span id="cb814-3"><a href="two-parameters.html#cb814-3"></a>                                  <span class="dv">1996</span>, <span class="dv">2004</span>, <span class="dv">2000</span>, <span class="dv">1994</span>, <span class="dv">1995</span>, <span class="dv">2015</span>, <span class="dv">1978</span>, </span>
-<span id="cb814-4"><a href="two-parameters.html#cb814-4"></a>                                  <span class="dv">1974</span>, <span class="dv">2015</span>, <span class="dv">2016</span>, <span class="dv">1996</span>, <span class="dv">1983</span>, <span class="dv">1971</span>, <span class="dv">1981</span>, </span>
-<span id="cb814-5"><a href="two-parameters.html#cb814-5"></a>                                  <span class="dv">1976</span>, <span class="dv">1998</span>, <span class="dv">2017</span>, <span class="dv">1979</span>, <span class="dv">1979</span>, <span class="dv">1993</span>, <span class="dv">2006</span>, </span>
-<span id="cb814-6"><a href="two-parameters.html#cb814-6"></a>                                  <span class="dv">1988</span>, <span class="dv">1978</span>, <span class="dv">2013</span>, <span class="dv">1976</span>, <span class="dv">1979</span>, <span class="dv">1985</span>, <span class="dv">1985</span>, </span>
-<span id="cb814-7"><a href="two-parameters.html#cb814-7"></a>                                  <span class="dv">2015</span>, <span class="dv">1962</span>, <span class="dv">1999</span>, <span class="dv">2015</span>, <span class="dv">1990</span>, <span class="dv">1992</span>, <span class="dv">1997</span>, </span>
-<span id="cb814-8"><a href="two-parameters.html#cb814-8"></a>                                  <span class="dv">2018</span>, <span class="dv">2015</span>, <span class="dv">1997</span>, <span class="dv">2017</span>, <span class="dv">1982</span>, <span class="dv">1988</span>, <span class="dv">2006</span>, </span>
-<span id="cb814-9"><a href="two-parameters.html#cb814-9"></a>                                  <span class="dv">2017</span>))</span>
-<span id="cb814-10"><a href="two-parameters.html#cb814-10"></a>pennies_sample</span></code></pre></div>
+<div class="sourceCode" id="cb797"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb797-1"><a href="two-parameters.html#cb797-1"></a>pennies_sample &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">ID =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>), </span>
+<span id="cb797-2"><a href="two-parameters.html#cb797-2"></a>                         <span class="dt">year =</span> <span class="kw">c</span>(<span class="dv">2002</span>, <span class="dv">1986</span>, <span class="dv">2017</span>, <span class="dv">1988</span>, <span class="dv">2008</span>, <span class="dv">1983</span>, <span class="dv">2008</span>, </span>
+<span id="cb797-3"><a href="two-parameters.html#cb797-3"></a>                                  <span class="dv">1996</span>, <span class="dv">2004</span>, <span class="dv">2000</span>, <span class="dv">1994</span>, <span class="dv">1995</span>, <span class="dv">2015</span>, <span class="dv">1978</span>, </span>
+<span id="cb797-4"><a href="two-parameters.html#cb797-4"></a>                                  <span class="dv">1974</span>, <span class="dv">2015</span>, <span class="dv">2016</span>, <span class="dv">1996</span>, <span class="dv">1983</span>, <span class="dv">1971</span>, <span class="dv">1981</span>, </span>
+<span id="cb797-5"><a href="two-parameters.html#cb797-5"></a>                                  <span class="dv">1976</span>, <span class="dv">1998</span>, <span class="dv">2017</span>, <span class="dv">1979</span>, <span class="dv">1979</span>, <span class="dv">1993</span>, <span class="dv">2006</span>, </span>
+<span id="cb797-6"><a href="two-parameters.html#cb797-6"></a>                                  <span class="dv">1988</span>, <span class="dv">1978</span>, <span class="dv">2013</span>, <span class="dv">1976</span>, <span class="dv">1979</span>, <span class="dv">1985</span>, <span class="dv">1985</span>, </span>
+<span id="cb797-7"><a href="two-parameters.html#cb797-7"></a>                                  <span class="dv">2015</span>, <span class="dv">1962</span>, <span class="dv">1999</span>, <span class="dv">2015</span>, <span class="dv">1990</span>, <span class="dv">1992</span>, <span class="dv">1997</span>, </span>
+<span id="cb797-8"><a href="two-parameters.html#cb797-8"></a>                                  <span class="dv">2018</span>, <span class="dv">2015</span>, <span class="dv">1997</span>, <span class="dv">2017</span>, <span class="dv">1982</span>, <span class="dv">1988</span>, <span class="dv">2006</span>, </span>
+<span id="cb797-9"><a href="two-parameters.html#cb797-9"></a>                                  <span class="dv">2017</span>))</span>
+<span id="cb797-10"><a href="two-parameters.html#cb797-10"></a>pennies_sample</span></code></pre></div>
 <pre><code>## # A tibble: 50 x 2
 ##       ID  year
 ##    &lt;int&gt; &lt;dbl&gt;
@@ -638,19 +638,19 @@ FIGURE 7.3: 50 US pennies labelled.
 </tbody>
 </table></div>
 <p>Based on these 50 sampled pennies, what can we say about <em>all</em> US pennies in 2019? Let’s study some properties of our sample by performing an exploratory data analysis. Let’s first visualize the distribution of the year of these 50 pennies using our data visualization tools from Chapter <a href="#viz"><strong>??</strong></a>. Since <code>year</code> is a numerical variable, we use a histogram in Figure <a href="#fig:pennies-sample-histogram"><strong>??</strong></a> to visualize its distribution.</p>
-<div class="sourceCode" id="cb816"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb816-1"><a href="two-parameters.html#cb816-1"></a>pennies_sample <span class="op">%&gt;%</span></span>
-<span id="cb816-2"><a href="two-parameters.html#cb816-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year)) <span class="op">+</span></span>
-<span id="cb816-3"><a href="two-parameters.html#cb816-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">10</span>, <span class="dt">color =</span> <span class="st">"white"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb799"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb799-1"><a href="two-parameters.html#cb799-1"></a>pennies_sample <span class="op">%&gt;%</span></span>
+<span id="cb799-2"><a href="two-parameters.html#cb799-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year)) <span class="op">+</span></span>
+<span id="cb799-3"><a href="two-parameters.html#cb799-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">10</span>, <span class="dt">color =</span> <span class="st">"white"</span>)</span></code></pre></div>
 <div class="figure">
-<span id="fig:unnamed-chunk-595"></span>
+<span id="fig:unnamed-chunk-601"></span>
 <p class="caption marginnote shownote">
 FIGURE 7.4: Distribution of year on 50 US pennies.
 </p>
-<img src="book_temp_files/figure-html/unnamed-chunk-595-1.png" alt="Distribution of year on 50 US pennies." width="672">
+<img src="book_temp_files/figure-html/unnamed-chunk-601-1.png" alt="Distribution of year on 50 US pennies." width="672">
 </div>
 <p>Observe a slightly left-skewed distribution, since most pennies fall between 1980 and 2010 with only a few pennies older than 1970. What is the average year for the 50 sampled pennies? Eyeballing the histogram it appears to be around 1990. Let’s now compute this value exactly using our data wrangling tools from Chapter <a href="wrangling.html#wrangling">2</a>.</p>
-<div class="sourceCode" id="cb817"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb817-1"><a href="two-parameters.html#cb817-1"></a>pennies_sample <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb817-2"><a href="two-parameters.html#cb817-2"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_year =</span> <span class="kw">mean</span>(year))</span></code></pre></div>
+<div class="sourceCode" id="cb800"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb800-1"><a href="two-parameters.html#cb800-1"></a>pennies_sample <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb800-2"><a href="two-parameters.html#cb800-2"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_year =</span> <span class="kw">mean</span>(year))</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 1
 ##   mean_year
 ##       &lt;dbl&gt;
@@ -1495,15 +1495,15 @@ FIGURE 7.4: Distribution of year on 50 US pennies.
 <p>Going back to our 50 sampled pennies in Figure <a href="#fig:resampling-exercise-c"><strong>??</strong></a>, the point estimate of interest is the sample mean <span class="math inline">\(\overline{x}\)</span> of 1995.44. This quantity is an <em>estimate</em> of the population mean year of <em>all</em> US pennies <span class="math inline">\(\mu\)</span>.</p>
 <p>Recall that we also saw in Chapter <a href="one-parameter.html#one-parameter">6</a> that such estimates are prone to <em>sampling variation</em>. For example, in this particular sample in Figure <a href="#fig:resampling-exercise-c"><strong>??</strong></a>, we observed three pennies with the year 1999. If we sampled another 50 pennies, would we observe exactly three pennies with the year 1999 again? More than likely not. We might observe none, one, two, or maybe even all 50! The same can be said for the other 26 unique years that are represented in our sample of 50 pennies.</p>
 <p>So what do we do about this sampling variation? One solution is that we create bootstrap samples! As you already know that resampling is a significant tool in data science, bootstrapping is one such resampling method that many data scientists use today. Bootstrapping essentially repeatedly draws independent samples from our data set with replacement. By sampling with replacement, the same observation can be sampled multiple times and each bootstrap sample will have the same number of observations as the original data set.</p>
-<p><label for="tufte-mn-58" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-58" class="margin-toggle"><span class="marginnote">To conduct bootstraps, make sure your dowload both rsample and tidyverse libraries</span></p>
+<p><label for="tufte-mn-71" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-71" class="margin-toggle"><span class="marginnote">To conduct bootstraps, make sure your dowload both rsample and tidyverse libraries</span></p>
 <p>Before the computer age, scientists would use direct standard error formulas and complex Taylor Series to compute confidence intervals for an estimate. However, the bootstrap was developed as an alternative to compute standard errors and confidence intervals for any statistic in a much faster and easier way.</p>
 <p>The intuition with bootstrapping is that we can model an inference about the population from resampling our sample data and then performing an inference about a sample from each resample. It will look something like this: resampled → sample → population.</p>
 <p>The first thing we want to do when bootstrapping is creating our bootstrap samples.Since we are concerned with the <code>year</code> of pennies in 2019, let’s select <code>year</code> in our data set before we create our bootstraps. Let’s now perform the virtual analog for 1000 resamples. Using these results, we’ll be able to study the variability in the sample means from 1000 resamples of size 50. Let’s first add a <code>times = 1000</code> argument to <code>bootstraps()</code>  to indicate we would like 1000 replicates. Remember that we must use the <code>rsample</code> library to use bootstraps.</p>
-<div class="sourceCode" id="cb819"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb819-1"><a href="two-parameters.html#cb819-1"></a><span class="kw">set.seed</span>(<span class="dv">9</span>)</span>
-<span id="cb819-2"><a href="two-parameters.html#cb819-2"></a>virtual_resamples &lt;-<span class="st"> </span>pennies_sample <span class="op">%&gt;%</span></span>
-<span id="cb819-3"><a href="two-parameters.html#cb819-3"></a><span class="st">  </span><span class="kw">select</span>(year) <span class="op">%&gt;%</span></span>
-<span id="cb819-4"><a href="two-parameters.html#cb819-4"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dt">times =</span> <span class="dv">1000</span>)</span>
-<span id="cb819-5"><a href="two-parameters.html#cb819-5"></a>virtual_resamples</span></code></pre></div>
+<div class="sourceCode" id="cb802"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb802-1"><a href="two-parameters.html#cb802-1"></a><span class="kw">set.seed</span>(<span class="dv">9</span>)</span>
+<span id="cb802-2"><a href="two-parameters.html#cb802-2"></a>virtual_resamples &lt;-<span class="st"> </span>pennies_sample <span class="op">%&gt;%</span></span>
+<span id="cb802-3"><a href="two-parameters.html#cb802-3"></a><span class="st">  </span><span class="kw">select</span>(year) <span class="op">%&gt;%</span></span>
+<span id="cb802-4"><a href="two-parameters.html#cb802-4"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dt">times =</span> <span class="dv">1000</span>)</span>
+<span id="cb802-5"><a href="two-parameters.html#cb802-5"></a>virtual_resamples</span></code></pre></div>
 <pre><code>## # Bootstrap sampling 
 ## # A tibble: 1,000 x 2
 ##    splits          id           
@@ -1520,9 +1520,9 @@ FIGURE 7.4: Distribution of year on 50 US pennies.
 ## 10 &lt;split [50/20]&gt; Bootstrap0010
 ## # … with 990 more rows</code></pre>
 <p>So we have now created our bootstrap samples, which are stored in a tibble-like object, and each bootstrap sample is nested in the splits column. This means that each <code>rsplit</code> row is a different bootstrap sample and the <code>id</code> column is used to identify each bootstrap sample.</p>
-<p><label for="tufte-mn-59" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-59" class="margin-toggle"><span class="marginnote">Check out ?analysis in console to get an even more comprehensive review of what analysis() does</span>
+<p><label for="tufte-mn-72" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-72" class="margin-toggle"><span class="marginnote">Check out ?analysis in console to get an even more comprehensive review of what analysis() does</span>
 Now if you are interested to view a specific bootstrap sample, you can use the <code>analysis()</code> function from the <code>rsample</code> package, which basically allows you to view a specific bootstrap sample as a data frame. To do so, type <code>analysis(virtual_resamples$splits[[n]]) %&gt;% as_tibble()</code> where n represents the nth row bootstrap sample. We will be looking at the first bootstrap sample in this case.</p>
-<div class="sourceCode" id="cb821"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb821-1"><a href="two-parameters.html#cb821-1"></a><span class="kw">analysis</span>(virtual_resamples<span class="op">$</span>splits[[<span class="dv">1</span>]]) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb804"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb804-1"><a href="two-parameters.html#cb804-1"></a><span class="kw">analysis</span>(virtual_resamples<span class="op">$</span>splits[[<span class="dv">1</span>]]) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 50 x 1
 ##     year
 ##    &lt;dbl&gt;
@@ -1538,13 +1538,13 @@ Now if you are interested to view a specific bootstrap sample, you can use the <
 ## 10  1996
 ## # … with 40 more rows</code></pre>
 <p>As you can see, we were able to view the data in first bootstrap sample. Noticed how it has 50 rows, which is the same as our <code>pennies_sample</code>. Now that we know how to create bootstrap samples and view them, we can apply more code to our bootstraps to find our desired statistic, which is the average year of pennies in 2019.</p>
-<p><label for="tufte-mn-60" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-60" class="margin-toggle"><span class="marginnote">In this chapter, bootstrap samples and resamples mean the same thing</span>
+<p><label for="tufte-mn-73" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-73" class="margin-toggle"><span class="marginnote">In this chapter, bootstrap samples and resamples mean the same thing</span>
 To compute our desired statistics, we now create the column <code>boot</code> by <code>mutate(boot = map(splits, ~ analysis(.)))</code>. What we are doing here is that we are iterating an analysis over each bootstrap sample in a new sample. We want to iterate an analysis over each bootstrap sample, because analysis allows us to extract the mean year for each resample.</p>
-<div class="sourceCode" id="cb823"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb823-1"><a href="two-parameters.html#cb823-1"></a>virtual_resamples &lt;-<span class="st"> </span>pennies_sample <span class="op">%&gt;%</span></span>
-<span id="cb823-2"><a href="two-parameters.html#cb823-2"></a><span class="st">  </span><span class="kw">select</span>(year) <span class="op">%&gt;%</span></span>
-<span id="cb823-3"><a href="two-parameters.html#cb823-3"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dt">times =</span> <span class="dv">1000</span>) <span class="op">%&gt;%</span></span>
-<span id="cb823-4"><a href="two-parameters.html#cb823-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.)))</span>
-<span id="cb823-5"><a href="two-parameters.html#cb823-5"></a>virtual_resamples</span></code></pre></div>
+<div class="sourceCode" id="cb806"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb806-1"><a href="two-parameters.html#cb806-1"></a>virtual_resamples &lt;-<span class="st"> </span>pennies_sample <span class="op">%&gt;%</span></span>
+<span id="cb806-2"><a href="two-parameters.html#cb806-2"></a><span class="st">  </span><span class="kw">select</span>(year) <span class="op">%&gt;%</span></span>
+<span id="cb806-3"><a href="two-parameters.html#cb806-3"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dt">times =</span> <span class="dv">1000</span>) <span class="op">%&gt;%</span></span>
+<span id="cb806-4"><a href="two-parameters.html#cb806-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.)))</span>
+<span id="cb806-5"><a href="two-parameters.html#cb806-5"></a>virtual_resamples</span></code></pre></div>
 <pre><code>## # Bootstrap sampling 
 ## # A tibble: 1,000 x 3
 ##    splits          id            boot             
@@ -1561,14 +1561,14 @@ To compute our desired statistics, we now create the column <code>boot</code> by
 ## 10 &lt;split [50/19]&gt; Bootstrap0010 &lt;tibble [50 × 1]&gt;
 ## # … with 990 more rows</code></pre>
 <p><code>boot</code> is now a list-column in the tibble, which we can use if we want to find a specific characteristic of each sample like the average year. Given that <code>boot</code> is a list column and we want to pull out the mean year as we are interested in this, we can create two more columns: <code>years</code> and year_mean<code>, respectively.  To create our</code>years<code>column, we run</code>mutate(years = map(boot, ~ pull(., year)))<code>after creating our</code>boot<code>column. What this does is that we are now pulling the year column of each bootstrap sample, which will evidently be nested in a list. Finally, we can create the column</code>year_mean<code>to extract the mean of each bootstrap sample by now running</code>mutate(year_mean = map_dbl(years, ~ mean(.)))<code>. This command line essentially calculates the mean year from the</code>years` list nested column.</p>
-<div class="sourceCode" id="cb825"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb825-1"><a href="two-parameters.html#cb825-1"></a><span class="kw">set.seed</span>(<span class="dv">9</span>)</span>
-<span id="cb825-2"><a href="two-parameters.html#cb825-2"></a>virtual_resamples &lt;-<span class="st"> </span>pennies_sample <span class="op">%&gt;%</span></span>
-<span id="cb825-3"><a href="two-parameters.html#cb825-3"></a><span class="st">  </span><span class="kw">select</span>(year) <span class="op">%&gt;%</span></span>
-<span id="cb825-4"><a href="two-parameters.html#cb825-4"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dt">times =</span> <span class="dv">1000</span>) <span class="op">%&gt;%</span></span>
-<span id="cb825-5"><a href="two-parameters.html#cb825-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.))) <span class="op">%&gt;%</span></span>
-<span id="cb825-6"><a href="two-parameters.html#cb825-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">years =</span> <span class="kw">map</span>(boot, <span class="op">~</span><span class="st"> </span><span class="kw">pull</span>(., year))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb825-7"><a href="two-parameters.html#cb825-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">year_mean =</span> <span class="kw">map_dbl</span>(years, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(.)))</span>
-<span id="cb825-8"><a href="two-parameters.html#cb825-8"></a>virtual_resamples</span></code></pre></div>
+<div class="sourceCode" id="cb808"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb808-1"><a href="two-parameters.html#cb808-1"></a><span class="kw">set.seed</span>(<span class="dv">9</span>)</span>
+<span id="cb808-2"><a href="two-parameters.html#cb808-2"></a>virtual_resamples &lt;-<span class="st"> </span>pennies_sample <span class="op">%&gt;%</span></span>
+<span id="cb808-3"><a href="two-parameters.html#cb808-3"></a><span class="st">  </span><span class="kw">select</span>(year) <span class="op">%&gt;%</span></span>
+<span id="cb808-4"><a href="two-parameters.html#cb808-4"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dt">times =</span> <span class="dv">1000</span>) <span class="op">%&gt;%</span></span>
+<span id="cb808-5"><a href="two-parameters.html#cb808-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.))) <span class="op">%&gt;%</span></span>
+<span id="cb808-6"><a href="two-parameters.html#cb808-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">years =</span> <span class="kw">map</span>(boot, <span class="op">~</span><span class="st"> </span><span class="kw">pull</span>(., year))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb808-7"><a href="two-parameters.html#cb808-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">year_mean =</span> <span class="kw">map_dbl</span>(years, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(.)))</span>
+<span id="cb808-8"><a href="two-parameters.html#cb808-8"></a>virtual_resamples</span></code></pre></div>
 <pre><code>## # Bootstrap sampling 
 ## # A tibble: 1,000 x 5
 ##    splits          id            boot              years      year_mean
@@ -1585,7 +1585,7 @@ To compute our desired statistics, we now create the column <code>boot</code> by
 ## 10 &lt;split [50/20]&gt; Bootstrap0010 &lt;tibble [50 × 1]&gt; &lt;dbl [50]&gt;     2000.
 ## # … with 990 more rows</code></pre>
 <p>Voila! We were able to create a thousand bootstrap samples and calculate the mean year for each resample. Let’s now create a plot to visualizes the posterior distribution for the mean year of American pennies in 2019.</p>
-<p><label for="tufte-mn-61" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-61" class="margin-toggle"><span class="marginnote"> In this sense, the bootstrap distribution represents an (approximate)
+<p><label for="tufte-mn-74" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-74" class="margin-toggle"><span class="marginnote"> In this sense, the bootstrap distribution represents an (approximate)
 nonparametric, noninformative posterior distribution for our parameter.
 But this bootstrap distribution is obtained painlessly — without having to
 formally specify a prior and without having to sample from the posterior
@@ -1593,12 +1593,12 @@ distribution. Hence we might think of the bootstrap distribution as a “poor
 man’s” Bayes posterior. By perturbing the data, the bootstrap approximates
 the Bayesian effect of perturbing the parameters, and is typically
 much simpler to carry out. — Elements of Statistical Learning, 2nd edition, by Hastie et al, page 271.</span></p>
-<div class="sourceCode" id="cb827"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb827-1"><a href="two-parameters.html#cb827-1"></a>virtual_resamples <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb827-2"><a href="two-parameters.html#cb827-2"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
-<span id="cb827-3"><a href="two-parameters.html#cb827-3"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year_mean, <span class="dt">y=</span>..count..<span class="op">/</span><span class="kw">sum</span>(..count..)), <span class="dt">binwidth =</span> <span class="fl">.5</span>, <span class="dt">fill =</span> <span class="st">"red"</span>) <span class="op">+</span></span>
-<span id="cb827-4"><a href="two-parameters.html#cb827-4"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Estimate in Year"</span>, <span class="dt">y =</span> <span class="st">"Probability"</span>,</span>
-<span id="cb827-5"><a href="two-parameters.html#cb827-5"></a>         <span class="dt">title =</span> <span class="st">"Posterior Distribution for the Mean Year of American Pennies in 2019"</span>) </span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-604-1.png" width="672">
+<div class="sourceCode" id="cb810"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb810-1"><a href="two-parameters.html#cb810-1"></a>virtual_resamples <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb810-2"><a href="two-parameters.html#cb810-2"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb810-3"><a href="two-parameters.html#cb810-3"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year_mean, <span class="dt">y=</span>..count..<span class="op">/</span><span class="kw">sum</span>(..count..)), <span class="dt">binwidth =</span> <span class="fl">.5</span>, <span class="dt">fill =</span> <span class="st">"red"</span>) <span class="op">+</span></span>
+<span id="cb810-4"><a href="two-parameters.html#cb810-4"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Estimate in Year"</span>, <span class="dt">y =</span> <span class="st">"Probability"</span>,</span>
+<span id="cb810-5"><a href="two-parameters.html#cb810-5"></a>         <span class="dt">title =</span> <span class="st">"Posterior Distribution for the Mean Year of American Pennies in 2019"</span>) </span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-610-1.png" width="672">
 Recall from chapter 5 that posterior distribution is based on beliefs and expectations. In the case of the bootstrap samples we made, the posterior distribution represents our knowledge about the mean year of American Pennies in 2019 after taking into account the the data we gathered from our bootstrap sample means. As demonstrated in the plot above, we can see that the mean year of pennies in 2019 is most likely between 1995 and 1998 from our posterior distribution.</p>
 <p>Recall that in the “resampling with replacement” scenario we are illustrating here, this histogram has a special name: the <em>bootstrap distribution of the sample mean</em>. Furthermore, recall it is an approximation to the <em>sampling distribution</em> of the sample mean, a concept you saw in Chapter <a href="#sampling"><strong>??</strong></a> on sampling. This distribution allows us to study the effect of sampling variation on our estimates of the true population mean, in this case the true mean year for <em>all</em> US pennies. However, unlike in Chapter <a href="one-parameter.html#one-parameter">6</a> where we took multiple samples (something one would never do in practice), bootstrap distributions are constructed by taking multiple resamples from a <em>single</em> sample: in this case, the 50 original pennies from the bank.</p>
 <p>Congratulations! You’ve just constructed your first bootstrap distribution! In the next section, you’ll see how to use this bootstrap distribution to construct <em>confidence intervals</em>.</p>
@@ -1612,7 +1612,7 @@ Recall from chapter 5 that posterior distribution is based on beliefs and expect
 <p>What would “fishing with a net” correspond to? Look at the bootstrap distribution in Figure <a href="#fig:one-thousand-sample-means"><strong>??</strong></a> once more. Between which two years would you say that “most” sample means lie? While this question is somewhat subjective, saying that most sample means lie between 1992 and 2000 would not be unreasonable. Think of this interval as the “net.”</p>
 <p>What we’ve just illustrated is the concept of a <em>confidence interval</em>, which we’ll abbreviate with “CI” throughout this book. As opposed to a point estimate/sample statistic that estimates the value of an unknown population parameter with a single value, a <em>confidence interval</em>  gives what can be interpreted as a range of plausible values. Going back to our analogy, point estimates/sample statistics can be thought of as spears, whereas confidence intervals can be thought of as nets.</p>
 <div class="figure" style="text-align: center">
-<span id="fig:unnamed-chunk-605"></span>
+<span id="fig:unnamed-chunk-611"></span>
 <p class="caption marginnote shownote">
 FIGURE 7.5: Analogy of difference between point estimates and confidence intervals.
 </p>
@@ -2009,7 +2009,7 @@ FIGURE 7.5: Analogy of difference between point estimates and confidence interva
 <h3>
 <span class="header-section-number">7.1.4</span> Confidence Intervals using lm and quantile</h3>
 <p>First, let’s type <code>lm(year ~ 1, data = pennies_sample)</code> in our code chunk. This alone will get the mean of our dataset for pennies_sample</p>
-<div class="sourceCode" id="cb828"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb828-1"><a href="two-parameters.html#cb828-1"></a>  <span class="kw">lm</span>(year <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> pennies_sample)</span></code></pre></div>
+<div class="sourceCode" id="cb811"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb811-1"><a href="two-parameters.html#cb811-1"></a>  <span class="kw">lm</span>(year <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> pennies_sample)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = year ~ 1, data = pennies_sample)
@@ -2018,23 +2018,23 @@ FIGURE 7.5: Analogy of difference between point estimates and confidence interva
 ## (Intercept)  
 ##        1995</code></pre>
 <p>So we see that the mean of pennies_sample is 1995. Now let’s add the line <code>tidy(conf,int = TRUE)</code> to our code. <code>tidy</code> is from the <code>rsample</code> package and this particular function can get the 95% confidence interval for our mean if we set the argument, <code>conf.int = TRUE</code>, in our <code>tidy</code> function.</p>
-<div class="sourceCode" id="cb830"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb830-1"><a href="two-parameters.html#cb830-1"></a>  <span class="kw">lm</span>(year <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> pennies_sample) <span class="op">%&gt;%</span></span>
-<span id="cb830-2"><a href="two-parameters.html#cb830-2"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb813"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb813-1"><a href="two-parameters.html#cb813-1"></a>  <span class="kw">lm</span>(year <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> pennies_sample) <span class="op">%&gt;%</span></span>
+<span id="cb813-2"><a href="two-parameters.html#cb813-2"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##   term        estimate std.error statistic   p.value conf.low conf.high
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 (Intercept)    1995.      2.15      930. 1.03e-105    1991.     2000.</code></pre>
 <p>Great! After running the code, we can clearly see the mean of the of <code>pennies_sample</code> as well as other characteristics like the upper and lower levels of our confidence interval. Since we are focused on the confidence interval only, let’s just <code>select(conf.low, estimate, conf.high)</code>.</p>
-<div class="sourceCode" id="cb832"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb832-1"><a href="two-parameters.html#cb832-1"></a>  <span class="kw">lm</span>(year <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> pennies_sample) <span class="op">%&gt;%</span></span>
-<span id="cb832-2"><a href="two-parameters.html#cb832-2"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb832-3"><a href="two-parameters.html#cb832-3"></a><span class="st">  </span><span class="kw">select</span>(conf.low, estimate, conf.high)</span></code></pre></div>
+<div class="sourceCode" id="cb815"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb815-1"><a href="two-parameters.html#cb815-1"></a>  <span class="kw">lm</span>(year <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> pennies_sample) <span class="op">%&gt;%</span></span>
+<span id="cb815-2"><a href="two-parameters.html#cb815-2"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb815-3"><a href="two-parameters.html#cb815-3"></a><span class="st">  </span><span class="kw">select</span>(conf.low, estimate, conf.high)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##   conf.low estimate conf.high
 ##      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 ## 1    1991.    1995.     2000.</code></pre>
 <p>Now we have our confidence interval for the mean year of pennies from 2019, which is (1991.127, 1999.753). But noticed that we used <code>pennies_sample</code> and not <code>virtual_resamples</code> for the <code>lm</code> method to calculate the confidence interval.</p>
 <p>Let’s now calculate the confidence interval by hand using our bootstrap samples, <code>virtual_resamples</code>. To do, type the following code below:</p>
-<div class="sourceCode" id="cb834"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb834-1"><a href="two-parameters.html#cb834-1"></a><span class="kw">quantile</span>(virtual_resamples<span class="op">$</span>year_mean, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb817"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb817-1"><a href="two-parameters.html#cb817-1"></a><span class="kw">quantile</span>(virtual_resamples<span class="op">$</span>year_mean, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code></pre></div>
 <pre><code>## 2.5%  98% 
 ## 1991 2000</code></pre>
 <p>Whoa! Noticed how we got 1991.28, 1999.92 as our confidence interval, which is the same as the <code>lm</code> method using pennies_sample. What this shows is that we can essentially use two methods to calculate the confidence interval for the mean: the <code>lm</code> method using the original data set and the quantile method using our bootstrap samples! However, if we want to find the confidence interval for any statistic, not including the mean, we have to use the quantile method using our bootstrap samples!</p>
@@ -2044,16 +2044,16 @@ FIGURE 7.5: Analogy of difference between point estimates and confidence interva
 <h2>
 <span class="header-section-number">7.2</span> EDA for <code>nhanes</code>
 </h2>
-<p><label for="tufte-mn-62" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-62" class="margin-toggle"><span class="marginnote">Run ?nhanes to get more information about the data from nhanes</span>
+<p><label for="tufte-mn-75" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-75" class="margin-toggle"><span class="marginnote">Run ?nhanes to get more information about the data from nhanes</span>
 Shifting away from dealing with pennies, let’s look at bootstrap modeling witht the nhanes dataset. Let’s perform an exploratory data analysis (EDA) of the nhanes data set from the <strong>PPBDS.data</strong> package. The nhanes data is the data from National Health and Nutrition Examination Survey conduced by the Centers for Disease Control and Prevention and is about children and adults in America.</p>
 <p>Load the libraries we will need in this chapter and analyze the nhanes data.</p>
-<div class="sourceCode" id="cb836"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb836-1"><a href="two-parameters.html#cb836-1"></a><span class="kw">library</span>(PPBDS.data)</span>
-<span id="cb836-2"><a href="two-parameters.html#cb836-2"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb836-3"><a href="two-parameters.html#cb836-3"></a><span class="kw">library</span>(broom)</span>
-<span id="cb836-4"><a href="two-parameters.html#cb836-4"></a><span class="kw">library</span>(rsample)</span>
-<span id="cb836-5"><a href="two-parameters.html#cb836-5"></a><span class="kw">library</span>(skimr)</span>
-<span id="cb836-6"><a href="two-parameters.html#cb836-6"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
-<div class="sourceCode" id="cb837"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb837-1"><a href="two-parameters.html#cb837-1"></a><span class="kw">glimpse</span>(nhanes)</span></code></pre></div>
+<div class="sourceCode" id="cb819"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb819-1"><a href="two-parameters.html#cb819-1"></a><span class="kw">library</span>(PPBDS.data)</span>
+<span id="cb819-2"><a href="two-parameters.html#cb819-2"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb819-3"><a href="two-parameters.html#cb819-3"></a><span class="kw">library</span>(broom)</span>
+<span id="cb819-4"><a href="two-parameters.html#cb819-4"></a><span class="kw">library</span>(rsample)</span>
+<span id="cb819-5"><a href="two-parameters.html#cb819-5"></a><span class="kw">library</span>(skimr)</span>
+<span id="cb819-6"><a href="two-parameters.html#cb819-6"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb820"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb820-1"><a href="two-parameters.html#cb820-1"></a><span class="kw">glimpse</span>(nhanes)</span></code></pre></div>
 <pre><code>## Rows: 10,000
 ## Columns: 15
 ## $ survey         &lt;int&gt; 2009, 2009, 2009, 2009, 2009, 2009, 2009, 2009, 2009, …
@@ -2073,11 +2073,11 @@ Shifting away from dealing with pennies, let’s look at bootstrap modeling with
 ## $ sleep          &lt;int&gt; 4, 4, 4, NA, 8, NA, NA, 8, 8, 8, 7, 5, 4, NA, 5, 7, NA…</code></pre>
 <p><code>glimpse()</code> is a really cool function to use to get a quick peek at your data. It basically allows your data to be viewed running across rows. <code>glimpse</code> gives you a sense of what your data is supposed to look like. Based on the glimpse of nhanes, we see that nhanes has data on a diverse array of things like physical attributes, education, and sleep.</p>
 <p>In our examination of nhanes, however, let’s restrict the nhanes data to a subset, focusing on year, gender, and height.</p>
-<div class="sourceCode" id="cb839"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb839-1"><a href="two-parameters.html#cb839-1"></a>ch7 &lt;-<span class="st"> </span>nhanes <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb839-2"><a href="two-parameters.html#cb839-2"></a><span class="st">  </span><span class="kw">select</span>(gender, height, survey)</span></code></pre></div>
+<div class="sourceCode" id="cb822"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb822-1"><a href="two-parameters.html#cb822-1"></a>ch7 &lt;-<span class="st"> </span>nhanes <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb822-2"><a href="two-parameters.html#cb822-2"></a><span class="st">  </span><span class="kw">select</span>(gender, height, survey)</span></code></pre></div>
 <p>Furthermore, it is always smart to look at random samples of our data set.</p>
-<div class="sourceCode" id="cb840"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb840-1"><a href="two-parameters.html#cb840-1"></a>ch7 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb840-2"><a href="two-parameters.html#cb840-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb823"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb823-1"><a href="two-parameters.html#cb823-1"></a>ch7 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb823-2"><a href="two-parameters.html#cb823-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 3
 ##   gender height survey
 ##   &lt;chr&gt;   &lt;dbl&gt;  &lt;int&gt;
@@ -2088,8 +2088,8 @@ Shifting away from dealing with pennies, let’s look at bootstrap modeling with
 ## 5 Male     171.   2011</code></pre>
 <p>Notice how there is a decimal in the height column of ch7 data. This is because <code>height</code> is in <code>&lt;dbl&gt;</code> and not <code>&lt;int&gt;</code>, so <code>height</code> will not be rounded up to the nearest integer.</p>
 <p>Let’s also run <code>glimpse</code> to analyze our new data.</p>
-<div class="sourceCode" id="cb842"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb842-1"><a href="two-parameters.html#cb842-1"></a>ch7 <span class="op">%&gt;%</span></span>
-<span id="cb842-2"><a href="two-parameters.html#cb842-2"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb825"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb825-1"><a href="two-parameters.html#cb825-1"></a>ch7 <span class="op">%&gt;%</span></span>
+<span id="cb825-2"><a href="two-parameters.html#cb825-2"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
 <pre><code>## Rows: 10,000
 ## Columns: 3
 ## $ gender &lt;chr&gt; "Male", "Male", "Male", "Male", "Female", "Male", "Male", "Fem…
@@ -2097,10 +2097,10 @@ Shifting away from dealing with pennies, let’s look at bootstrap modeling with
 ## $ survey &lt;int&gt; 2009, 2009, 2009, 2009, 2009, 2009, 2009, 2009, 2009, 2009, 20…</code></pre>
 <p>Be on the lookout if anything looks suspicious to you. Are there any NA’s in your data set? What types of data are the columns, i.e. why is <code>survey</code> characterized as integer instead of double? Was most of the data collected in 2009? Are there more females than males? There will clearly be more questions to answer, but it is important that you ask these types of questions and notice anything suspicious. A good data scientist will always look thoroughly at the data.</p>
 <p>In addition to <code>glimpse</code>, we can run<code>skim</code> on our data to get standard statistics like mean of our data.</p>
-<div class="sourceCode" id="cb844"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb844-1"><a href="two-parameters.html#cb844-1"></a>ch7 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb844-2"><a href="two-parameters.html#cb844-2"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb827"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb827-1"><a href="two-parameters.html#cb827-1"></a>ch7 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb827-2"><a href="two-parameters.html#cb827-2"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
 <p><!--
-<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-616">TABLE 7.1: </span>Data summary</span><!--</caption>--></p>
+<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-622">TABLE 7.1: </span>Data summary</span><!--</caption>--></p>
 <table><tbody>
 <tr class="odd">
 <td align="left">Name</td>
@@ -2208,16 +2208,16 @@ Shifting away from dealing with pennies, let’s look at bootstrap modeling with
 </table>
 <p>Interesting! Noticed how <code>skim</code> told us that are 353 missing values of height in our subset of data even though we could not find that out so easily using glimpse. Thus, it’s always good to use both <code>skim</code> and <code>glimpse</code> to get a gyst of what our data entails.</p>
 <p>Since we are dealing with NA’s then, let’s filter out the NA’s using <code>drop_na</code>. This we will remove out the rows that have NA’s in them.</p>
-<div class="sourceCode" id="cb845"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb845-1"><a href="two-parameters.html#cb845-1"></a>ch7 &lt;-<span class="st"> </span>nhanes <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb845-2"><a href="two-parameters.html#cb845-2"></a><span class="st">  </span><span class="kw">select</span>(gender, height, survey) <span class="op">%&gt;%</span></span>
-<span id="cb845-3"><a href="two-parameters.html#cb845-3"></a><span class="st">  </span><span class="kw">drop_na</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb828"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb828-1"><a href="two-parameters.html#cb828-1"></a>ch7 &lt;-<span class="st"> </span>nhanes <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb828-2"><a href="two-parameters.html#cb828-2"></a><span class="st">  </span><span class="kw">select</span>(gender, height, survey) <span class="op">%&gt;%</span></span>
+<span id="cb828-3"><a href="two-parameters.html#cb828-3"></a><span class="st">  </span><span class="kw">drop_na</span>()</span></code></pre></div>
 <p>Plot your data.</p>
-<div class="sourceCode" id="cb846"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb846-1"><a href="two-parameters.html#cb846-1"></a>ch7 <span class="op">%&gt;%</span></span>
-<span id="cb846-2"><a href="two-parameters.html#cb846-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">color =</span> gender)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb846-3"><a href="two-parameters.html#cb846-3"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb846-4"><a href="two-parameters.html#cb846-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Height"</span>,</span>
-<span id="cb846-5"><a href="two-parameters.html#cb846-5"></a>       <span class="dt">title =</span> <span class="st">"Height by Gender in Nhanes Dataset"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-618-1.png" width="672">
+<div class="sourceCode" id="cb829"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb829-1"><a href="two-parameters.html#cb829-1"></a>ch7 <span class="op">%&gt;%</span></span>
+<span id="cb829-2"><a href="two-parameters.html#cb829-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height, <span class="dt">color =</span> gender)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb829-3"><a href="two-parameters.html#cb829-3"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb829-4"><a href="two-parameters.html#cb829-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Height"</span>,</span>
+<span id="cb829-5"><a href="two-parameters.html#cb829-5"></a>       <span class="dt">title =</span> <span class="st">"Height by Gender in Nhanes Dataset"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-624-1.png" width="672">
 The plot shows some interesting stuff. Since the distributions of height for both genders are skewed left, we can infer that this data set included children and thus age played a role in our data. Additionally, we can see the the most probable heights for both genders and that men are generally taller than women.</p>
 </div>
 <div id="using-bootstraps-with-nhanes" class="section level2">
@@ -2229,23 +2229,23 @@ The plot shows some interesting stuff. Since the distributions of height for bot
 <!-- Then, create a tibble, first column is ID. Second column is height_sample, which is created by running sample(ch7$height, size = 40, replace = FALSE). Third column is ci, which is result mutate(ci = map(height_sample, ~ create_ci(.)). Fourth column is within_ci, which is TRUE if ci includes the TRUE value and FALSE otherwise. (If you want to have two columns, one for each limit, that is fine.) -->
 <p>We have shown you how to use bootstrap sampling to create confidence intervals for an unknown parameter for which you have created. In other words, we use bootstrap sampling to create our posterior distribution for the average year of pennies in the US during 2009. But we have not yet demonstrated that the bootstrap “works,” that our 95% confidence intervals provide correct coverage. The purpose of this section is to provide that demonstration.</p>
 <p>In this demonstration, let’s play a game! Let’s first filter our data set to just males and the year 2009. We want to estimate the mean and 75th percentile of male height in the year 2009. Obviously, we already know what these statistics are since we can easily calculate them by hand. However, we want to show that the bootstrap works!</p>
-<div class="sourceCode" id="cb847"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb847-1"><a href="two-parameters.html#cb847-1"></a>ch7_male &lt;-<span class="st"> </span>nhanes <span class="op">%&gt;%</span></span>
-<span id="cb847-2"><a href="two-parameters.html#cb847-2"></a><span class="st">  </span><span class="kw">filter</span>(survey <span class="op">==</span><span class="st"> </span><span class="dv">2009</span>, gender <span class="op">==</span><span class="st"> "Male"</span>) <span class="op">%&gt;%</span></span>
-<span id="cb847-3"><a href="two-parameters.html#cb847-3"></a><span class="st">  </span><span class="kw">select</span>(height) <span class="op">%&gt;%</span></span>
-<span id="cb847-4"><a href="two-parameters.html#cb847-4"></a><span class="st">  </span><span class="kw">arrange</span>(height) <span class="op">%&gt;%</span></span>
-<span id="cb847-5"><a href="two-parameters.html#cb847-5"></a><span class="st">  </span><span class="kw">na.omit</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb830"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb830-1"><a href="two-parameters.html#cb830-1"></a>ch7_male &lt;-<span class="st"> </span>nhanes <span class="op">%&gt;%</span></span>
+<span id="cb830-2"><a href="two-parameters.html#cb830-2"></a><span class="st">  </span><span class="kw">filter</span>(survey <span class="op">==</span><span class="st"> </span><span class="dv">2009</span>, gender <span class="op">==</span><span class="st"> "Male"</span>) <span class="op">%&gt;%</span></span>
+<span id="cb830-3"><a href="two-parameters.html#cb830-3"></a><span class="st">  </span><span class="kw">select</span>(height) <span class="op">%&gt;%</span></span>
+<span id="cb830-4"><a href="two-parameters.html#cb830-4"></a><span class="st">  </span><span class="kw">arrange</span>(height) <span class="op">%&gt;%</span></span>
+<span id="cb830-5"><a href="two-parameters.html#cb830-5"></a><span class="st">  </span><span class="kw">na.omit</span>()</span></code></pre></div>
 <p>Noticed how we did <code>arrange(height)</code>, because since we know the 90th percentile is the 2,133 tallest male in the data set, it would be good to look at our data in increasing order. Furthermore, remember how nhanes had lots of NA’s. It would be good to get rid of them here. The true mean in this case is ________ and the true 90th percentile is ________.</p>
 <p>We are now going to estimate both the true mean and 90th percentile using our bootstrap. Remember how in the <code>pennies_sample</code> example, we first used a sample of 50 pennies to create our bootstrap samples. Let’s do something very similar. In this case, let’s take a sample without replacement of 40 of the 2,370 males in our data and look at their heights in 2009. To do so, we run the following command:</p>
-<div class="sourceCode" id="cb848"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb848-1"><a href="two-parameters.html#cb848-1"></a>heights_sample &lt;-<span class="st"> </span><span class="kw">sample_n</span>(ch7_male, <span class="dv">40</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb831"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb831-1"><a href="two-parameters.html#cb831-1"></a>heights_sample &lt;-<span class="st"> </span><span class="kw">sample_n</span>(ch7_male, <span class="dv">40</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <p>Great! So now we have our sample of 40 male heights in 2009. Now you might wonder how this section of this chapter is different from the section with <code>pennies_samples</code>. Well, there are two key differences. First, we know the truth in this case, so we can examine whether or not the bootstrap works. (That is, we pull a sample of 40 and see if the bootstrap confidence interval from that 40 includes the true 90th percentile of the 2,370) Second, note that only the bootstrap will allow us to estimate statistics other than the mean. We can’t use the lm() trick we learned about for pennies as we will find the confidence interval for the 90th percentile, which is a statistic that isn’t the mean.</p>
-<div class="sourceCode" id="cb849"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb849-1"><a href="two-parameters.html#cb849-1"></a><span class="kw">set.seed</span>(<span class="dv">9</span>)</span>
-<span id="cb849-2"><a href="two-parameters.html#cb849-2"></a>virtual_heights &lt;-<span class="st"> </span>heights_sample <span class="op">%&gt;%</span></span>
-<span id="cb849-3"><a href="two-parameters.html#cb849-3"></a><span class="st">  </span><span class="kw">select</span>(height) <span class="op">%&gt;%</span></span>
-<span id="cb849-4"><a href="two-parameters.html#cb849-4"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dt">times =</span> <span class="dv">1000</span>) <span class="op">%&gt;%</span></span>
-<span id="cb849-5"><a href="two-parameters.html#cb849-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.))) <span class="op">%&gt;%</span></span>
-<span id="cb849-6"><a href="two-parameters.html#cb849-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">heights =</span> <span class="kw">map</span>(boot, <span class="op">~</span><span class="st"> </span><span class="kw">pull</span>(., height))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb849-7"><a href="two-parameters.html#cb849-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">height_90th =</span> <span class="kw">map_dbl</span>(heights, <span class="op">~</span><span class="st"> </span><span class="kw">quantile</span>(., <span class="dt">probs =</span> <span class="fl">.90</span>))) </span>
-<span id="cb849-8"><a href="two-parameters.html#cb849-8"></a>virtual_heights</span></code></pre></div>
+<div class="sourceCode" id="cb832"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb832-1"><a href="two-parameters.html#cb832-1"></a><span class="kw">set.seed</span>(<span class="dv">9</span>)</span>
+<span id="cb832-2"><a href="two-parameters.html#cb832-2"></a>virtual_heights &lt;-<span class="st"> </span>heights_sample <span class="op">%&gt;%</span></span>
+<span id="cb832-3"><a href="two-parameters.html#cb832-3"></a><span class="st">  </span><span class="kw">select</span>(height) <span class="op">%&gt;%</span></span>
+<span id="cb832-4"><a href="two-parameters.html#cb832-4"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dt">times =</span> <span class="dv">1000</span>) <span class="op">%&gt;%</span></span>
+<span id="cb832-5"><a href="two-parameters.html#cb832-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.))) <span class="op">%&gt;%</span></span>
+<span id="cb832-6"><a href="two-parameters.html#cb832-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">heights =</span> <span class="kw">map</span>(boot, <span class="op">~</span><span class="st"> </span><span class="kw">pull</span>(., height))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb832-7"><a href="two-parameters.html#cb832-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">height_90th =</span> <span class="kw">map_dbl</span>(heights, <span class="op">~</span><span class="st"> </span><span class="kw">quantile</span>(., <span class="dt">probs =</span> <span class="fl">.90</span>))) </span>
+<span id="cb832-8"><a href="two-parameters.html#cb832-8"></a>virtual_heights</span></code></pre></div>
 <pre><code>## # Bootstrap sampling 
 ## # A tibble: 1,000 x 5
 ##    splits          id            boot              heights    height_90th
@@ -2262,12 +2262,12 @@ The plot shows some interesting stuff. Since the distributions of height for bot
 ## 10 &lt;split [40/16]&gt; Bootstrap0010 &lt;tibble [40 × 1]&gt; &lt;dbl [40]&gt;        182.
 ## # … with 990 more rows</code></pre>
 <p>Let’s also see the posterior distribution for the 90th percentile of male heights in 2009 by creating a ggplot.</p>
-<div class="sourceCode" id="cb851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb851-1"><a href="two-parameters.html#cb851-1"></a>virtual_heights <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb851-2"><a href="two-parameters.html#cb851-2"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
-<span id="cb851-3"><a href="two-parameters.html#cb851-3"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height_90th, <span class="dt">y=</span>..count..<span class="op">/</span><span class="kw">sum</span>(..count..)), <span class="dt">binwidth =</span> <span class="fl">.5</span>, <span class="dt">fill =</span> <span class="st">"red"</span>) <span class="op">+</span></span>
-<span id="cb851-4"><a href="two-parameters.html#cb851-4"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Estimate in 90th Percentile of Male Height"</span>, <span class="dt">y =</span> <span class="st">"Probability"</span>,</span>
-<span id="cb851-5"><a href="two-parameters.html#cb851-5"></a>         <span class="dt">title =</span> <span class="st">"Posterior Distribution for the 90th Percentile of Male Heights in 2009"</span>) </span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-622-1.png" width="672"></p>
+<div class="sourceCode" id="cb834"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb834-1"><a href="two-parameters.html#cb834-1"></a>virtual_heights <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb834-2"><a href="two-parameters.html#cb834-2"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb834-3"><a href="two-parameters.html#cb834-3"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> height_90th, <span class="dt">y=</span>..count..<span class="op">/</span><span class="kw">sum</span>(..count..)), <span class="dt">binwidth =</span> <span class="fl">.5</span>, <span class="dt">fill =</span> <span class="st">"red"</span>) <span class="op">+</span></span>
+<span id="cb834-4"><a href="two-parameters.html#cb834-4"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Estimate in 90th Percentile of Male Height"</span>, <span class="dt">y =</span> <span class="st">"Probability"</span>,</span>
+<span id="cb834-5"><a href="two-parameters.html#cb834-5"></a>         <span class="dt">title =</span> <span class="st">"Posterior Distribution for the 90th Percentile of Male Heights in 2009"</span>) </span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-628-1.png" width="672"></p>
 <p>We have just created the posterior distribution of the 90th percentile from our bootstraps. The histogram appears to be skewed to the right. Frankly, the posterior distribution looks weird, but that is okay because the posterior distribution includes the truth.</p>
 <!-- Bootstrap creates posterior distribution for your estimate of the unknown parametr: the 90th percentile of heights in the 2370 observations from nhanes -->
 <p>DK: Discuss our posterior distribution of the 90th percentile. Why it is weird. Does it include the truth in the 95% interval? Yes!</p>
@@ -2279,25 +2279,25 @@ The plot shows some interesting stuff. Since the distributions of height for bot
 value for the real population. We have taken 1000 bootstrap samples. The bootstrap method suggests that approximately 95% of the time, the true parameter value for 90th percentile falls between the 2.5th percentile of the
 bootstrap samples and the 97.5th percentile. In general, a 95% confidence interval indicates that if 1000 bootstrap samples are taken and a 95% confidence interval is calculated for each resample, then approximately 950 of the 1000 confidence intervals will contain the truth. Sometimes, however, we may take just one bootstrap sample and calculate its confidence interval, but this confidence interval may or may not contain the truth. In other words, the confidence interval generated from that bootstrap sample can over- or underestimate the true value. That is why statisticians usually run many samples like a thousand to see if 95% of the confidence intervals generated contain the truth.</p>
 <p>In this case, we have created 1000 bootstrap samples, and we want to show that the bootstrap works, we will be creating a confidence interval for the 90th percentile for each bootstrap sample. One way to create a confidence interval for each bootstrap function is through a function. Notice how the function we created is basically the same as the bootstrap code, but we have just added a line to create the confidence interval for each bootstrap sample.</p>
-<div class="sourceCode" id="cb852"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb852-1"><a href="two-parameters.html#cb852-1"></a>do_the_bootstrapci &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
-<span id="cb852-2"><a href="two-parameters.html#cb852-2"></a>x <span class="op">%&gt;%</span><span class="st">   </span></span>
-<span id="cb852-3"><a href="two-parameters.html#cb852-3"></a><span class="st">  </span><span class="kw">select</span>(height) <span class="op">%&gt;%</span></span>
-<span id="cb852-4"><a href="two-parameters.html#cb852-4"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dt">times =</span> <span class="dv">1000</span>) <span class="op">%&gt;%</span></span>
-<span id="cb852-5"><a href="two-parameters.html#cb852-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.))) <span class="op">%&gt;%</span></span>
-<span id="cb852-6"><a href="two-parameters.html#cb852-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">heights =</span> <span class="kw">map</span>(boot, <span class="op">~</span><span class="st"> </span><span class="kw">pull</span>(., height))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb852-7"><a href="two-parameters.html#cb852-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">height_90th =</span> <span class="kw">map_dbl</span>(heights, <span class="op">~</span><span class="st"> </span><span class="kw">quantile</span>(., <span class="dt">probs =</span> <span class="fl">0.90</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb852-8"><a href="two-parameters.html#cb852-8"></a><span class="st">  </span><span class="kw">pull</span>(height_90th)  <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb852-9"><a href="two-parameters.html#cb852-9"></a><span class="st">  </span><span class="kw">quantile</span>(., <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
-<span id="cb852-10"><a href="two-parameters.html#cb852-10"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb835"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb835-1"><a href="two-parameters.html#cb835-1"></a>do_the_bootstrapci &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
+<span id="cb835-2"><a href="two-parameters.html#cb835-2"></a>x <span class="op">%&gt;%</span><span class="st">   </span></span>
+<span id="cb835-3"><a href="two-parameters.html#cb835-3"></a><span class="st">  </span><span class="kw">select</span>(height) <span class="op">%&gt;%</span></span>
+<span id="cb835-4"><a href="two-parameters.html#cb835-4"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dt">times =</span> <span class="dv">1000</span>) <span class="op">%&gt;%</span></span>
+<span id="cb835-5"><a href="two-parameters.html#cb835-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.))) <span class="op">%&gt;%</span></span>
+<span id="cb835-6"><a href="two-parameters.html#cb835-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">heights =</span> <span class="kw">map</span>(boot, <span class="op">~</span><span class="st"> </span><span class="kw">pull</span>(., height))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb835-7"><a href="two-parameters.html#cb835-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">height_90th =</span> <span class="kw">map_dbl</span>(heights, <span class="op">~</span><span class="st"> </span><span class="kw">quantile</span>(., <span class="dt">probs =</span> <span class="fl">0.90</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb835-8"><a href="two-parameters.html#cb835-8"></a><span class="st">  </span><span class="kw">pull</span>(height_90th)  <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb835-9"><a href="two-parameters.html#cb835-9"></a><span class="st">  </span><span class="kw">quantile</span>(., <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb835-10"><a href="two-parameters.html#cb835-10"></a>}</span></code></pre></div>
 <p>Let’s not create a tibble to show whether the true value is within each confidence interval generated.</p>
-<div class="sourceCode" id="cb853"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb853-1"><a href="two-parameters.html#cb853-1"></a><span class="kw">set.seed</span>(<span class="dv">9</span>)</span>
-<span id="cb853-2"><a href="two-parameters.html#cb853-2"></a>sims &lt;-<span class="st"> </span><span class="dv">100</span></span>
-<span id="cb853-3"><a href="two-parameters.html#cb853-3"></a></span>
-<span id="cb853-4"><a href="two-parameters.html#cb853-4"></a>bootstrapchecks &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">ID =</span> <span class="dv">1</span><span class="op">:</span>sims) <span class="op">%&gt;%</span></span>
-<span id="cb853-5"><a href="two-parameters.html#cb853-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">heights_samples =</span> <span class="kw">map</span>(ID, <span class="op">~</span><span class="st"> </span><span class="kw">sample_n</span>(ch7_male, <span class="dv">40</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb853-6"><a href="two-parameters.html#cb853-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ci =</span> <span class="kw">map</span>(heights_samples, <span class="op">~</span><span class="st"> </span><span class="kw">do_the_bootstrapci</span>(.))) <span class="op">%&gt;%</span></span>
-<span id="cb853-7"><a href="two-parameters.html#cb853-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">within_ci =</span> <span class="kw">map_lgl</span>(ci, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">between</span>(<span class="fl">184.3</span>, ci[[<span class="dv">1</span>]][<span class="dv">1</span>], ci[[<span class="dv">1</span>]][<span class="dv">2</span>]), <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)))</span>
-<span id="cb853-8"><a href="two-parameters.html#cb853-8"></a>bootstrapchecks</span></code></pre></div>
+<div class="sourceCode" id="cb836"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb836-1"><a href="two-parameters.html#cb836-1"></a><span class="kw">set.seed</span>(<span class="dv">9</span>)</span>
+<span id="cb836-2"><a href="two-parameters.html#cb836-2"></a>sims &lt;-<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb836-3"><a href="two-parameters.html#cb836-3"></a></span>
+<span id="cb836-4"><a href="two-parameters.html#cb836-4"></a>bootstrapchecks &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">ID =</span> <span class="dv">1</span><span class="op">:</span>sims) <span class="op">%&gt;%</span></span>
+<span id="cb836-5"><a href="two-parameters.html#cb836-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">heights_samples =</span> <span class="kw">map</span>(ID, <span class="op">~</span><span class="st"> </span><span class="kw">sample_n</span>(ch7_male, <span class="dv">40</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb836-6"><a href="two-parameters.html#cb836-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ci =</span> <span class="kw">map</span>(heights_samples, <span class="op">~</span><span class="st"> </span><span class="kw">do_the_bootstrapci</span>(.))) <span class="op">%&gt;%</span></span>
+<span id="cb836-7"><a href="two-parameters.html#cb836-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">within_ci =</span> <span class="kw">map_lgl</span>(ci, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">between</span>(<span class="fl">184.3</span>, ci[[<span class="dv">1</span>]][<span class="dv">1</span>], ci[[<span class="dv">1</span>]][<span class="dv">2</span>]), <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)))</span>
+<span id="cb836-8"><a href="two-parameters.html#cb836-8"></a>bootstrapchecks</span></code></pre></div>
 <pre><code>## # A tibble: 100 x 4
 ##       ID heights_samples   ci        within_ci
 ##    &lt;int&gt; &lt;list&gt;            &lt;list&gt;    &lt;lgl&gt;    
@@ -2419,7 +2419,7 @@ We see that of our 100 confidence intervals based on samples of size $n$ = 50, `
 <a href="three-parameters.html"><button class="btn btn-default">Next</button></a>
 </p>
 <p class="build-date">Page built: 
-2020-08-17
+2020-08-21
 </p>
 </div>
 </div>

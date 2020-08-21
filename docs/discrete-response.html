@@ -183,13 +183,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2>
 <span class="header-section-number">12.1</span> Exploratory Data Analysis (EDA)</h2>
 <p>Begin with our usual libraries:</p>
-<div class="sourceCode" id="cb1024"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1024-1"><a href="discrete-response.html#cb1024-1"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb1024-2"><a href="discrete-response.html#cb1024-2"></a><span class="kw">library</span>(broom)</span>
-<span id="cb1024-3"><a href="discrete-response.html#cb1024-3"></a><span class="kw">library</span>(skimr)</span>
-<span id="cb1024-4"><a href="discrete-response.html#cb1024-4"></a><span class="kw">library</span>(PPBDS.data)</span>
-<span id="cb1024-5"><a href="discrete-response.html#cb1024-5"></a><span class="kw">library</span>(tidymodels)</span></code></pre></div>
+<div class="sourceCode" id="cb1007"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1007-1"><a href="discrete-response.html#cb1007-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1007-2"><a href="discrete-response.html#cb1007-2"></a><span class="kw">library</span>(broom)</span>
+<span id="cb1007-3"><a href="discrete-response.html#cb1007-3"></a><span class="kw">library</span>(skimr)</span>
+<span id="cb1007-4"><a href="discrete-response.html#cb1007-4"></a><span class="kw">library</span>(PPBDS.data)</span>
+<span id="cb1007-5"><a href="discrete-response.html#cb1007-5"></a><span class="kw">library</span>(tidymodels)</span></code></pre></div>
 <p>Before we start modeling, let’s perform some exploratory analysis on the dataset we’ll be working with, cces. Cces stands for the Cooperative Congressional Election Study, a study regarding the approval rating of individual voters to their sitting president. Each row captures one voter, some of their demographic information, and how highly they approve (or disaprprove) of the president. Let’s first look at the raw data values by either looking at <code>cces</code> using RStudio’s spreadsheet viewer or by using the <code>glimpse()</code> function from the <strong>dplyr</strong> package:</p>
-<div class="sourceCode" id="cb1025"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1025-1"><a href="discrete-response.html#cb1025-1"></a><span class="kw">glimpse</span>(cces)</span></code></pre></div>
+<div class="sourceCode" id="cb1008"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1008-1"><a href="discrete-response.html#cb1008-1"></a><span class="kw">glimpse</span>(cces)</span></code></pre></div>
 <pre><code>## Rows: 452,755
 ## Columns: 12
 ## $ year        &lt;int&gt; 2006, 2006, 2006, 2006, 2006, 2006, 2006, 2006, 2006, 200…
@@ -205,19 +205,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ approval_ch &lt;chr&gt; "Strongly Disapprove", "Strongly Disapprove", "Strongly D…
 ## $ approval    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 5, 1, 1, 2, 4, 1, 4, 5, 1, 1, 1, 3, 1, …</code></pre>
 <p>We will tweak the data by only looking at observations recorded in the year 2018 so that all the responses are about the same president. We’ll also select the variables that are currently of interest to us. Finally, because this chapter will be dealing with logistic regressions, we want to convert the numeric <code>approval</code> variable into a binary variable. <code>approval</code> is a numeric variable from 1-5 with 5 representing the highest approval of the president. In order to do this, we have to turn approval into a binary variable. 1-2 will be coded to 0 to signify disapproval and 3-5 will be coded to 1 for approval. We will also cast <code>approval</code> as a factor variable rather than a number, which is useful information for models.</p>
-<div class="sourceCode" id="cb1027"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1027-1"><a href="discrete-response.html#cb1027-1"></a>ch12 &lt;-<span class="st"> </span>cces <span class="op">%&gt;%</span></span>
-<span id="cb1027-2"><a href="discrete-response.html#cb1027-2"></a><span class="st">  </span><span class="kw">filter</span>(year <span class="op">==</span><span class="st"> </span><span class="dv">2018</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1027-3"><a href="discrete-response.html#cb1027-3"></a><span class="st">  </span><span class="kw">select</span>(state, age, gender, race, education, ideology, approval) <span class="op">%&gt;%</span></span>
-<span id="cb1027-4"><a href="discrete-response.html#cb1027-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">as.factor</span>(<span class="kw">case_when</span>(</span>
-<span id="cb1027-5"><a href="discrete-response.html#cb1027-5"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
-<span id="cb1027-6"><a href="discrete-response.html#cb1027-6"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
-<span id="cb1027-7"><a href="discrete-response.html#cb1027-7"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
-<span id="cb1027-8"><a href="discrete-response.html#cb1027-8"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
-<span id="cb1027-9"><a href="discrete-response.html#cb1027-9"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb1010"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1010-1"><a href="discrete-response.html#cb1010-1"></a>ch12 &lt;-<span class="st"> </span>cces <span class="op">%&gt;%</span></span>
+<span id="cb1010-2"><a href="discrete-response.html#cb1010-2"></a><span class="st">  </span><span class="kw">filter</span>(year <span class="op">==</span><span class="st"> </span><span class="dv">2018</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1010-3"><a href="discrete-response.html#cb1010-3"></a><span class="st">  </span><span class="kw">select</span>(state, age, gender, race, education, ideology, approval) <span class="op">%&gt;%</span></span>
+<span id="cb1010-4"><a href="discrete-response.html#cb1010-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">as.factor</span>(<span class="kw">case_when</span>(</span>
+<span id="cb1010-5"><a href="discrete-response.html#cb1010-5"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb1010-6"><a href="discrete-response.html#cb1010-6"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb1010-7"><a href="discrete-response.html#cb1010-7"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb1010-8"><a href="discrete-response.html#cb1010-8"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb1010-9"><a href="discrete-response.html#cb1010-9"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>)))</span></code></pre></div>
 <p>From this, we can gather that there are 16 variables. Notably, there are 60,000 observations even after filtering only for the year 2018.</p>
 <p>Let’s also display a random sample of 5 rows of the 60,000 rows.</p>
-<div class="sourceCode" id="cb1028"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1028-1"><a href="discrete-response.html#cb1028-1"></a>ch12 <span class="op">%&gt;%</span></span>
-<span id="cb1028-2"><a href="discrete-response.html#cb1028-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1011"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1011-1"><a href="discrete-response.html#cb1011-1"></a>ch12 <span class="op">%&gt;%</span></span>
+<span id="cb1011-2"><a href="discrete-response.html#cb1011-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 7
 ##   state          age gender race     education    ideology     approval
 ##   &lt;chr&gt;        &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;    &lt;fct&gt;        &lt;fct&gt;        &lt;fct&gt;   
@@ -227,10 +227,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4 Florida         76 Female White    Some College Moderate     1       
 ## 5 Minnesota       24 Female White    4-Year       Not Sure     0</code></pre>
 <p>Now, let’s compute summary statistics. Let’s use the <code>skim()</code> function from the <code>skimr</code> package.</p>
-<div class="sourceCode" id="cb1030"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1030-1"><a href="discrete-response.html#cb1030-1"></a>ch12 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1030-2"><a href="discrete-response.html#cb1030-2"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1013"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1013-1"><a href="discrete-response.html#cb1013-1"></a>ch12 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1013-2"><a href="discrete-response.html#cb1013-2"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
 <p><!--
-<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-779">TABLE 12.1: </span>Data summary</span><!--</caption>--></p>
+<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-785">TABLE 12.1: </span>Data summary</span><!--</caption>--></p>
 <table><tbody>
 <tr class="odd">
 <td align="left">Name</td>
@@ -385,104 +385,104 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr></tbody>
 </table>
 <p>You’ll notice that we are missing data for our ideology and approval variables. The <code>complete_rate</code> column tells us that approval has 3% missing observations and ideology has 0.7% missing observations. Let’s use the function <code>drop_na()</code> to get rid of these missing observations so they don’t interfere with our models later in the chapter:</p>
-<div class="sourceCode" id="cb1031"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1031-1"><a href="discrete-response.html#cb1031-1"></a>ch12 &lt;-<span class="st"> </span>cces <span class="op">%&gt;%</span></span>
-<span id="cb1031-2"><a href="discrete-response.html#cb1031-2"></a><span class="st">  </span><span class="kw">filter</span>(year <span class="op">==</span><span class="st"> </span><span class="dv">2018</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1031-3"><a href="discrete-response.html#cb1031-3"></a><span class="st">  </span><span class="kw">select</span>(state, age, gender, race, education, ideology, approval) <span class="op">%&gt;%</span></span>
-<span id="cb1031-4"><a href="discrete-response.html#cb1031-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">as.factor</span>(<span class="kw">case_when</span>(</span>
-<span id="cb1031-5"><a href="discrete-response.html#cb1031-5"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
-<span id="cb1031-6"><a href="discrete-response.html#cb1031-6"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
-<span id="cb1031-7"><a href="discrete-response.html#cb1031-7"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
-<span id="cb1031-8"><a href="discrete-response.html#cb1031-8"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
-<span id="cb1031-9"><a href="discrete-response.html#cb1031-9"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1031-10"><a href="discrete-response.html#cb1031-10"></a><span class="st">  </span><span class="kw">drop_na</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1014"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1014-1"><a href="discrete-response.html#cb1014-1"></a>ch12 &lt;-<span class="st"> </span>cces <span class="op">%&gt;%</span></span>
+<span id="cb1014-2"><a href="discrete-response.html#cb1014-2"></a><span class="st">  </span><span class="kw">filter</span>(year <span class="op">==</span><span class="st"> </span><span class="dv">2018</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1014-3"><a href="discrete-response.html#cb1014-3"></a><span class="st">  </span><span class="kw">select</span>(state, age, gender, race, education, ideology, approval) <span class="op">%&gt;%</span></span>
+<span id="cb1014-4"><a href="discrete-response.html#cb1014-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">as.factor</span>(<span class="kw">case_when</span>(</span>
+<span id="cb1014-5"><a href="discrete-response.html#cb1014-5"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb1014-6"><a href="discrete-response.html#cb1014-6"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb1014-7"><a href="discrete-response.html#cb1014-7"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb1014-8"><a href="discrete-response.html#cb1014-8"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">4</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb1014-9"><a href="discrete-response.html#cb1014-9"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">5</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1014-10"><a href="discrete-response.html#cb1014-10"></a><span class="st">  </span><span class="kw">drop_na</span>()</span></code></pre></div>
 <p>To complete our exploratory data analysis, let’s create some data visualizations.</p>
 <p>The primary response variable left in our dataset is <code>approval</code>, a (newly) binary variable with 0 representing disapproval of the President and 1 representing approval. So, let’s start by looking at the overall distribution of <code>approval</code>.</p>
-<div class="sourceCode" id="cb1032"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1032-1"><a href="discrete-response.html#cb1032-1"></a>ch12 <span class="op">%&gt;%</span></span>
-<span id="cb1032-2"><a href="discrete-response.html#cb1032-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> approval)) <span class="op">+</span></span>
-<span id="cb1032-3"><a href="discrete-response.html#cb1032-3"></a><span class="st">    </span><span class="kw">geom_bar</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1032-4"><a href="discrete-response.html#cb1032-4"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"Count"</span>,</span>
-<span id="cb1032-5"><a href="discrete-response.html#cb1032-5"></a>         <span class="dt">x =</span> <span class="st">"Presidential Approval"</span>,</span>
-<span id="cb1032-6"><a href="discrete-response.html#cb1032-6"></a>         <span class="dt">title =</span> <span class="st">"Presidential Approval in 2018"</span>) </span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-781-1.png" width="672"></p>
+<div class="sourceCode" id="cb1015"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1015-1"><a href="discrete-response.html#cb1015-1"></a>ch12 <span class="op">%&gt;%</span></span>
+<span id="cb1015-2"><a href="discrete-response.html#cb1015-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> approval)) <span class="op">+</span></span>
+<span id="cb1015-3"><a href="discrete-response.html#cb1015-3"></a><span class="st">    </span><span class="kw">geom_bar</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1015-4"><a href="discrete-response.html#cb1015-4"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"Count"</span>,</span>
+<span id="cb1015-5"><a href="discrete-response.html#cb1015-5"></a>         <span class="dt">x =</span> <span class="st">"Presidential Approval"</span>,</span>
+<span id="cb1015-6"><a href="discrete-response.html#cb1015-6"></a>         <span class="dt">title =</span> <span class="st">"Presidential Approval in 2018"</span>) </span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-787-1.png" width="672"></p>
 <p>According to this graph, there are roughly 10,000 more voters who disapprove of Trump. To make things more interesting, let’s look at <code>approval</code> across gender and then race.</p>
-<div class="sourceCode" id="cb1033"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1033-1"><a href="discrete-response.html#cb1033-1"></a>ch12 <span class="op">%&gt;%</span></span>
-<span id="cb1033-2"><a href="discrete-response.html#cb1033-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> approval, <span class="dt">fill =</span> gender)) <span class="op">+</span></span>
-<span id="cb1033-3"><a href="discrete-response.html#cb1033-3"></a><span class="st">  </span><span class="kw">geom_bar</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1033-4"><a href="discrete-response.html#cb1033-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"Count"</span>,</span>
-<span id="cb1033-5"><a href="discrete-response.html#cb1033-5"></a>       <span class="dt">x =</span> <span class="st">"Presidential Approval"</span>,</span>
-<span id="cb1033-6"><a href="discrete-response.html#cb1033-6"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval in 2018 by Gender"</span>) <span class="op">+</span></span>
-<span id="cb1033-7"><a href="discrete-response.html#cb1033-7"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>gender) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1033-8"><a href="discrete-response.html#cb1033-8"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-782-1.png" width="672"></p>
+<div class="sourceCode" id="cb1016"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1016-1"><a href="discrete-response.html#cb1016-1"></a>ch12 <span class="op">%&gt;%</span></span>
+<span id="cb1016-2"><a href="discrete-response.html#cb1016-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> approval, <span class="dt">fill =</span> gender)) <span class="op">+</span></span>
+<span id="cb1016-3"><a href="discrete-response.html#cb1016-3"></a><span class="st">  </span><span class="kw">geom_bar</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1016-4"><a href="discrete-response.html#cb1016-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"Count"</span>,</span>
+<span id="cb1016-5"><a href="discrete-response.html#cb1016-5"></a>       <span class="dt">x =</span> <span class="st">"Presidential Approval"</span>,</span>
+<span id="cb1016-6"><a href="discrete-response.html#cb1016-6"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval in 2018 by Gender"</span>) <span class="op">+</span></span>
+<span id="cb1016-7"><a href="discrete-response.html#cb1016-7"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>gender) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1016-8"><a href="discrete-response.html#cb1016-8"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-788-1.png" width="672"></p>
 <p>It seems that females have higher rates of disapproval of the President than males have.</p>
-<div class="sourceCode" id="cb1034"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1034-1"><a href="discrete-response.html#cb1034-1"></a>ch12 <span class="op">%&gt;%</span></span>
-<span id="cb1034-2"><a href="discrete-response.html#cb1034-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> approval, <span class="dt">x =</span> race, <span class="dt">y =</span> age)) <span class="op">+</span></span>
-<span id="cb1034-3"><a href="discrete-response.html#cb1034-3"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">position=</span><span class="st">"fill"</span>, <span class="dt">stat=</span><span class="st">"identity"</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1034-4"><a href="discrete-response.html#cb1034-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"Percentage"</span>,</span>
-<span id="cb1034-5"><a href="discrete-response.html#cb1034-5"></a>       <span class="dt">x =</span> <span class="st">"Presidential Approval"</span>,</span>
-<span id="cb1034-6"><a href="discrete-response.html#cb1034-6"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval in 2018 by Race"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-783-1.png" width="672"></p>
+<div class="sourceCode" id="cb1017"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1017-1"><a href="discrete-response.html#cb1017-1"></a>ch12 <span class="op">%&gt;%</span></span>
+<span id="cb1017-2"><a href="discrete-response.html#cb1017-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> approval, <span class="dt">x =</span> race, <span class="dt">y =</span> age)) <span class="op">+</span></span>
+<span id="cb1017-3"><a href="discrete-response.html#cb1017-3"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">position=</span><span class="st">"fill"</span>, <span class="dt">stat=</span><span class="st">"identity"</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1017-4"><a href="discrete-response.html#cb1017-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"Percentage"</span>,</span>
+<span id="cb1017-5"><a href="discrete-response.html#cb1017-5"></a>       <span class="dt">x =</span> <span class="st">"Presidential Approval"</span>,</span>
+<span id="cb1017-6"><a href="discrete-response.html#cb1017-6"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval in 2018 by Race"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-789-1.png" width="672"></p>
 <p>This segmented bar graph shows us the percentage of each race that approved of the president.We can see that the disapproving majority in the overall data is present across most races.</p>
 <p>Now, let’s use our state variable. Let’s create a scatterplot with <code>approval</code> to see how the rate of approval varied across states.</p>
-<div class="sourceCode" id="cb1035"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1035-1"><a href="discrete-response.html#cb1035-1"></a>ch12 <span class="op">%&gt;%</span></span>
-<span id="cb1035-2"><a href="discrete-response.html#cb1035-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">as.integer</span>(approval)) <span class="op">%&gt;%</span></span>
-<span id="cb1035-3"><a href="discrete-response.html#cb1035-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">case_when</span>(</span>
-<span id="cb1035-4"><a href="discrete-response.html#cb1035-4"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
-<span id="cb1035-5"><a href="discrete-response.html#cb1035-5"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb1035-6"><a href="discrete-response.html#cb1035-6"></a><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span></span>
-<span id="cb1035-7"><a href="discrete-response.html#cb1035-7"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">avg_approval =</span> <span class="kw">sum</span>(approval)<span class="op">/</span><span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb1035-8"><a href="discrete-response.html#cb1035-8"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> avg_approval, <span class="dt">y =</span> <span class="kw">reorder</span>(state, avg_approval))) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1035-9"><a href="discrete-response.html#cb1035-9"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1035-10"><a href="discrete-response.html#cb1035-10"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"State"</span>,</span>
-<span id="cb1035-11"><a href="discrete-response.html#cb1035-11"></a>       <span class="dt">x =</span> <span class="st">"Approval Rate of President"</span>,</span>
-<span id="cb1035-12"><a href="discrete-response.html#cb1035-12"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval by State"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-784-1.png" width="672"></p>
+<div class="sourceCode" id="cb1018"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1018-1"><a href="discrete-response.html#cb1018-1"></a>ch12 <span class="op">%&gt;%</span></span>
+<span id="cb1018-2"><a href="discrete-response.html#cb1018-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">as.integer</span>(approval)) <span class="op">%&gt;%</span></span>
+<span id="cb1018-3"><a href="discrete-response.html#cb1018-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">case_when</span>(</span>
+<span id="cb1018-4"><a href="discrete-response.html#cb1018-4"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb1018-5"><a href="discrete-response.html#cb1018-5"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb1018-6"><a href="discrete-response.html#cb1018-6"></a><span class="st">  </span><span class="kw">group_by</span>(state) <span class="op">%&gt;%</span></span>
+<span id="cb1018-7"><a href="discrete-response.html#cb1018-7"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">avg_approval =</span> <span class="kw">sum</span>(approval)<span class="op">/</span><span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb1018-8"><a href="discrete-response.html#cb1018-8"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> avg_approval, <span class="dt">y =</span> <span class="kw">reorder</span>(state, avg_approval))) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1018-9"><a href="discrete-response.html#cb1018-9"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1018-10"><a href="discrete-response.html#cb1018-10"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"State"</span>,</span>
+<span id="cb1018-11"><a href="discrete-response.html#cb1018-11"></a>       <span class="dt">x =</span> <span class="st">"Approval Rate of President"</span>,</span>
+<span id="cb1018-12"><a href="discrete-response.html#cb1018-12"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval by State"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-790-1.png" width="672"></p>
 </div>
 <div id="the-question" class="section level2">
 <h2>
 <span class="header-section-number">12.2</span> The Question</h2>
 <p>Now that we’ve seen some EDA for the general dataset, let’s narrow our focus. When creating models, it is important to have a specific question in mind that you can use your model to answer. For our chapter, that question will be “How do Blacks and Hispanic voters vary in their support of the President?” At the end of this chapter, we’ll use the three models we created to address answer this. Before then, however, we’ll do some exploratory data analysis on this part of the data.</p>
 <p>First, we’ll filter <code>race</code> to two groups: Black or Hispanic. We’ll also code approval to be an integer, which will help when doing the math for our graphs.</p>
-<div class="sourceCode" id="cb1036"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1036-1"><a href="discrete-response.html#cb1036-1"></a>ch12 &lt;-<span class="st"> </span>ch12 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1036-2"><a href="discrete-response.html#cb1036-2"></a><span class="st">  </span><span class="kw">filter</span>(race <span class="op">==</span><span class="st"> "Black"</span> <span class="op">|</span><span class="st"> </span>race <span class="op">==</span><span class="st"> "Hispanic"</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1036-3"><a href="discrete-response.html#cb1036-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">as.integer</span>(approval)) <span class="op">%&gt;%</span></span>
-<span id="cb1036-4"><a href="discrete-response.html#cb1036-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">case_when</span>(</span>
-<span id="cb1036-5"><a href="discrete-response.html#cb1036-5"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
-<span id="cb1036-6"><a href="discrete-response.html#cb1036-6"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb1019"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1019-1"><a href="discrete-response.html#cb1019-1"></a>ch12 &lt;-<span class="st"> </span>ch12 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1019-2"><a href="discrete-response.html#cb1019-2"></a><span class="st">  </span><span class="kw">filter</span>(race <span class="op">==</span><span class="st"> "Black"</span> <span class="op">|</span><span class="st"> </span>race <span class="op">==</span><span class="st"> "Hispanic"</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1019-3"><a href="discrete-response.html#cb1019-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">as.integer</span>(approval)) <span class="op">%&gt;%</span></span>
+<span id="cb1019-4"><a href="discrete-response.html#cb1019-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> <span class="kw">case_when</span>(</span>
+<span id="cb1019-5"><a href="discrete-response.html#cb1019-5"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>,</span>
+<span id="cb1019-6"><a href="discrete-response.html#cb1019-6"></a>    approval <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>))</span></code></pre></div>
 <p>Now, let’s look at a basic comparison of their rates of approval.</p>
-<div class="sourceCode" id="cb1037"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1037-1"><a href="discrete-response.html#cb1037-1"></a>ch12 <span class="op">%&gt;%</span></span>
-<span id="cb1037-2"><a href="discrete-response.html#cb1037-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> approval, <span class="dt">fill =</span> race)) <span class="op">+</span></span>
-<span id="cb1037-3"><a href="discrete-response.html#cb1037-3"></a><span class="st">  </span><span class="kw">geom_bar</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1037-4"><a href="discrete-response.html#cb1037-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"Count"</span>,</span>
-<span id="cb1037-5"><a href="discrete-response.html#cb1037-5"></a>       <span class="dt">x =</span> <span class="st">"Presidential Approval"</span>,</span>
-<span id="cb1037-6"><a href="discrete-response.html#cb1037-6"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval in 2018 for Black and Hispanic voters"</span>) <span class="op">+</span></span>
-<span id="cb1037-7"><a href="discrete-response.html#cb1037-7"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>race)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-786-1.png" width="672"></p>
+<div class="sourceCode" id="cb1020"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1020-1"><a href="discrete-response.html#cb1020-1"></a>ch12 <span class="op">%&gt;%</span></span>
+<span id="cb1020-2"><a href="discrete-response.html#cb1020-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> approval, <span class="dt">fill =</span> race)) <span class="op">+</span></span>
+<span id="cb1020-3"><a href="discrete-response.html#cb1020-3"></a><span class="st">  </span><span class="kw">geom_bar</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1020-4"><a href="discrete-response.html#cb1020-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">"Count"</span>,</span>
+<span id="cb1020-5"><a href="discrete-response.html#cb1020-5"></a>       <span class="dt">x =</span> <span class="st">"Presidential Approval"</span>,</span>
+<span id="cb1020-6"><a href="discrete-response.html#cb1020-6"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval in 2018 for Black and Hispanic voters"</span>) <span class="op">+</span></span>
+<span id="cb1020-7"><a href="discrete-response.html#cb1020-7"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>race)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-792-1.png" width="672"></p>
 <p>We can get two important pieces of information from this graph. The first observation is that, although it seems there are a few more black voters, these populations are very similar in size. The second is there is slightly stronger disapproval of the President among Black voters.</p>
 <p>However, we must do further analyses to better understand Black and Hispanic voters. Looking at how different covariates affect approval rate within the group is a great next step. Let’s start with age:</p>
-<div class="sourceCode" id="cb1038"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1038-1"><a href="discrete-response.html#cb1038-1"></a>ch12 <span class="op">%&gt;%</span></span>
-<span id="cb1038-2"><a href="discrete-response.html#cb1038-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, race) <span class="op">%&gt;%</span></span>
-<span id="cb1038-3"><a href="discrete-response.html#cb1038-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">approval_rate =</span> <span class="kw">sum</span>(approval)<span class="op">/</span><span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb1038-4"><a href="discrete-response.html#cb1038-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> approval_rate, <span class="dt">group =</span> race, <span class="dt">color =</span> race)) <span class="op">+</span></span>
-<span id="cb1038-5"><a href="discrete-response.html#cb1038-5"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
-<span id="cb1038-6"><a href="discrete-response.html#cb1038-6"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1038-7"><a href="discrete-response.html#cb1038-7"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Age"</span>,</span>
-<span id="cb1038-8"><a href="discrete-response.html#cb1038-8"></a>       <span class="dt">y =</span> <span class="st">"Approval Rate"</span>,</span>
-<span id="cb1038-9"><a href="discrete-response.html#cb1038-9"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval Rate by Age"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-787-1.png" width="672"></p>
+<div class="sourceCode" id="cb1021"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1021-1"><a href="discrete-response.html#cb1021-1"></a>ch12 <span class="op">%&gt;%</span></span>
+<span id="cb1021-2"><a href="discrete-response.html#cb1021-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, race) <span class="op">%&gt;%</span></span>
+<span id="cb1021-3"><a href="discrete-response.html#cb1021-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">approval_rate =</span> <span class="kw">sum</span>(approval)<span class="op">/</span><span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb1021-4"><a href="discrete-response.html#cb1021-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> approval_rate, <span class="dt">group =</span> race, <span class="dt">color =</span> race)) <span class="op">+</span></span>
+<span id="cb1021-5"><a href="discrete-response.html#cb1021-5"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb1021-6"><a href="discrete-response.html#cb1021-6"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1021-7"><a href="discrete-response.html#cb1021-7"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Age"</span>,</span>
+<span id="cb1021-8"><a href="discrete-response.html#cb1021-8"></a>       <span class="dt">y =</span> <span class="st">"Approval Rate"</span>,</span>
+<span id="cb1021-9"><a href="discrete-response.html#cb1021-9"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval Rate by Age"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-793-1.png" width="672"></p>
 <p>You can see that the difference in the approval ratings increases with age. Older Hispanic voters approve more strongly of the President while older Black voters approve of the President at even lower rates than younger Black voters. This graph shows us why covariates are important. Even adding just one – age – added a new complexity to our understanding of question at hand.</p>
 <p>Now, let’s add another variable by throwing gender in the mix.</p>
-<div class="sourceCode" id="cb1039"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1039-1"><a href="discrete-response.html#cb1039-1"></a>ch12 <span class="op">%&gt;%</span></span>
-<span id="cb1039-2"><a href="discrete-response.html#cb1039-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, race, gender) <span class="op">%&gt;%</span></span>
-<span id="cb1039-3"><a href="discrete-response.html#cb1039-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">approval_rate =</span> <span class="kw">sum</span>(approval)<span class="op">/</span><span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb1039-4"><a href="discrete-response.html#cb1039-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> approval_rate, <span class="dt">group =</span> race, <span class="dt">color =</span> race)) <span class="op">+</span></span>
-<span id="cb1039-5"><a href="discrete-response.html#cb1039-5"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
-<span id="cb1039-6"><a href="discrete-response.html#cb1039-6"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1039-7"><a href="discrete-response.html#cb1039-7"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>gender)<span class="op">+</span></span>
-<span id="cb1039-8"><a href="discrete-response.html#cb1039-8"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Age"</span>,</span>
-<span id="cb1039-9"><a href="discrete-response.html#cb1039-9"></a>       <span class="dt">y =</span> <span class="st">"Approval Rate"</span>,</span>
-<span id="cb1039-10"><a href="discrete-response.html#cb1039-10"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval Rate by Age and Gender"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-788-1.png" width="672"></p>
+<div class="sourceCode" id="cb1022"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1022-1"><a href="discrete-response.html#cb1022-1"></a>ch12 <span class="op">%&gt;%</span></span>
+<span id="cb1022-2"><a href="discrete-response.html#cb1022-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, race, gender) <span class="op">%&gt;%</span></span>
+<span id="cb1022-3"><a href="discrete-response.html#cb1022-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">approval_rate =</span> <span class="kw">sum</span>(approval)<span class="op">/</span><span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb1022-4"><a href="discrete-response.html#cb1022-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> approval_rate, <span class="dt">group =</span> race, <span class="dt">color =</span> race)) <span class="op">+</span></span>
+<span id="cb1022-5"><a href="discrete-response.html#cb1022-5"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb1022-6"><a href="discrete-response.html#cb1022-6"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1022-7"><a href="discrete-response.html#cb1022-7"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>gender)<span class="op">+</span></span>
+<span id="cb1022-8"><a href="discrete-response.html#cb1022-8"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Age"</span>,</span>
+<span id="cb1022-9"><a href="discrete-response.html#cb1022-9"></a>       <span class="dt">y =</span> <span class="st">"Approval Rate"</span>,</span>
+<span id="cb1022-10"><a href="discrete-response.html#cb1022-10"></a>       <span class="dt">title =</span> <span class="st">"Presidential Approval Rate by Age and Gender"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-794-1.png" width="672"></p>
 <p>Now that we’ve faceted by gender, we can see that the trends from the previous graph don’t vary much from male to female.</p>
 <div id="themes" class="section level3">
 <h3>
@@ -984,20 +984,20 @@ FIGURE 12.1: Linear vs. logistic regression models for binary response data.
 <h3>
 <span class="header-section-number">12.3.2</span> One categorical explanatory variable</h3>
 <p>Let’s start our modeling by predicting <code>approval</code> with a single categorical explanatory variable. We’ll start by modeling our binary <code>approval</code> with the categorical variable <code>race</code>. Like last chapter, we’ll be using tools from the <strong>tidymodels</strong> package. Rather than having to use a different function each time we construct a model (choosing between lm(), glm(), and other modelling function), <strong>tidymodels</strong> streamlines the synthax for any model we want to construct.</p>
-<div class="sourceCode" id="cb1040"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1040-1"><a href="discrete-response.html#cb1040-1"></a><span class="kw">library</span>(tidymodels)</span></code></pre></div>
+<div class="sourceCode" id="cb1023"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1023-1"><a href="discrete-response.html#cb1023-1"></a><span class="kw">library</span>(tidymodels)</span></code></pre></div>
 <p>First, in the <strong>tidymodels</strong> workflow, we have to save the <em>model specification</em>. We do that using two functions: <code>logistic_reg()</code> and <code>set_engine()</code>.</p>
-<div class="sourceCode" id="cb1041"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1041-1"><a href="discrete-response.html#cb1041-1"></a>race_mod &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>() <span class="op">%&gt;%</span></span>
-<span id="cb1041-2"><a href="discrete-response.html#cb1041-2"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">"glm"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1024"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1024-1"><a href="discrete-response.html#cb1024-1"></a>race_mod &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1024-2"><a href="discrete-response.html#cb1024-2"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">"glm"</span>)</span></code></pre></div>
 <p><code>logistic_reg()</code> says that we want to fit a logistic regression, and <code>set_engine("glm")</code> specifies that we want to do it using <code>glm()</code>. By unifying the syntax, it means that you don’t have to memorize how a lot of different functions work to use different model types, from glm to random forests that we’ll use later in the chapter. <code>glm()</code> operates very similarly to <code>lm()</code>, but will instead model along the red line in Figure <a href="discrete-response.html#fig:OLSlogistic">12.1</a> rather than the blue line when using a logistic outcome variable.</p>
 <p>Note that our new object, <code>race_mod</code>, doesn’t contain our data or a formula. In order actually to fit our model, we need to feed <code>race_mod</code> to a function called <code>fit()</code>. <code>fit()</code> takes as its first argument the model specification, but otherwise it operates similarly to <code>lm()</code> and <code>glm()</code>. We have to wrap <code>approval</code> in <code>factor()</code>, because <code>fit()</code> is more careful than <code>glm()</code> in requiring that classification models actually have categorical outcomes.</p>
-<div class="sourceCode" id="cb1042"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1042-1"><a href="discrete-response.html#cb1042-1"></a>race_fit &lt;-<span class="st"> </span><span class="kw">fit</span>(race_mod,</span>
-<span id="cb1042-2"><a href="discrete-response.html#cb1042-2"></a>                    <span class="kw">factor</span>(approval) <span class="op">~</span><span class="st"> </span>race,</span>
-<span id="cb1042-3"><a href="discrete-response.html#cb1042-3"></a>                    <span class="dt">data =</span> ch12)</span></code></pre></div>
+<div class="sourceCode" id="cb1025"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1025-1"><a href="discrete-response.html#cb1025-1"></a>race_fit &lt;-<span class="st"> </span><span class="kw">fit</span>(race_mod,</span>
+<span id="cb1025-2"><a href="discrete-response.html#cb1025-2"></a>                    <span class="kw">factor</span>(approval) <span class="op">~</span><span class="st"> </span>race,</span>
+<span id="cb1025-3"><a href="discrete-response.html#cb1025-3"></a>                    <span class="dt">data =</span> ch12)</span></code></pre></div>
 <p>One we have fit the model, how can we use it? The <code>glm</code> object is still stored in <code>race_fit$fit</code>, so we can access that and use <code>tidy()</code>, just like we did before:</p>
-<div class="sourceCode" id="cb1043"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1043-1"><a href="discrete-response.html#cb1043-1"></a>race_fit<span class="op">$</span>fit <span class="op">%&gt;%</span></span>
-<span id="cb1043-2"><a href="discrete-response.html#cb1043-2"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1043-3"><a href="discrete-response.html#cb1043-3"></a><span class="st">  </span><span class="kw">select</span>(term, estimate, conf.low, conf.high) <span class="op">%&gt;%</span></span>
-<span id="cb1043-4"><a href="discrete-response.html#cb1043-4"></a><span class="st">  </span><span class="kw">gt</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1026"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1026-1"><a href="discrete-response.html#cb1026-1"></a>race_fit<span class="op">$</span>fit <span class="op">%&gt;%</span></span>
+<span id="cb1026-2"><a href="discrete-response.html#cb1026-2"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1026-3"><a href="discrete-response.html#cb1026-3"></a><span class="st">  </span><span class="kw">select</span>(term, estimate, conf.low, conf.high) <span class="op">%&gt;%</span></span>
+<span id="cb1026-4"><a href="discrete-response.html#cb1026-4"></a><span class="st">  </span><span class="kw">gt</span>()</span></code></pre></div>
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
@@ -1496,17 +1496,17 @@ Now, the `.resid` value is the difference between the actual outcome (`approval`
 <h3>
 <span class="header-section-number">12.3.3</span> One numerical explanatory variable</h3>
 <p>We’ll now predict <code>approval</code> with a single numerical explanatory variable, <code>age</code> using <strong>tidymodels</strong>. We’ll begin, once again, by setting our engine to <code>glm</code>.</p>
-<div class="sourceCode" id="cb1044"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1044-1"><a href="discrete-response.html#cb1044-1"></a>age_mod &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>() <span class="op">%&gt;%</span></span>
-<span id="cb1044-2"><a href="discrete-response.html#cb1044-2"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">"glm"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1027"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1027-1"><a href="discrete-response.html#cb1027-1"></a>age_mod &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1027-2"><a href="discrete-response.html#cb1027-2"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">"glm"</span>)</span></code></pre></div>
 <p>Now, we’ll use <code>fit</code> to add our formula to the model.</p>
-<div class="sourceCode" id="cb1045"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1045-1"><a href="discrete-response.html#cb1045-1"></a>age_fit &lt;-<span class="st"> </span><span class="kw">fit</span>(age_mod,</span>
-<span id="cb1045-2"><a href="discrete-response.html#cb1045-2"></a>               <span class="kw">factor</span>(approval) <span class="op">~</span><span class="st"> </span>age,</span>
-<span id="cb1045-3"><a href="discrete-response.html#cb1045-3"></a>               <span class="dt">data =</span> ch12)</span></code></pre></div>
+<div class="sourceCode" id="cb1028"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1028-1"><a href="discrete-response.html#cb1028-1"></a>age_fit &lt;-<span class="st"> </span><span class="kw">fit</span>(age_mod,</span>
+<span id="cb1028-2"><a href="discrete-response.html#cb1028-2"></a>               <span class="kw">factor</span>(approval) <span class="op">~</span><span class="st"> </span>age,</span>
+<span id="cb1028-3"><a href="discrete-response.html#cb1028-3"></a>               <span class="dt">data =</span> ch12)</span></code></pre></div>
 <p>We’ll use <code>tidy()</code> to view the <code>glm</code> object is still stored in <code>race_fit$fit</code>.</p>
-<div class="sourceCode" id="cb1046"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1046-1"><a href="discrete-response.html#cb1046-1"></a>age_fit<span class="op">$</span>fit <span class="op">%&gt;%</span></span>
-<span id="cb1046-2"><a href="discrete-response.html#cb1046-2"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1046-3"><a href="discrete-response.html#cb1046-3"></a><span class="st">  </span><span class="kw">select</span>(term, estimate, conf.low, conf.high) <span class="op">%&gt;%</span></span>
-<span id="cb1046-4"><a href="discrete-response.html#cb1046-4"></a><span class="st">  </span><span class="kw">gt</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1029"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1029-1"><a href="discrete-response.html#cb1029-1"></a>age_fit<span class="op">$</span>fit <span class="op">%&gt;%</span></span>
+<span id="cb1029-2"><a href="discrete-response.html#cb1029-2"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1029-3"><a href="discrete-response.html#cb1029-3"></a><span class="st">  </span><span class="kw">select</span>(term, estimate, conf.low, conf.high) <span class="op">%&gt;%</span></span>
+<span id="cb1029-4"><a href="discrete-response.html#cb1029-4"></a><span class="st">  </span><span class="kw">gt</span>()</span></code></pre></div>
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
@@ -1873,7 +1873,7 @@ p_{dem\_win} = \frac{1}{1 + e^{-(-1.43 + 0.023 \times year)}}
 <p>For example, the predicted probability of a 90-year-old approving of the President is 65.4% while the predicted probability of a 19-year-old approving of the President is 27%.</p>
 <p>Note that since this is not a linear function, a one-unit change in <code>year</code> will be associated with various one-unit changes in <code>year</code>, depending on what <code>year</code> you are starting from. Recall the figure we used to start the chapter:</p>
 <p>A one-unit change in <span class="math inline">\(X\)</span> thus is associated with a one-unit change in <span class="math inline">\(log\left(\frac{p}{1 - p}\right)\)</span>, where <span class="math inline">\(p\)</span> is the predicted probability of success. It is hard to understand intuitively what this means. We can directly calculate all the possible values of <span class="math inline">\(p\)</span> this model by using the <em>standard logistic function</em>:</p>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-802-1.png" width="672"></p>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-808-1.png" width="672"></p>
 <p>A linear regression line (in blue) has a constant slope, which means that no matter what <span class="math inline">\(x\)</span> you start with, the effect of going from <span class="math inline">\(x\)</span> to <span class="math inline">\(x + 1\)</span> on <span class="math inline">\(y\)</span> is the same number. However, take a look at the logistic regression curve (in red). The value of the slope for very high or very low values of <span class="math inline">\(x\)</span> is smaller (approaching 0 as <span class="math inline">\(x\)</span> tends to negative or positive infinity), while the slope in the middle of the curve is highest. The steepest part of the curve corresponds to that part of the curve where the predicted probability equals 0.5. That is, the effect of a one-unit change in <span class="math inline">\(x\)</span> is the highest when the predicted probability for that <span class="math inline">\(x\)</span> is close to 0.5 and smallest when the predicted probability for that <span class="math inline">\(x\)</span> is close to 0 or 1.</p>
 <p>You can always use R to calculate the predicted probabilities for any value of <span class="math inline">\(x\)</span> and thus calculate the effect of moving from a particular <span class="math inline">\(x\)</span> to <span class="math inline">\(x + 1\)</span>. But this can get complicated. In particular, once you start employing logistic regression with multiple predictors, the effect of a one-unit change in a predictor <span class="math inline">\(x\)</span> depends not only on <span class="math inline">\(x\)</span>, but on the values of all the other predictors in your model! You can always plug in all the coefficients and values of your predictors into the logistic function to calculate predicted probabilities, but if you don’t do that, how can you interpret the coefficients?</p>
 <p>Here is where we can use the <em>divide by 4 rule</em> that we discussed before. A logistic regression coefficient divided by 4 is the effect of that variable at the steepest part of the logistic regression curve, which, as we just saw, corresponds to where the predicted probability is 0.5.</p>
@@ -1885,23 +1885,23 @@ p_{dem\_win} = \frac{1}{1 + e^{-(-1.43 + 0.023 \times year)}}
 <span class="header-section-number">12.3.4</span> Multiple explanatory variables</h3>
 <p>We’ll now predict <code>approval</code> with three variables, <code>race</code>, <code>age</code> and <code>gender</code>, as well as the interaction between the <code>race</code> and <code>age</code>.</p>
 <p>This time, we’ll do it slightly differently. We’ll still be using <strong>tidymodels</strong>, but this time we will split the data into a testing set and training set. The training dataset will be used to create our model and the testing dataset will be used to test our final model’s performance. This is a typical part of the tidymodels workflow; it was omitted in our previous two examples because we were not testing the performance of either models. The <code>initial_split()</code> function reserves 25% of the data for testing by default.</p>
-<div class="sourceCode" id="cb1047"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1047-1"><a href="discrete-response.html#cb1047-1"></a>log_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(ch12)</span>
-<span id="cb1047-2"><a href="discrete-response.html#cb1047-2"></a></span>
-<span id="cb1047-3"><a href="discrete-response.html#cb1047-3"></a></span>
-<span id="cb1047-4"><a href="discrete-response.html#cb1047-4"></a>log_training &lt;-<span class="st"> </span>log_split <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">training</span>()</span>
-<span id="cb1047-5"><a href="discrete-response.html#cb1047-5"></a>log_testing &lt;-<span class="st"> </span>log_split <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">testing</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1030"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1030-1"><a href="discrete-response.html#cb1030-1"></a>log_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(ch12)</span>
+<span id="cb1030-2"><a href="discrete-response.html#cb1030-2"></a></span>
+<span id="cb1030-3"><a href="discrete-response.html#cb1030-3"></a></span>
+<span id="cb1030-4"><a href="discrete-response.html#cb1030-4"></a>log_training &lt;-<span class="st"> </span>log_split <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">training</span>()</span>
+<span id="cb1030-5"><a href="discrete-response.html#cb1030-5"></a>log_testing &lt;-<span class="st"> </span>log_split <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">testing</span>()</span></code></pre></div>
 <p>Then, let’s set the <em>model specification</em> to be a logistic regression using <code>glm</code>.</p>
-<div class="sourceCode" id="cb1048"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1048-1"><a href="discrete-response.html#cb1048-1"></a>logistic_mod &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>() <span class="op">%&gt;%</span></span>
-<span id="cb1048-2"><a href="discrete-response.html#cb1048-2"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">"glm"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1031"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1031-1"><a href="discrete-response.html#cb1031-1"></a>logistic_mod &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1031-2"><a href="discrete-response.html#cb1031-2"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">"glm"</span>)</span></code></pre></div>
 <p>For our multi-variable logistic regression, we’ll be using 3 different explanatory variables, as well as the interaction between 2 of those variables, <code>race</code> and <code>age</code>. We will begin by defining the formula of our model. In our last two examples, we constructed our formulas directly in <code>fit()</code>. This time, we will do it seperately, as the formula will be used seperately later when cross-validating our results.</p>
-<div class="sourceCode" id="cb1049"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1049-1"><a href="discrete-response.html#cb1049-1"></a>log_formula &lt;-<span class="st"> </span><span class="kw">formula</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>race<span class="op">:</span>age)</span></code></pre></div>
+<div class="sourceCode" id="cb1032"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1032-1"><a href="discrete-response.html#cb1032-1"></a>log_formula &lt;-<span class="st"> </span><span class="kw">formula</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>race<span class="op">:</span>age)</span></code></pre></div>
 <p>Finally, let’s fit our model. <code>fit()</code> will take in our model specification <code>logistic_mod</code>, our formula, and our training set of data. We are reserving our testing set for later.</p>
-<div class="sourceCode" id="cb1050"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1050-1"><a href="discrete-response.html#cb1050-1"></a>logistic_fit &lt;-<span class="st"> </span><span class="kw">fit</span>(logistic_mod, log_formula, log_training)</span>
-<span id="cb1050-2"><a href="discrete-response.html#cb1050-2"></a></span>
-<span id="cb1050-3"><a href="discrete-response.html#cb1050-3"></a>logistic_fit<span class="op">$</span>fit <span class="op">%&gt;%</span></span>
-<span id="cb1050-4"><a href="discrete-response.html#cb1050-4"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1050-5"><a href="discrete-response.html#cb1050-5"></a><span class="st">  </span><span class="kw">select</span>(term, estimate, conf.low, conf.high) <span class="op">%&gt;%</span></span>
-<span id="cb1050-6"><a href="discrete-response.html#cb1050-6"></a><span class="st">  </span><span class="kw">gt</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1033"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1033-1"><a href="discrete-response.html#cb1033-1"></a>logistic_fit &lt;-<span class="st"> </span><span class="kw">fit</span>(logistic_mod, log_formula, log_training)</span>
+<span id="cb1033-2"><a href="discrete-response.html#cb1033-2"></a></span>
+<span id="cb1033-3"><a href="discrete-response.html#cb1033-3"></a>logistic_fit<span class="op">$</span>fit <span class="op">%&gt;%</span></span>
+<span id="cb1033-4"><a href="discrete-response.html#cb1033-4"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1033-5"><a href="discrete-response.html#cb1033-5"></a><span class="st">  </span><span class="kw">select</span>(term, estimate, conf.low, conf.high) <span class="op">%&gt;%</span></span>
+<span id="cb1033-6"><a href="discrete-response.html#cb1033-6"></a><span class="st">  </span><span class="kw">gt</span>()</span></code></pre></div>
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
@@ -2358,18 +2358,18 @@ p_{dem\_win} = \frac{1}{1 + e^{-(-1.43 + 0.023 \times year)}}
 <span class="header-section-number">12.3.5</span> K-Fold Cross-Validation</h3>
 <p>We can check whether the model we created is accurate by using cross-validation. Recall that when we first started constructing this model, we used <code>initial_split()</code> to reserves 25% of the data for testing and 75% of the data for creating the model. By doing so, the model avoids the issue of overtraining.</p>
 <p>The function <code>vfold_cv()</code> splits your training set into <code>v</code> smaller sections. We will be using <code>v = 5</code> so that the small, individual sections are still large enough to train the model. The first four folds will be used to train the model, and the last fold is always used to assess the accuracy of the model.</p>
-<div class="sourceCode" id="cb1051"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1051-1"><a href="discrete-response.html#cb1051-1"></a>log_folds &lt;-<span class="st"> </span>log_training <span class="op">%&gt;%</span></span>
-<span id="cb1051-2"><a href="discrete-response.html#cb1051-2"></a><span class="st">  </span><span class="kw">vfold_cv</span>(<span class="dt">v =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1034"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1034-1"><a href="discrete-response.html#cb1034-1"></a>log_folds &lt;-<span class="st"> </span>log_training <span class="op">%&gt;%</span></span>
+<span id="cb1034-2"><a href="discrete-response.html#cb1034-2"></a><span class="st">  </span><span class="kw">vfold_cv</span>(<span class="dt">v =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p>Now, we create the recipe for our cross-validation. A recipe is the same thing as a formula, except it includes the dataset that the formula is enacted upon (<code>log_training</code> in our case).</p>
-<div class="sourceCode" id="cb1052"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1052-1"><a href="discrete-response.html#cb1052-1"></a>log_recipe &lt;-<span class="st"> </span><span class="kw">recipe</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> log_training) </span></code></pre></div>
+<div class="sourceCode" id="cb1035"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1035-1"><a href="discrete-response.html#cb1035-1"></a>log_recipe &lt;-<span class="st"> </span><span class="kw">recipe</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>race, <span class="dt">data =</span> log_training) </span></code></pre></div>
 <p>You’ll notice that our interaction term is missing from this recipe. In order to add interaction terms to a recipe, you must take the additional step of using <code>step_interact</code>.</p>
-<div class="sourceCode" id="cb1053"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1053-1"><a href="discrete-response.html#cb1053-1"></a>log_recipe &lt;-<span class="st"> </span>log_recipe <span class="op">%&gt;%</span></span>
-<span id="cb1053-2"><a href="discrete-response.html#cb1053-2"></a><span class="st">  </span><span class="kw">step_interact</span>(<span class="dt">terms =</span> <span class="op">~</span><span class="st"> </span>age<span class="op">:</span>race)</span></code></pre></div>
+<div class="sourceCode" id="cb1036"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1036-1"><a href="discrete-response.html#cb1036-1"></a>log_recipe &lt;-<span class="st"> </span>log_recipe <span class="op">%&gt;%</span></span>
+<span id="cb1036-2"><a href="discrete-response.html#cb1036-2"></a><span class="st">  </span><span class="kw">step_interact</span>(<span class="dt">terms =</span> <span class="op">~</span><span class="st"> </span>age<span class="op">:</span>race)</span></code></pre></div>
 <p>Finally, we’ll use <code>fit_resamples()</code> to run our logistic model on the different folds we created in the training set. <code>fit_resamples()</code> takes in our model specification, our recipe, and the folds we created. This will give us our <code>accuracy</code> and <code>roc_auc</code> values.</p>
-<div class="sourceCode" id="cb1054"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1054-1"><a href="discrete-response.html#cb1054-1"></a><span class="kw">fit_resamples</span>(logistic_mod,</span>
-<span id="cb1054-2"><a href="discrete-response.html#cb1054-2"></a>              log_recipe,</span>
-<span id="cb1054-3"><a href="discrete-response.html#cb1054-3"></a>              log_folds) <span class="op">%&gt;%</span></span>
-<span id="cb1054-4"><a href="discrete-response.html#cb1054-4"></a><span class="st">  </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1037"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1037-1"><a href="discrete-response.html#cb1037-1"></a><span class="kw">fit_resamples</span>(logistic_mod,</span>
+<span id="cb1037-2"><a href="discrete-response.html#cb1037-2"></a>              log_recipe,</span>
+<span id="cb1037-3"><a href="discrete-response.html#cb1037-3"></a>              log_folds) <span class="op">%&gt;%</span></span>
+<span id="cb1037-4"><a href="discrete-response.html#cb1037-4"></a><span class="st">  </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   .metric  .estimator  mean     n std_err
 ##   &lt;chr&gt;    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
@@ -2377,9 +2377,9 @@ p_{dem\_win} = \frac{1}{1 + e^{-(-1.43 + 0.023 \times year)}}
 ## 2 roc_auc  binary     0.655     5 0.00335</code></pre>
 <!-- MB: interpret these values -->
 <p>Now that we saw how the training set performed, it’s time to use our testing set. We do so by applying <code>log_testing</code> to <code>predict()</code>.</p>
-<div class="sourceCode" id="cb1056"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1056-1"><a href="discrete-response.html#cb1056-1"></a>logistic_mod <span class="op">%&gt;%</span></span>
-<span id="cb1056-2"><a href="discrete-response.html#cb1056-2"></a><span class="st">  </span><span class="kw">fit</span>(log_formula, <span class="dt">data =</span> log_training) <span class="op">%&gt;%</span></span>
-<span id="cb1056-3"><a href="discrete-response.html#cb1056-3"></a><span class="st">  </span><span class="kw">predict</span>(<span class="dt">new_data =</span> log_testing)</span></code></pre></div>
+<div class="sourceCode" id="cb1039"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1039-1"><a href="discrete-response.html#cb1039-1"></a>logistic_mod <span class="op">%&gt;%</span></span>
+<span id="cb1039-2"><a href="discrete-response.html#cb1039-2"></a><span class="st">  </span><span class="kw">fit</span>(log_formula, <span class="dt">data =</span> log_training) <span class="op">%&gt;%</span></span>
+<span id="cb1039-3"><a href="discrete-response.html#cb1039-3"></a><span class="st">  </span><span class="kw">predict</span>(<span class="dt">new_data =</span> log_testing)</span></code></pre></div>
 <pre><code>## # A tibble: 14,887 x 1
 ##    .pred_class
 ##    &lt;fct&gt;      
@@ -2396,11 +2396,11 @@ p_{dem\_win} = \frac{1}{1 + e^{-(-1.43 + 0.023 \times year)}}
 ## # … with 14,877 more rows</code></pre>
 <p>Here, the model created by the training set predicts whether the observations in testing set would approve or disapprove of the President. While this is an interesting set of predictions, it doesn’t tell us much about how well our model performed. So, we need to solve for the rmse, or the mean squared error.</p>
 <p>To extract the rmse, we set the “truth” to <code>approval</code> so this function can compare our predicted values to the true values.</p>
-<div class="sourceCode" id="cb1058"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1058-1"><a href="discrete-response.html#cb1058-1"></a>logistic_mod <span class="op">%&gt;%</span></span>
-<span id="cb1058-2"><a href="discrete-response.html#cb1058-2"></a><span class="st">  </span><span class="kw">fit</span>(log_formula, <span class="dt">data =</span> log_training) <span class="op">%&gt;%</span></span>
-<span id="cb1058-3"><a href="discrete-response.html#cb1058-3"></a><span class="st">  </span><span class="kw">predict</span>(<span class="dt">new_data =</span> log_testing) <span class="op">%&gt;%</span></span>
-<span id="cb1058-4"><a href="discrete-response.html#cb1058-4"></a><span class="st">  </span><span class="kw">bind_cols</span>(log_testing) <span class="op">%&gt;%</span></span>
-<span id="cb1058-5"><a href="discrete-response.html#cb1058-5"></a><span class="st">  </span><span class="kw">rmse</span>(<span class="dt">truth =</span> <span class="kw">as.numeric</span>(approval), <span class="dt">estimate =</span> <span class="kw">as.numeric</span>(.pred_class))</span></code></pre></div>
+<div class="sourceCode" id="cb1041"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1041-1"><a href="discrete-response.html#cb1041-1"></a>logistic_mod <span class="op">%&gt;%</span></span>
+<span id="cb1041-2"><a href="discrete-response.html#cb1041-2"></a><span class="st">  </span><span class="kw">fit</span>(log_formula, <span class="dt">data =</span> log_training) <span class="op">%&gt;%</span></span>
+<span id="cb1041-3"><a href="discrete-response.html#cb1041-3"></a><span class="st">  </span><span class="kw">predict</span>(<span class="dt">new_data =</span> log_testing) <span class="op">%&gt;%</span></span>
+<span id="cb1041-4"><a href="discrete-response.html#cb1041-4"></a><span class="st">  </span><span class="kw">bind_cols</span>(log_testing) <span class="op">%&gt;%</span></span>
+<span id="cb1041-5"><a href="discrete-response.html#cb1041-5"></a><span class="st">  </span><span class="kw">rmse</span>(<span class="dt">truth =</span> <span class="kw">as.numeric</span>(approval), <span class="dt">estimate =</span> <span class="kw">as.numeric</span>(.pred_class))</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##   .metric .estimator .estimate
 ##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
@@ -2433,29 +2433,29 @@ But how do we pick the predictor $j$ and the value $s$? One of the more popular 
 <h3>
 <span class="header-section-number">12.4.2</span> Multivariate CART</h3>
 <p>Before creating any model, let’s split our data into a training and testing set, just like we did with our multivariate logistical regression.</p>
-<div class="sourceCode" id="cb1060"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1060-1"><a href="discrete-response.html#cb1060-1"></a>cart_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(ch12)</span>
-<span id="cb1060-2"><a href="discrete-response.html#cb1060-2"></a></span>
-<span id="cb1060-3"><a href="discrete-response.html#cb1060-3"></a>cart_training &lt;-<span class="st"> </span>cart_split <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">training</span>()</span>
-<span id="cb1060-4"><a href="discrete-response.html#cb1060-4"></a>cart_testing &lt;-<span class="st"> </span>cart_split <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">testing</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1043"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1043-1"><a href="discrete-response.html#cb1043-1"></a>cart_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(ch12)</span>
+<span id="cb1043-2"><a href="discrete-response.html#cb1043-2"></a></span>
+<span id="cb1043-3"><a href="discrete-response.html#cb1043-3"></a>cart_training &lt;-<span class="st"> </span>cart_split <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">training</span>()</span>
+<span id="cb1043-4"><a href="discrete-response.html#cb1043-4"></a>cart_testing &lt;-<span class="st"> </span>cart_split <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">testing</span>()</span></code></pre></div>
 <p>To create a CART using multiple variables, we’ll use the <code>decision_tree()</code> model specification and the <code>"rpart"</code> engine. The syntax is very similar to when we used <code>logistic_reg()</code>. Note that our binary response variable has to be a factor, just like with <code>logistic_reg()</code>.</p>
-<div class="sourceCode" id="cb1061"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1061-1"><a href="discrete-response.html#cb1061-1"></a>tree_mod &lt;-<span class="st"> </span><span class="kw">decision_tree</span>() <span class="op">%&gt;%</span></span>
-<span id="cb1061-2"><a href="discrete-response.html#cb1061-2"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">"rpart"</span>,</span>
-<span id="cb1061-3"><a href="discrete-response.html#cb1061-3"></a>             <span class="dt">model =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1061-4"><a href="discrete-response.html#cb1061-4"></a><span class="st">  </span><span class="kw">set_mode</span>(<span class="st">"classification"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1044"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1044-1"><a href="discrete-response.html#cb1044-1"></a>tree_mod &lt;-<span class="st"> </span><span class="kw">decision_tree</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1044-2"><a href="discrete-response.html#cb1044-2"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">"rpart"</span>,</span>
+<span id="cb1044-3"><a href="discrete-response.html#cb1044-3"></a>             <span class="dt">model =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1044-4"><a href="discrete-response.html#cb1044-4"></a><span class="st">  </span><span class="kw">set_mode</span>(<span class="st">"classification"</span>)</span></code></pre></div>
 <p>Note that we added the argument <code>model = TRUE</code> to <code>set_engine()</code>. This saves the model frame, which we will need to avoid a warning when we plot the trees later.</p>
 <p>The function <code>set_mode()</code> wasn’t necessary when we did logistic regression. Here it clarifies that we want a <em>classification</em> tree rather than a <em>regression</em> tree.</p>
 <p>Next, let’s create our formula for this tree. We will use the same formula that we used in the logistical regression.</p>
-<div class="sourceCode" id="cb1062"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1062-1"><a href="discrete-response.html#cb1062-1"></a>cart_formula &lt;-<span class="st"> </span><span class="kw">formula</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>race)</span></code></pre></div>
+<div class="sourceCode" id="cb1045"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1045-1"><a href="discrete-response.html#cb1045-1"></a>cart_formula &lt;-<span class="st"> </span><span class="kw">formula</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>race)</span></code></pre></div>
 <p>Now that we have the object <code>tree_mod</code> and our formula, we can use <code>fit()</code> to construct our tree.</p>
-<div class="sourceCode" id="cb1063"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1063-1"><a href="discrete-response.html#cb1063-1"></a>cart_fit &lt;-<span class="st"> </span><span class="kw">fit</span>(tree_mod,</span>
-<span id="cb1063-2"><a href="discrete-response.html#cb1063-2"></a>                 cart_formula,</span>
-<span id="cb1063-3"><a href="discrete-response.html#cb1063-3"></a>                 cart_training)</span></code></pre></div>
+<div class="sourceCode" id="cb1046"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1046-1"><a href="discrete-response.html#cb1046-1"></a>cart_fit &lt;-<span class="st"> </span><span class="kw">fit</span>(tree_mod,</span>
+<span id="cb1046-2"><a href="discrete-response.html#cb1046-2"></a>                 cart_formula,</span>
+<span id="cb1046-3"><a href="discrete-response.html#cb1046-3"></a>                 cart_training)</span></code></pre></div>
 <p>As you can see, <strong>tidymodels</strong> has the same workflow for creating a CART as it does for fitting a logistic regression, but with our model specification saved in <code>tree_mod</code> rather than the model specification we saved in <code>logistic_mod</code>.</p>
 <p>What was the result of our tree?</p>
-<div class="sourceCode" id="cb1064"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1064-1"><a href="discrete-response.html#cb1064-1"></a>cart_fit</span></code></pre></div>
+<div class="sourceCode" id="cb1047"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1047-1"><a href="discrete-response.html#cb1047-1"></a>cart_fit</span></code></pre></div>
 <pre><code>## parsnip model object
 ## 
-## Fit time:  306ms 
+## Fit time:  296ms 
 ## n= 44661 
 ## 
 ## node), split, n, loss, yval, (yprob)
@@ -2467,17 +2467,17 @@ But how do we pick the predictor $j$ and the value $s$? One of the more popular 
 ##     6) age&lt; 42 11752  4700 0 (0.60 0.40) *
 ##     7) age&gt;=42 22518 10000 1 (0.45 0.55) *</code></pre>
 <p>It’s not helpful to look at the results of a tree as text. In order to visualize the tree, we’ll use the <code>prp()</code> function in the <strong>rpart.plot</strong> package. Remember that the model object is stored in <code>cart_fit$fit</code>.</p>
-<div class="sourceCode" id="cb1066"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1066-1"><a href="discrete-response.html#cb1066-1"></a><span class="kw">library</span>(rpart.plot)</span>
-<span id="cb1066-2"><a href="discrete-response.html#cb1066-2"></a></span>
-<span id="cb1066-3"><a href="discrete-response.html#cb1066-3"></a>cart_fit<span class="op">$</span>fit <span class="op">%&gt;%</span></span>
-<span id="cb1066-4"><a href="discrete-response.html#cb1066-4"></a><span class="st">  </span><span class="kw">prp</span>(<span class="dt">extra =</span> <span class="dv">6</span>, <span class="dt">varlen =</span> <span class="dv">0</span>, <span class="dt">faclen =</span> <span class="dv">0</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-819-1.png" width="672"></p>
+<div class="sourceCode" id="cb1049"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1049-1"><a href="discrete-response.html#cb1049-1"></a><span class="kw">library</span>(rpart.plot)</span>
+<span id="cb1049-2"><a href="discrete-response.html#cb1049-2"></a></span>
+<span id="cb1049-3"><a href="discrete-response.html#cb1049-3"></a>cart_fit<span class="op">$</span>fit <span class="op">%&gt;%</span></span>
+<span id="cb1049-4"><a href="discrete-response.html#cb1049-4"></a><span class="st">  </span><span class="kw">prp</span>(<span class="dt">extra =</span> <span class="dv">6</span>, <span class="dt">varlen =</span> <span class="dv">0</span>, <span class="dt">faclen =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-825-1.png" width="672"></p>
 <p>The arguments <code>varlen = 0</code> and <code>faclen = 0</code> ensure that the full variable names and factor levels are printed. The argument <code>extra = 6</code> shows the proportion of “yes” outcomes within a given partition. Since we’ll be using these same arguments throughout the chapter, we’ll create a new function that calls <code>prp()</code> but with these options as defaults:</p>
-<div class="sourceCode" id="cb1067"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1067-1"><a href="discrete-response.html#cb1067-1"></a>prp_ch12 &lt;-<span class="st"> </span><span class="cf">function</span>(x, ...) <span class="kw">prp</span>(x, <span class="dt">extra =</span> <span class="dv">6</span>, <span class="dt">varlen =</span> <span class="dv">0</span>, <span class="dt">faclen =</span> <span class="dv">0</span>, ...)</span>
-<span id="cb1067-2"><a href="discrete-response.html#cb1067-2"></a></span>
-<span id="cb1067-3"><a href="discrete-response.html#cb1067-3"></a>cart_fit<span class="op">$</span>fit <span class="op">%&gt;%</span></span>
-<span id="cb1067-4"><a href="discrete-response.html#cb1067-4"></a><span class="st">  </span><span class="kw">prp_ch12</span>()</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-820-1.png" width="672"></p>
+<div class="sourceCode" id="cb1050"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1050-1"><a href="discrete-response.html#cb1050-1"></a>prp_ch12 &lt;-<span class="st"> </span><span class="cf">function</span>(x, ...) <span class="kw">prp</span>(x, <span class="dt">extra =</span> <span class="dv">6</span>, <span class="dt">varlen =</span> <span class="dv">0</span>, <span class="dt">faclen =</span> <span class="dv">0</span>, ...)</span>
+<span id="cb1050-2"><a href="discrete-response.html#cb1050-2"></a></span>
+<span id="cb1050-3"><a href="discrete-response.html#cb1050-3"></a>cart_fit<span class="op">$</span>fit <span class="op">%&gt;%</span></span>
+<span id="cb1050-4"><a href="discrete-response.html#cb1050-4"></a><span class="st">  </span><span class="kw">prp_ch12</span>()</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-826-1.png" width="672"></p>
 <p>So, how do we interpret this tree? We are given two partitions; the first is for race. The observations that identify as any of the named races are classified as disapproving of the President, denoted by the 0 on that node. All other racial identities proceed to the next partition. If these people are younger than 44, they are also classified as disapproving of the president. Voters 44 and older are classsified as approving of the President.</p>
 <p>The decimal numbers within each box identify how many observations in that node approved of the President. This means that only 20% of observations in the first node approved of the President, 38% in the second node, and 54% in the third node.</p>
 <p>You may notice that this tree did not factor in gender.
@@ -2488,19 +2488,19 @@ But how do we pick the predictor $j$ and the value $s$? One of the more popular 
 <span class="header-section-number">12.4.3</span> K-Fold Cross-Validation</h3>
 <p>Once again, we can check whether the model we created is accurate by using cross-validation.</p>
 <p>We’ll use <code>vfold_cv()</code> to create <code>v = 5</code> splits in the training set, using the final fold to asses the model’s accuracy.</p>
-<div class="sourceCode" id="cb1068"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1068-1"><a href="discrete-response.html#cb1068-1"></a>cart_folds &lt;-<span class="st"> </span>cart_training <span class="op">%&gt;%</span></span>
-<span id="cb1068-2"><a href="discrete-response.html#cb1068-2"></a><span class="st">  </span><span class="kw">vfold_cv</span>(<span class="dt">v =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1051"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1051-1"><a href="discrete-response.html#cb1051-1"></a>cart_folds &lt;-<span class="st"> </span>cart_training <span class="op">%&gt;%</span></span>
+<span id="cb1051-2"><a href="discrete-response.html#cb1051-2"></a><span class="st">  </span><span class="kw">vfold_cv</span>(<span class="dt">v =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p>Then, we’ll create our recipe and plug it into <code>fit_resamples()</code> along with <code>tree_mod</code> and <code>cart_folds</code>. We’ll use <code>collect_metrics()</code> to get our accuracy values.</p>
 <!-- MB: Added interaction term here, but not in the tree above -->
-<div class="sourceCode" id="cb1069"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1069-1"><a href="discrete-response.html#cb1069-1"></a>cart_recipe &lt;-<span class="st"> </span><span class="kw">recipe</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data =</span> cart_training) </span>
-<span id="cb1069-2"><a href="discrete-response.html#cb1069-2"></a></span>
-<span id="cb1069-3"><a href="discrete-response.html#cb1069-3"></a>cart_recipe &lt;-<span class="st"> </span>cart_recipe <span class="op">%&gt;%</span></span>
-<span id="cb1069-4"><a href="discrete-response.html#cb1069-4"></a><span class="st">  </span><span class="kw">step_interact</span>(<span class="dt">terms =</span> <span class="op">~</span><span class="st"> </span>age<span class="op">:</span>race)</span>
-<span id="cb1069-5"><a href="discrete-response.html#cb1069-5"></a></span>
-<span id="cb1069-6"><a href="discrete-response.html#cb1069-6"></a><span class="kw">fit_resamples</span>(tree_mod,</span>
-<span id="cb1069-7"><a href="discrete-response.html#cb1069-7"></a>              cart_recipe,</span>
-<span id="cb1069-8"><a href="discrete-response.html#cb1069-8"></a>              cart_folds) <span class="op">%&gt;%</span></span>
-<span id="cb1069-9"><a href="discrete-response.html#cb1069-9"></a><span class="st">  </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1052"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1052-1"><a href="discrete-response.html#cb1052-1"></a>cart_recipe &lt;-<span class="st"> </span><span class="kw">recipe</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data =</span> cart_training) </span>
+<span id="cb1052-2"><a href="discrete-response.html#cb1052-2"></a></span>
+<span id="cb1052-3"><a href="discrete-response.html#cb1052-3"></a>cart_recipe &lt;-<span class="st"> </span>cart_recipe <span class="op">%&gt;%</span></span>
+<span id="cb1052-4"><a href="discrete-response.html#cb1052-4"></a><span class="st">  </span><span class="kw">step_interact</span>(<span class="dt">terms =</span> <span class="op">~</span><span class="st"> </span>age<span class="op">:</span>race)</span>
+<span id="cb1052-5"><a href="discrete-response.html#cb1052-5"></a></span>
+<span id="cb1052-6"><a href="discrete-response.html#cb1052-6"></a><span class="kw">fit_resamples</span>(tree_mod,</span>
+<span id="cb1052-7"><a href="discrete-response.html#cb1052-7"></a>              cart_recipe,</span>
+<span id="cb1052-8"><a href="discrete-response.html#cb1052-8"></a>              cart_folds) <span class="op">%&gt;%</span></span>
+<span id="cb1052-9"><a href="discrete-response.html#cb1052-9"></a><span class="st">  </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   .metric  .estimator  mean     n std_err
 ##   &lt;chr&gt;    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
@@ -2508,9 +2508,9 @@ But how do we pick the predictor $j$ and the value $s$? One of the more popular 
 ## 2 roc_auc  binary     0.620     5 0.00644</code></pre>
 <!-- Interpret accuracy values -->
 <p>Now that we saw how the training set performed, we’ll use our testing set. We do so by applying <code>cart_testing</code> to <code>predict()</code>.</p>
-<div class="sourceCode" id="cb1071"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1071-1"><a href="discrete-response.html#cb1071-1"></a>tree_mod <span class="op">%&gt;%</span></span>
-<span id="cb1071-2"><a href="discrete-response.html#cb1071-2"></a><span class="st">  </span><span class="kw">fit</span>(cart_formula, <span class="dt">data =</span> cart_training) <span class="op">%&gt;%</span></span>
-<span id="cb1071-3"><a href="discrete-response.html#cb1071-3"></a><span class="st">  </span><span class="kw">predict</span>(<span class="dt">new_data =</span> cart_testing)</span></code></pre></div>
+<div class="sourceCode" id="cb1054"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1054-1"><a href="discrete-response.html#cb1054-1"></a>tree_mod <span class="op">%&gt;%</span></span>
+<span id="cb1054-2"><a href="discrete-response.html#cb1054-2"></a><span class="st">  </span><span class="kw">fit</span>(cart_formula, <span class="dt">data =</span> cart_training) <span class="op">%&gt;%</span></span>
+<span id="cb1054-3"><a href="discrete-response.html#cb1054-3"></a><span class="st">  </span><span class="kw">predict</span>(<span class="dt">new_data =</span> cart_testing)</span></code></pre></div>
 <pre><code>## # A tibble: 14,887 x 1
 ##    .pred_class
 ##    &lt;fct&gt;      
@@ -2527,11 +2527,11 @@ But how do we pick the predictor $j$ and the value $s$? One of the more popular 
 ## # … with 14,877 more rows</code></pre>
 <p>Once again, the model predicts whether the observations in testing set would approve or disapprove of the President based on the model created with the training set.</p>
 <p>To extract the rmse, we set the “truth” to <code>approval</code> so this function can compare our predicted values to the true values.</p>
-<div class="sourceCode" id="cb1073"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1073-1"><a href="discrete-response.html#cb1073-1"></a>tree_mod <span class="op">%&gt;%</span></span>
-<span id="cb1073-2"><a href="discrete-response.html#cb1073-2"></a><span class="st">  </span><span class="kw">fit</span>(cart_formula, <span class="dt">data =</span> cart_training) <span class="op">%&gt;%</span></span>
-<span id="cb1073-3"><a href="discrete-response.html#cb1073-3"></a><span class="st">  </span><span class="kw">predict</span>(<span class="dt">new_data =</span> cart_testing) <span class="op">%&gt;%</span></span>
-<span id="cb1073-4"><a href="discrete-response.html#cb1073-4"></a><span class="st">  </span><span class="kw">bind_cols</span>(cart_testing) <span class="op">%&gt;%</span></span>
-<span id="cb1073-5"><a href="discrete-response.html#cb1073-5"></a><span class="st">  </span><span class="kw">rmse</span>(<span class="dt">truth =</span> <span class="kw">as.numeric</span>(approval), <span class="dt">estimate =</span> <span class="kw">as.numeric</span>(.pred_class))</span></code></pre></div>
+<div class="sourceCode" id="cb1056"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1056-1"><a href="discrete-response.html#cb1056-1"></a>tree_mod <span class="op">%&gt;%</span></span>
+<span id="cb1056-2"><a href="discrete-response.html#cb1056-2"></a><span class="st">  </span><span class="kw">fit</span>(cart_formula, <span class="dt">data =</span> cart_training) <span class="op">%&gt;%</span></span>
+<span id="cb1056-3"><a href="discrete-response.html#cb1056-3"></a><span class="st">  </span><span class="kw">predict</span>(<span class="dt">new_data =</span> cart_testing) <span class="op">%&gt;%</span></span>
+<span id="cb1056-4"><a href="discrete-response.html#cb1056-4"></a><span class="st">  </span><span class="kw">bind_cols</span>(cart_testing) <span class="op">%&gt;%</span></span>
+<span id="cb1056-5"><a href="discrete-response.html#cb1056-5"></a><span class="st">  </span><span class="kw">rmse</span>(<span class="dt">truth =</span> <span class="kw">as.numeric</span>(approval), <span class="dt">estimate =</span> <span class="kw">as.numeric</span>(.pred_class))</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##   .metric .estimator .estimate
 ##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
@@ -2542,11 +2542,11 @@ But how do we pick the predictor $j$ and the value $s$? One of the more popular 
 <h3>
 <span class="header-section-number">12.4.4</span> Predicting New Data</h3>
 <p>Let’s now use our tree to make some predictions. When used on trees, the <code>predict()</code> function takes in the tree object and new observations containing the explanatory variables. In this case, we’ll be passing in a 54-year-old Asian voter, a 41-year-old Black voter, a 56-year-old White voter, and a 70-year-old Native American voter.</p>
-<div class="sourceCode" id="cb1075"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1075-1"><a href="discrete-response.html#cb1075-1"></a>newdata &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">race =</span> <span class="kw">c</span>(<span class="st">"Asian"</span>, <span class="st">"Black"</span>, <span class="st">"White"</span>, <span class="st">"Native American"</span>),</span>
-<span id="cb1075-2"><a href="discrete-response.html#cb1075-2"></a>                  <span class="dt">age =</span> <span class="kw">c</span>(<span class="dv">54</span>, <span class="dv">41</span>, <span class="dv">56</span>, <span class="dv">70</span>),</span>
-<span id="cb1075-3"><a href="discrete-response.html#cb1075-3"></a>                  <span class="dt">gender =</span> <span class="kw">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>, <span class="st">"Male"</span>, <span class="st">"Female"</span>))</span>
-<span id="cb1075-4"><a href="discrete-response.html#cb1075-4"></a></span>
-<span id="cb1075-5"><a href="discrete-response.html#cb1075-5"></a><span class="kw">predict</span>(cart_fit, <span class="dt">new_data =</span> newdata) </span></code></pre></div>
+<div class="sourceCode" id="cb1058"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1058-1"><a href="discrete-response.html#cb1058-1"></a>newdata &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">race =</span> <span class="kw">c</span>(<span class="st">"Asian"</span>, <span class="st">"Black"</span>, <span class="st">"White"</span>, <span class="st">"Native American"</span>),</span>
+<span id="cb1058-2"><a href="discrete-response.html#cb1058-2"></a>                  <span class="dt">age =</span> <span class="kw">c</span>(<span class="dv">54</span>, <span class="dv">41</span>, <span class="dv">56</span>, <span class="dv">70</span>),</span>
+<span id="cb1058-3"><a href="discrete-response.html#cb1058-3"></a>                  <span class="dt">gender =</span> <span class="kw">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>, <span class="st">"Male"</span>, <span class="st">"Female"</span>))</span>
+<span id="cb1058-4"><a href="discrete-response.html#cb1058-4"></a></span>
+<span id="cb1058-5"><a href="discrete-response.html#cb1058-5"></a><span class="kw">predict</span>(cart_fit, <span class="dt">new_data =</span> newdata) </span></code></pre></div>
 <pre><code>## # A tibble: 4 x 1
 ##   .pred_class
 ##   &lt;fct&gt;      
@@ -2555,8 +2555,8 @@ But how do we pick the predictor $j$ and the value $s$? One of the more popular 
 ## 3 1          
 ## 4 1</code></pre>
 <p>As you can see, the tree predicted that our first two new voters would disapprove of the President while our second two would approve based on their age and race.</p>
-<div class="sourceCode" id="cb1077"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1077-1"><a href="discrete-response.html#cb1077-1"></a><span class="co">#library(rstanarm)</span></span>
-<span id="cb1077-2"><a href="discrete-response.html#cb1077-2"></a><span class="co">#posterior_linpred(cart_fit, newdata)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1060"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1060-1"><a href="discrete-response.html#cb1060-1"></a><span class="co">#library(rstanarm)</span></span>
+<span id="cb1060-2"><a href="discrete-response.html#cb1060-2"></a><span class="co">#posterior_linpred(cart_fit, newdata)</span></span></code></pre></div>
 </div>
 </div>
 <div id="random-forests" class="section level2">
@@ -2585,54 +2585,54 @@ But how do we pick the predictor $j$ and the value $s$? One of the more popular 
 https://s3.amazonaws.com/assets.datacamp.com/production/course_7215/slides/chapter3.pdf
 -->
 <p>We will demonstrate by fitting a random forest to the House elections data. Before we even write our model formula, we need to split the data to create a <em>training set</em> and a <em>testing set</em>. The training dataset will be used to create our model and the testing dataset will be used to test our final model’s performance.</p>
-<div class="sourceCode" id="cb1078"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1078-1"><a href="discrete-response.html#cb1078-1"></a>forest_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(ch12, </span>
-<span id="cb1078-2"><a href="discrete-response.html#cb1078-2"></a>                                <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)</span>
-<span id="cb1078-3"><a href="discrete-response.html#cb1078-3"></a></span>
-<span id="cb1078-4"><a href="discrete-response.html#cb1078-4"></a>forest_train &lt;-<span class="st"> </span><span class="kw">training</span>(forest_split)</span>
-<span id="cb1078-5"><a href="discrete-response.html#cb1078-5"></a>forest_test &lt;-<span class="st"> </span><span class="kw">testing</span>(forest_split)</span></code></pre></div>
+<div class="sourceCode" id="cb1061"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1061-1"><a href="discrete-response.html#cb1061-1"></a>forest_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(ch12, </span>
+<span id="cb1061-2"><a href="discrete-response.html#cb1061-2"></a>                                <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)</span>
+<span id="cb1061-3"><a href="discrete-response.html#cb1061-3"></a></span>
+<span id="cb1061-4"><a href="discrete-response.html#cb1061-4"></a>forest_train &lt;-<span class="st"> </span><span class="kw">training</span>(forest_split)</span>
+<span id="cb1061-5"><a href="discrete-response.html#cb1061-5"></a>forest_test &lt;-<span class="st"> </span><span class="kw">testing</span>(forest_split)</span></code></pre></div>
 <p>Next, we will use the <code>rand_forest()</code> function to create our model specification, setting the engine to <code>"randomForest"</code> and the mode to <code>"classification"</code>.</p>
-<div class="sourceCode" id="cb1079"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1079-1"><a href="discrete-response.html#cb1079-1"></a><span class="kw">library</span>(randomForest)</span>
-<span id="cb1079-2"><a href="discrete-response.html#cb1079-2"></a></span>
-<span id="cb1079-3"><a href="discrete-response.html#cb1079-3"></a>forest_mod &lt;-<span class="st"> </span></span>
-<span id="cb1079-4"><a href="discrete-response.html#cb1079-4"></a><span class="st">  </span><span class="kw">rand_forest</span>() <span class="op">%&gt;%</span></span>
-<span id="cb1079-5"><a href="discrete-response.html#cb1079-5"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">"randomForest"</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1079-6"><a href="discrete-response.html#cb1079-6"></a><span class="st">  </span><span class="kw">set_mode</span>(<span class="st">"classification"</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb1062"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1062-1"><a href="discrete-response.html#cb1062-1"></a><span class="kw">library</span>(randomForest)</span>
+<span id="cb1062-2"><a href="discrete-response.html#cb1062-2"></a></span>
+<span id="cb1062-3"><a href="discrete-response.html#cb1062-3"></a>forest_mod &lt;-<span class="st"> </span></span>
+<span id="cb1062-4"><a href="discrete-response.html#cb1062-4"></a><span class="st">  </span><span class="kw">rand_forest</span>() <span class="op">%&gt;%</span></span>
+<span id="cb1062-5"><a href="discrete-response.html#cb1062-5"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">"randomForest"</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1062-6"><a href="discrete-response.html#cb1062-6"></a><span class="st">  </span><span class="kw">set_mode</span>(<span class="st">"classification"</span>) </span></code></pre></div>
 <p>We will now create the formula for our forest.</p>
-<div class="sourceCode" id="cb1080"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1080-1"><a href="discrete-response.html#cb1080-1"></a>forest_formula &lt;-<span class="st"> </span><span class="kw">formula</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>race<span class="op">:</span>age)</span></code></pre></div>
+<div class="sourceCode" id="cb1063"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1063-1"><a href="discrete-response.html#cb1063-1"></a>forest_formula &lt;-<span class="st"> </span><span class="kw">formula</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>race <span class="op">+</span><span class="st"> </span>race<span class="op">:</span>age)</span></code></pre></div>
 <p>Finally, let’s fit our model. <code>fit()</code> will take in our model specification <code>logistic_mod</code>, our formula, and our training set of data. We are reserving our testing set for later.</p>
-<div class="sourceCode" id="cb1081"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1081-1"><a href="discrete-response.html#cb1081-1"></a>forest_fit &lt;-<span class="st"> </span><span class="kw">fit</span>(forest_mod, forest_formula, forest_train)</span></code></pre></div>
+<div class="sourceCode" id="cb1064"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1064-1"><a href="discrete-response.html#cb1064-1"></a>forest_fit &lt;-<span class="st"> </span><span class="kw">fit</span>(forest_mod, forest_formula, forest_train)</span></code></pre></div>
 <p>If we graph the “OOB estimate of error rate”, we can see that this model settles around an error rate of just under 40% (or, looking at it the other way, an accuracy of 60%). We can see how the error rate of our algorithm changes as we add trees by looking at <code>forest_fit$fit$err.rate[, "OOB"]</code>. By default, <code>randomForest()</code> (the engine we specified) grows 500 trees. –&gt;</p>
-<div class="sourceCode" id="cb1082"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1082-1"><a href="discrete-response.html#cb1082-1"></a><span class="kw">tibble</span>(<span class="st">`</span><span class="dt">Error rate</span><span class="st">`</span> =<span class="st"> </span>forest_fit<span class="op">$</span>fit<span class="op">$</span>err.rate[, <span class="st">"OOB"</span>], <span class="dt">Trees =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">500</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1082-2"><a href="discrete-response.html#cb1082-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Trees, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Error rate</span><span class="st">`</span>)) <span class="op">+</span></span>
-<span id="cb1082-3"><a href="discrete-response.html#cb1082-3"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1082-4"><a href="discrete-response.html#cb1082-4"></a><span class="st">  </span><span class="kw">theme_classic</span>()</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-831-1.png" width="672"></p>
+<div class="sourceCode" id="cb1065"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1065-1"><a href="discrete-response.html#cb1065-1"></a><span class="kw">tibble</span>(<span class="st">`</span><span class="dt">Error rate</span><span class="st">`</span> =<span class="st"> </span>forest_fit<span class="op">$</span>fit<span class="op">$</span>err.rate[, <span class="st">"OOB"</span>], <span class="dt">Trees =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">500</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1065-2"><a href="discrete-response.html#cb1065-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Trees, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Error rate</span><span class="st">`</span>)) <span class="op">+</span></span>
+<span id="cb1065-3"><a href="discrete-response.html#cb1065-3"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1065-4"><a href="discrete-response.html#cb1065-4"></a><span class="st">  </span><span class="kw">theme_classic</span>()</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-837-1.png" width="672"></p>
 <p>We can see that in this case, the accuracy improves as we add more trees until about 50 trees where accuracy stabilizes. Random forests often perform better than other methods. However, a disadvantage of random forests is that we lose interpretability—we don’t get anything like the coefficients from a logistic regression or the single tree from CART.</p>
 </div>
 <div id="k-fold-cross-validation-2" class="section level3">
 <h3>
 <span class="header-section-number">12.5.3</span> K-Fold Cross-Validation</h3>
 <p>Just like with CART and logistic regression, we will use cross-validation to check the accuracy of our random forest. Once again, we’ll create the recipe and add our interaction term seperately.</p>
-<div class="sourceCode" id="cb1083"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1083-1"><a href="discrete-response.html#cb1083-1"></a>forest_recipe &lt;-<span class="st"> </span><span class="kw">recipe</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>race, </span>
-<span id="cb1083-2"><a href="discrete-response.html#cb1083-2"></a>                        <span class="dt">data =</span> forest_train)</span>
-<span id="cb1083-3"><a href="discrete-response.html#cb1083-3"></a></span>
-<span id="cb1083-4"><a href="discrete-response.html#cb1083-4"></a>forest_recipe &lt;-<span class="st"> </span>forest_recipe <span class="op">%&gt;%</span></span>
-<span id="cb1083-5"><a href="discrete-response.html#cb1083-5"></a><span class="st">  </span><span class="kw">step_interact</span>(<span class="dt">terms =</span> <span class="op">~</span><span class="st"> </span>age<span class="op">:</span>race)</span>
-<span id="cb1083-6"><a href="discrete-response.html#cb1083-6"></a></span>
-<span id="cb1083-7"><a href="discrete-response.html#cb1083-7"></a><span class="co">#approval_workflow &lt;- workflow() %&gt;%</span></span>
-<span id="cb1083-8"><a href="discrete-response.html#cb1083-8"></a>  <span class="co"># add the recipe</span></span>
-<span id="cb1083-9"><a href="discrete-response.html#cb1083-9"></a><span class="co">#  add_recipe(approval_recipe) %&gt;%</span></span>
-<span id="cb1083-10"><a href="discrete-response.html#cb1083-10"></a>  <span class="co"># add the model</span></span>
-<span id="cb1083-11"><a href="discrete-response.html#cb1083-11"></a><span class="co">#  add_model(forest_mod)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1066"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1066-1"><a href="discrete-response.html#cb1066-1"></a>forest_recipe &lt;-<span class="st"> </span><span class="kw">recipe</span>(approval <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>race, </span>
+<span id="cb1066-2"><a href="discrete-response.html#cb1066-2"></a>                        <span class="dt">data =</span> forest_train)</span>
+<span id="cb1066-3"><a href="discrete-response.html#cb1066-3"></a></span>
+<span id="cb1066-4"><a href="discrete-response.html#cb1066-4"></a>forest_recipe &lt;-<span class="st"> </span>forest_recipe <span class="op">%&gt;%</span></span>
+<span id="cb1066-5"><a href="discrete-response.html#cb1066-5"></a><span class="st">  </span><span class="kw">step_interact</span>(<span class="dt">terms =</span> <span class="op">~</span><span class="st"> </span>age<span class="op">:</span>race)</span>
+<span id="cb1066-6"><a href="discrete-response.html#cb1066-6"></a></span>
+<span id="cb1066-7"><a href="discrete-response.html#cb1066-7"></a><span class="co">#approval_workflow &lt;- workflow() %&gt;%</span></span>
+<span id="cb1066-8"><a href="discrete-response.html#cb1066-8"></a>  <span class="co"># add the recipe</span></span>
+<span id="cb1066-9"><a href="discrete-response.html#cb1066-9"></a><span class="co">#  add_recipe(approval_recipe) %&gt;%</span></span>
+<span id="cb1066-10"><a href="discrete-response.html#cb1066-10"></a>  <span class="co"># add the model</span></span>
+<span id="cb1066-11"><a href="discrete-response.html#cb1066-11"></a><span class="co">#  add_model(forest_mod)</span></span></code></pre></div>
 <p>We will also create our folds using <code>vfold_cv()</code>.</p>
-<div class="sourceCode" id="cb1084"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1084-1"><a href="discrete-response.html#cb1084-1"></a>forest_folds &lt;-<span class="st"> </span>forest_train <span class="op">%&gt;%</span></span>
-<span id="cb1084-2"><a href="discrete-response.html#cb1084-2"></a><span class="st">  </span><span class="kw">vfold_cv</span>(<span class="dt">v =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1067"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1067-1"><a href="discrete-response.html#cb1067-1"></a>forest_folds &lt;-<span class="st"> </span>forest_train <span class="op">%&gt;%</span></span>
+<span id="cb1067-2"><a href="discrete-response.html#cb1067-2"></a><span class="st">  </span><span class="kw">vfold_cv</span>(<span class="dt">v =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p>Now we use <code>fit_resamples()</code> to see how it accurately the model performed on the fifth and final fold of the training set. We will save the output of <code>fit_resamples()</code> in forest_metrics to use later.</p>
-<div class="sourceCode" id="cb1085"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1085-1"><a href="discrete-response.html#cb1085-1"></a>forest_metrics &lt;-<span class="st"> </span><span class="kw">fit_resamples</span>(forest_mod,</span>
-<span id="cb1085-2"><a href="discrete-response.html#cb1085-2"></a>                                forest_recipe,</span>
-<span id="cb1085-3"><a href="discrete-response.html#cb1085-3"></a>                                forest_folds) </span>
-<span id="cb1085-4"><a href="discrete-response.html#cb1085-4"></a></span>
-<span id="cb1085-5"><a href="discrete-response.html#cb1085-5"></a>forest_metrics <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1068"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1068-1"><a href="discrete-response.html#cb1068-1"></a>forest_metrics &lt;-<span class="st"> </span><span class="kw">fit_resamples</span>(forest_mod,</span>
+<span id="cb1068-2"><a href="discrete-response.html#cb1068-2"></a>                                forest_recipe,</span>
+<span id="cb1068-3"><a href="discrete-response.html#cb1068-3"></a>                                forest_folds) </span>
+<span id="cb1068-4"><a href="discrete-response.html#cb1068-4"></a></span>
+<span id="cb1068-5"><a href="discrete-response.html#cb1068-5"></a>forest_metrics <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   .metric  .estimator  mean     n std_err
 ##   &lt;chr&gt;    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
@@ -2640,15 +2640,15 @@ https://s3.amazonaws.com/assets.datacamp.com/production/course_7215/slides/chapt
 ## 2 roc_auc  binary     0.652     5 0.00266</code></pre>
 <!-- MB: Interpret -->
 <p>Now that we saw how the training set performed, we’ll use our testing set. We do so by applying <code>forest_test</code> to <code>predict()</code>.</p>
-<div class="sourceCode" id="cb1087"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1087-1"><a href="discrete-response.html#cb1087-1"></a><span class="co">#forest_mod %&gt;%</span></span>
-<span id="cb1087-2"><a href="discrete-response.html#cb1087-2"></a><span class="co">#  fit(forest_formula, data = forest_train) %&gt;%</span></span>
-<span id="cb1087-3"><a href="discrete-response.html#cb1087-3"></a><span class="co">#  predict(new_data = forest_test)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1070"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1070-1"><a href="discrete-response.html#cb1070-1"></a><span class="co">#forest_mod %&gt;%</span></span>
+<span id="cb1070-2"><a href="discrete-response.html#cb1070-2"></a><span class="co">#  fit(forest_formula, data = forest_train) %&gt;%</span></span>
+<span id="cb1070-3"><a href="discrete-response.html#cb1070-3"></a><span class="co">#  predict(new_data = forest_test)</span></span></code></pre></div>
 <p>To extract the rmse, we again set the “truth” to <code>approval</code> so this function can compare our predicted values to the true values.</p>
-<div class="sourceCode" id="cb1088"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1088-1"><a href="discrete-response.html#cb1088-1"></a><span class="co">#forest_mod %&gt;%</span></span>
-<span id="cb1088-2"><a href="discrete-response.html#cb1088-2"></a><span class="co">#  fit(forest_formula, data = forest_train) %&gt;%</span></span>
-<span id="cb1088-3"><a href="discrete-response.html#cb1088-3"></a><span class="co">#  predict(new_data = forest_test) %&gt;%</span></span>
-<span id="cb1088-4"><a href="discrete-response.html#cb1088-4"></a><span class="co">#  bind_cols(forest_test) %&gt;%</span></span>
-<span id="cb1088-5"><a href="discrete-response.html#cb1088-5"></a><span class="co">#  rmse(truth = as.numeric(approval), estimate = as.numeric(.pred_class))</span></span></code></pre></div>
+<div class="sourceCode" id="cb1071"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1071-1"><a href="discrete-response.html#cb1071-1"></a><span class="co">#forest_mod %&gt;%</span></span>
+<span id="cb1071-2"><a href="discrete-response.html#cb1071-2"></a><span class="co">#  fit(forest_formula, data = forest_train) %&gt;%</span></span>
+<span id="cb1071-3"><a href="discrete-response.html#cb1071-3"></a><span class="co">#  predict(new_data = forest_test) %&gt;%</span></span>
+<span id="cb1071-4"><a href="discrete-response.html#cb1071-4"></a><span class="co">#  bind_cols(forest_test) %&gt;%</span></span>
+<span id="cb1071-5"><a href="discrete-response.html#cb1071-5"></a><span class="co">#  rmse(truth = as.numeric(approval), estimate = as.numeric(.pred_class))</span></span></code></pre></div>
 <p>The mean squared error is about 0.619.</p>
 <!-- We can use `collect_predictions()` to see exactly how many of the predictions on the test set were correct. It appears that 9051 were correct (the addition of the (0,0) and (1,1) cells), while 5403 were incorrect. -->
 <!-- ```{r} -->
@@ -2671,19 +2671,19 @@ https://s3.amazonaws.com/assets.datacamp.com/production/course_7215/slides/chapt
 <h3>
 <span class="header-section-number">12.5.4</span> Predicting New Data</h3>
 <p>Let’s use our final forest model to make some predictions. We’ll be passing in the same observations as with the CART example: a 54-year-old Asian voter, a 41-year-old Black voter, a 56-year-old White voter, and a 70-year-old Native American voter. However, our forest also includes a gender variable. We’ll make the first and third observations female.</p>
-<div class="sourceCode" id="cb1089"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1089-1"><a href="discrete-response.html#cb1089-1"></a><span class="co"># DK: If the model has been fit with race as a factor, then race in newdata must</span></span>
-<span id="cb1089-2"><a href="discrete-response.html#cb1089-2"></a><span class="co"># also be a factor and, subtle point!, must have the same levels as the variable</span></span>
-<span id="cb1089-3"><a href="discrete-response.html#cb1089-3"></a><span class="co"># which was used to fit the model, even if there are no observations with those</span></span>
-<span id="cb1089-4"><a href="discrete-response.html#cb1089-4"></a><span class="co"># values in the newdata.</span></span>
-<span id="cb1089-5"><a href="discrete-response.html#cb1089-5"></a></span>
-<span id="cb1089-6"><a href="discrete-response.html#cb1089-6"></a></span>
-<span id="cb1089-7"><a href="discrete-response.html#cb1089-7"></a>newdata &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">race =</span> <span class="kw">c</span>(<span class="st">"Asian"</span>, <span class="st">"Black"</span>, <span class="st">"White"</span>, <span class="st">"Native American"</span>),</span>
-<span id="cb1089-8"><a href="discrete-response.html#cb1089-8"></a>                  <span class="dt">age =</span> <span class="kw">c</span>(<span class="dv">54</span>, <span class="dv">41</span>, <span class="dv">56</span>, <span class="dv">70</span>),</span>
-<span id="cb1089-9"><a href="discrete-response.html#cb1089-9"></a>                 <span class="dt">gender =</span> <span class="kw">c</span>(<span class="st">"Female"</span>, <span class="st">"Male"</span>, <span class="st">"Female"</span>, <span class="st">"Male"</span>))</span>
-<span id="cb1089-10"><a href="discrete-response.html#cb1089-10"></a></span>
-<span id="cb1089-11"><a href="discrete-response.html#cb1089-11"></a><span class="co">#predict(forest_fit, new_data = newdata) </span></span></code></pre></div>
+<div class="sourceCode" id="cb1072"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1072-1"><a href="discrete-response.html#cb1072-1"></a><span class="co"># DK: If the model has been fit with race as a factor, then race in newdata must</span></span>
+<span id="cb1072-2"><a href="discrete-response.html#cb1072-2"></a><span class="co"># also be a factor and, subtle point!, must have the same levels as the variable</span></span>
+<span id="cb1072-3"><a href="discrete-response.html#cb1072-3"></a><span class="co"># which was used to fit the model, even if there are no observations with those</span></span>
+<span id="cb1072-4"><a href="discrete-response.html#cb1072-4"></a><span class="co"># values in the newdata.</span></span>
+<span id="cb1072-5"><a href="discrete-response.html#cb1072-5"></a></span>
+<span id="cb1072-6"><a href="discrete-response.html#cb1072-6"></a></span>
+<span id="cb1072-7"><a href="discrete-response.html#cb1072-7"></a>newdata &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">race =</span> <span class="kw">c</span>(<span class="st">"Asian"</span>, <span class="st">"Black"</span>, <span class="st">"White"</span>, <span class="st">"Native American"</span>),</span>
+<span id="cb1072-8"><a href="discrete-response.html#cb1072-8"></a>                  <span class="dt">age =</span> <span class="kw">c</span>(<span class="dv">54</span>, <span class="dv">41</span>, <span class="dv">56</span>, <span class="dv">70</span>),</span>
+<span id="cb1072-9"><a href="discrete-response.html#cb1072-9"></a>                 <span class="dt">gender =</span> <span class="kw">c</span>(<span class="st">"Female"</span>, <span class="st">"Male"</span>, <span class="st">"Female"</span>, <span class="st">"Male"</span>))</span>
+<span id="cb1072-10"><a href="discrete-response.html#cb1072-10"></a></span>
+<span id="cb1072-11"><a href="discrete-response.html#cb1072-11"></a><span class="co">#predict(forest_fit, new_data = newdata) </span></span></code></pre></div>
 <p>Our forest predicted that the first three voters would disaprove of the President and that our final voter would approve. These predictions differ from our CART predictions most likely because of the added variable: gender. Because females disapproved of the President at higher rates, the third voter was predicted to disapprove instead.</p>
-<div class="sourceCode" id="cb1090"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1090-1"><a href="discrete-response.html#cb1090-1"></a><span class="co">#posterior_linpred(forest_fit, newdata)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1073"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1073-1"><a href="discrete-response.html#cb1073-1"></a><span class="co">#posterior_linpred(forest_fit, newdata)</span></span></code></pre></div>
 </div>
 </div>
 <div id="comparing-models" class="section level2">
@@ -2691,25 +2691,25 @@ https://s3.amazonaws.com/assets.datacamp.com/production/course_7215/slides/chapt
 <span class="header-section-number">12.6</span> Comparing Models</h2>
 <p>Now that we’ve modelled the same formula using three different types of models (logistic regression, CART, and random forest), let’s compare these models to see which was the most accurate.</p>
 <p>Here is the output:</p>
-<div class="sourceCode" id="cb1091"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1091-1"><a href="discrete-response.html#cb1091-1"></a><span class="kw">fit_resamples</span>(logistic_mod, </span>
-<span id="cb1091-2"><a href="discrete-response.html#cb1091-2"></a>              log_recipe, </span>
-<span id="cb1091-3"><a href="discrete-response.html#cb1091-3"></a>              log_folds) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1074"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1074-1"><a href="discrete-response.html#cb1074-1"></a><span class="kw">fit_resamples</span>(logistic_mod, </span>
+<span id="cb1074-2"><a href="discrete-response.html#cb1074-2"></a>              log_recipe, </span>
+<span id="cb1074-3"><a href="discrete-response.html#cb1074-3"></a>              log_folds) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   .metric  .estimator  mean     n std_err
 ##   &lt;chr&gt;    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
 ## 1 accuracy binary     0.608     5 0.00394
 ## 2 roc_auc  binary     0.655     5 0.00335</code></pre>
-<div class="sourceCode" id="cb1093"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1093-1"><a href="discrete-response.html#cb1093-1"></a><span class="kw">fit_resamples</span>(tree_mod, </span>
-<span id="cb1093-2"><a href="discrete-response.html#cb1093-2"></a>              cart_recipe, </span>
-<span id="cb1093-3"><a href="discrete-response.html#cb1093-3"></a>              cart_folds) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1076"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1076-1"><a href="discrete-response.html#cb1076-1"></a><span class="kw">fit_resamples</span>(tree_mod, </span>
+<span id="cb1076-2"><a href="discrete-response.html#cb1076-2"></a>              cart_recipe, </span>
+<span id="cb1076-3"><a href="discrete-response.html#cb1076-3"></a>              cart_folds) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   .metric  .estimator  mean     n std_err
 ##   &lt;chr&gt;    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
 ## 1 accuracy binary     0.610     5 0.00234
 ## 2 roc_auc  binary     0.620     5 0.00644</code></pre>
-<div class="sourceCode" id="cb1095"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1095-1"><a href="discrete-response.html#cb1095-1"></a><span class="kw">fit_resamples</span>(forest_mod, </span>
-<span id="cb1095-2"><a href="discrete-response.html#cb1095-2"></a>              forest_recipe, </span>
-<span id="cb1095-3"><a href="discrete-response.html#cb1095-3"></a>              forest_folds) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1078"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1078-1"><a href="discrete-response.html#cb1078-1"></a><span class="kw">fit_resamples</span>(forest_mod, </span>
+<span id="cb1078-2"><a href="discrete-response.html#cb1078-2"></a>              forest_recipe, </span>
+<span id="cb1078-3"><a href="discrete-response.html#cb1078-3"></a>              forest_folds) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect_metrics</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   .metric  .estimator  mean     n std_err
 ##   &lt;chr&gt;    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
@@ -2717,7 +2717,7 @@ https://s3.amazonaws.com/assets.datacamp.com/production/course_7215/slides/chapt
 ## 2 roc_auc  binary     0.651     5 0.00270</code></pre>
 <p>Based on <code>accuracy</code>, the random forest performed best by a small margin, followed by logistic regression and then CART. <code>accuracy</code> is the percentage of observations in the testing set that the model (which was constructed using the training set) was able to successfully predict. All of the models performed within a margin of 0.01 of eachother. However, it makes sense that random forest was the most successful. By generating many prediction trees and averaging them rather than relying on one, random forest is a more precise form of modelling than CART.</p>
 <p><code>roc_auc</code> is similar to <code>accuracy</code> in that it is a measure of how good a model is at predicting 0s to be 0 and 1s to be 1 in the dataset. However, it is calculated by taking the area under the ROC curve. <code>roc_auc</code> itself is a shortened form of “area under the ROC curve.”</p>
-<div class="sourceCode" id="cb1097"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1097-1"><a href="discrete-response.html#cb1097-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">"12-discrete-response/images/ROC_AUC.png"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1080"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1080-1"><a href="discrete-response.html#cb1080-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">"12-discrete-response/images/ROC_AUC.png"</span>)</span></code></pre></div>
 <p><img src="12-discrete-response/images/ROC_AUC.png" width="487"></p>
 <p>The ROC curve is created by graphing the rate of true positives as the y-axis (those who approved of the President who were labelled as such) against the rate of false positives (those who approved of the President but were labelled as disapproving). The area under this curve comes out to a very similar measure of accuracy. A <code>roc_auc</code> of 1 means that the testing set was perfectly predicted, with no false positives, while a 0 means that every observation of the testing set was falsely predicted.</p>
 <p>In the case of the <code>roc_auc</code>, our logistic regression performed best, followed by the random forest, and then CART. They were all within 0.05 of eachother, a wider range than <code>accuracy</code>. Being a cruder version of random forest, it again makes sense that it placed last.</p>
@@ -2731,7 +2731,7 @@ https://s3.amazonaws.com/assets.datacamp.com/production/course_7215/slides/chapt
 <p>Let’s return to our original question of how Asians and Whites specifically vary in their support of the president. We’ll use our logistic regression first, as that model performed with the highest roc_auc.</p>
 <!-- imprtnt: When comparing blacks and hispanics, the approval was predicted to be 0 for every age. So i switched to white and asian here. Need to go back and fix in earlier work (in The Question section) -->
 <p>We’ve created a dataset of 24 new Asian and White voters so that we can use our model to predict if they will vote for the President. Each voter’s race, age, and gender have been included as these are the 3 demographic factors our model uses to predict approval.</p>
-<div class="sourceCode" id="cb1098"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1098-1"><a href="discrete-response.html#cb1098-1"></a>newdata</span></code></pre></div>
+<div class="sourceCode" id="cb1081"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1081-1"><a href="discrete-response.html#cb1081-1"></a>newdata</span></code></pre></div>
 <pre><code>## # A tibble: 24 x 3
 ##    race    age gender
 ##    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; 
@@ -2747,8 +2747,8 @@ https://s3.amazonaws.com/assets.datacamp.com/production/course_7215/slides/chapt
 ## 10 Asian    73 Male  
 ## # … with 14 more rows</code></pre>
 <p>Next, we’ll use the <code>predict()</code> function to see how our model thinks these voters will regard the President.</p>
-<div class="sourceCode" id="cb1100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1100-1"><a href="discrete-response.html#cb1100-1"></a>x &lt;-<span class="st"> </span><span class="kw">predict</span>(logistic_fit, <span class="dt">new_data =</span> newdata) </span>
-<span id="cb1100-2"><a href="discrete-response.html#cb1100-2"></a>x</span></code></pre></div>
+<div class="sourceCode" id="cb1083"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1083-1"><a href="discrete-response.html#cb1083-1"></a>x &lt;-<span class="st"> </span><span class="kw">predict</span>(logistic_fit, <span class="dt">new_data =</span> newdata) </span>
+<span id="cb1083-2"><a href="discrete-response.html#cb1083-2"></a>x</span></code></pre></div>
 <pre><code>## # A tibble: 24 x 1
 ##    .pred_class
 ##    &lt;fct&gt;      
@@ -2765,23 +2765,23 @@ https://s3.amazonaws.com/assets.datacamp.com/production/course_7215/slides/chapt
 ## # … with 14 more rows</code></pre>
 <p>Well, now what? We have our predictions for each of the new voters, but it isn’t helpful to answering our question yet. To see greater trends between White and Asian voters, let’s visualize our predictions! The new data had an intentionally even spread of age, race, and gender to make our comparisons easier.</p>
 <p>Let’s use the same strategy from our exploratory data analysis earlier. We can graph age against approval, facet by gender, and color the observations by race. This way, we can view trends across all three variables in one graph.</p>
-<div class="sourceCode" id="cb1102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1102-1"><a href="discrete-response.html#cb1102-1"></a><span class="co"># Cleaning the data </span></span>
-<span id="cb1102-2"><a href="discrete-response.html#cb1102-2"></a></span>
-<span id="cb1102-3"><a href="discrete-response.html#cb1102-3"></a>y &lt;-<span class="st"> </span>x <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1102-4"><a href="discrete-response.html#cb1102-4"></a><span class="st">  </span><span class="kw">bind_cols</span>(newdata) <span class="op">%&gt;%</span></span>
-<span id="cb1102-5"><a href="discrete-response.html#cb1102-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> .pred_class) <span class="op">%&gt;%</span></span>
-<span id="cb1102-6"><a href="discrete-response.html#cb1102-6"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>.pred_class)</span>
-<span id="cb1102-7"><a href="discrete-response.html#cb1102-7"></a></span>
-<span id="cb1102-8"><a href="discrete-response.html#cb1102-8"></a><span class="co"># Graphing the data</span></span>
-<span id="cb1102-9"><a href="discrete-response.html#cb1102-9"></a></span>
-<span id="cb1102-10"><a href="discrete-response.html#cb1102-10"></a>y <span class="op">%&gt;%</span></span>
-<span id="cb1102-11"><a href="discrete-response.html#cb1102-11"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> approval, <span class="dt">color =</span> race)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1102-12"><a href="discrete-response.html#cb1102-12"></a><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">width =</span> <span class="dv">8</span>, <span class="dt">height =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="co"># Adding width so that the dots don't block eachother</span></span>
-<span id="cb1102-13"><a href="discrete-response.html#cb1102-13"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>gender) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1102-14"><a href="discrete-response.html#cb1102-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Age"</span>,</span>
-<span id="cb1102-15"><a href="discrete-response.html#cb1102-15"></a>       <span class="dt">y =</span> <span class="st">"Predicted Approval"</span>,</span>
-<span id="cb1102-16"><a href="discrete-response.html#cb1102-16"></a>       <span class="dt">title =</span> <span class="st">"Predicted Approval of President for White and Asian Voters"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-846-1.png" width="672"></p>
+<div class="sourceCode" id="cb1085"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1085-1"><a href="discrete-response.html#cb1085-1"></a><span class="co"># Cleaning the data </span></span>
+<span id="cb1085-2"><a href="discrete-response.html#cb1085-2"></a></span>
+<span id="cb1085-3"><a href="discrete-response.html#cb1085-3"></a>y &lt;-<span class="st"> </span>x <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1085-4"><a href="discrete-response.html#cb1085-4"></a><span class="st">  </span><span class="kw">bind_cols</span>(newdata) <span class="op">%&gt;%</span></span>
+<span id="cb1085-5"><a href="discrete-response.html#cb1085-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">approval =</span> .pred_class) <span class="op">%&gt;%</span></span>
+<span id="cb1085-6"><a href="discrete-response.html#cb1085-6"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>.pred_class)</span>
+<span id="cb1085-7"><a href="discrete-response.html#cb1085-7"></a></span>
+<span id="cb1085-8"><a href="discrete-response.html#cb1085-8"></a><span class="co"># Graphing the data</span></span>
+<span id="cb1085-9"><a href="discrete-response.html#cb1085-9"></a></span>
+<span id="cb1085-10"><a href="discrete-response.html#cb1085-10"></a>y <span class="op">%&gt;%</span></span>
+<span id="cb1085-11"><a href="discrete-response.html#cb1085-11"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> approval, <span class="dt">color =</span> race)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1085-12"><a href="discrete-response.html#cb1085-12"></a><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">width =</span> <span class="dv">8</span>, <span class="dt">height =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="co"># Adding width so that the dots don't block eachother</span></span>
+<span id="cb1085-13"><a href="discrete-response.html#cb1085-13"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>gender) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1085-14"><a href="discrete-response.html#cb1085-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Age"</span>,</span>
+<span id="cb1085-15"><a href="discrete-response.html#cb1085-15"></a>       <span class="dt">y =</span> <span class="st">"Predicted Approval"</span>,</span>
+<span id="cb1085-16"><a href="discrete-response.html#cb1085-16"></a>       <span class="dt">title =</span> <span class="st">"Predicted Approval of President for White and Asian Voters"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-852-1.png" width="672"></p>
 <p>So, how do White and Asian voters vary in their support of the President in 2018? As we can see, this is a more complex question than one may think. For example, if one were only considering race, they would guess an White voter to be more likely to approve of the President than an Asian voter. However, a 40-year-old White male, according to our model, is not as likely to approve of the President as a 70-year-old Asian man. This is useful information to consider: when using our model to its full extent, we can make predictions based on more than one variable at a time.</p>
 <p>What else can we learn from this graph? Both races follow the trend of older voters being more likely to approve of the President. However, we see that Asian woman were predicted to <em>disapprove</em> of the President at any age, while the older Asian men were predicted to approve of him. The margin was much closer for White voters, with both older men and women being predicted to approve.</p>
 
@@ -2793,7 +2793,7 @@ https://s3.amazonaws.com/assets.datacamp.com/production/course_7215/slides/chapt
 <a href="appendices.html"><button class="btn btn-default">Next</button></a>
 </p>
 <p class="build-date">Page built: 
-2020-08-17
+2020-08-21
 </p>
 </div>
 </div>

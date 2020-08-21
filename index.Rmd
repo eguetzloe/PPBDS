@@ -22,7 +22,7 @@ graphics: yes
 ::: {.fullwidth}
 
 ```{r, echo=FALSE, out.width="100%"}
-knitr::include_graphics("other/images/cover.jpg", ) 
+knitr::include_graphics("other/images/cover.png", ) 
 ```
 
 :::

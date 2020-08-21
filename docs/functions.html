@@ -190,24 +190,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="header-section-number">4.1</span> Introduction to Functions</h2>
 <p>First, let’s introduce the concept of functions. A function is a piece of code that is packaged in a way that makes it easy to reuse. Functions make it easy for you to <code>filter()</code>, <code>arrange()</code>, <code>select()</code>, and create a <code>tibble()</code>, as you have seen in the last few chapters. Functions also allow you to transform variables and perform a bunch of useful mathematical calculations, such as finding the <code>min()</code>, <code>max()</code>, and <code>quantile()</code>s of a dataset. Functions are also important in generating data and values, such as using <code>rnorm()</code> to randomly generate a normal distribution.</p>
 <p>Note that every time we mention a function, we include the parentheses. This is because you call a function by including its parentheses and any necessary arguments in those parentheses. If you run the function name without its parentheses, R will return the code that makes up the function.</p>
-<div class="sourceCode" id="cb537"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb537-1"><a href="functions.html#cb537-1"></a><span class="kw">rnorm</span>(<span class="dv">1</span>)</span></code></pre></div>
-<pre><code>## [1] -0.19</code></pre>
+<div class="sourceCode" id="cb521"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb521-1"><a href="functions.html#cb521-1"></a><span class="kw">rnorm</span>(<span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## [1] 0.82</code></pre>
 <p>If you run the function name without its parentheses, R will return the code that makes up the function.</p>
-<div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb539-1"><a href="functions.html#cb539-1"></a>rnorm</span></code></pre></div>
+<div class="sourceCode" id="cb523"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb523-1"><a href="functions.html#cb523-1"></a>rnorm</span></code></pre></div>
 <pre><code>## function (n, mean = 0, sd = 1) 
 ## .Call(C_rnorm, n, mean, sd)
-## &lt;bytecode: 0x7f97a9e01468&gt;
+## &lt;bytecode: 0x7fe8290b29e8&gt;
 ## &lt;environment: namespace:stats&gt;</code></pre>
 <p>Functions can do all sorts of things. Below, <code>sample()</code> takes a vector of values and spits out a number of random values from that vector. You can specify the number of random values with the argument <code>size</code>. Let’s take it for a spin. This is the equivalent of rolling a die!</p>
-<div class="sourceCode" id="cb541"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb541-1"><a href="functions.html#cb541-1"></a><span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">size =</span> <span class="dv">1</span>)</span></code></pre></div>
-<pre><code>## [1] 3</code></pre>
+<div class="sourceCode" id="cb525"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb525-1"><a href="functions.html#cb525-1"></a><span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">size =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
 <p>Functions can also take in other functions as arguments. For example, <code>replicate()</code> takes an expression and repeats it for <code>n</code> specified times. This is really useful when you want to generate many iterations of data. What if we replicated the rolling of a die ten times?</p>
-<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb543-1"><a href="functions.html#cb543-1"></a><span class="kw">replicate</span>(<span class="dv">10</span>, <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span>))</span></code></pre></div>
-<pre><code>##  [1] 2 3 6 2 2 4 3 6 2 4</code></pre>
+<div class="sourceCode" id="cb527"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb527-1"><a href="functions.html#cb527-1"></a><span class="kw">replicate</span>(<span class="dv">10</span>, <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>##  [1] 5 3 5 3 4 3 4 5 1 4</code></pre>
 <p>An especially useful type of function is the family of <code>map_*</code> functions. <code>map_*</code> functions come from the <strong>purrr</strong> package, which you will have loaded if you have loaded <strong>tidyverse</strong>. These functions apply the same function to every row in a tibble.</p>
 <p>Let’s create a tibble with 3 values: 3, 7, and 2.</p>
-<div class="sourceCode" id="cb545"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb545-1"><a href="functions.html#cb545-1"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb545-2"><a href="functions.html#cb545-2"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb529"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb529-1"><a href="functions.html#cb529-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb529-2"><a href="functions.html#cb529-2"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 1
 ##       x
 ##   &lt;dbl&gt;
@@ -215,8 +215,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 2     7
 ## 3     2</code></pre>
 <p>What if we wanted to take the square root of each value?</p>
-<div class="sourceCode" id="cb547"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb547-1"><a href="functions.html#cb547-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb547-2"><a href="functions.html#cb547-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map_dbl</span>(x, sqrt))</span></code></pre></div>
+<div class="sourceCode" id="cb531"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb531-1"><a href="functions.html#cb531-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb531-2"><a href="functions.html#cb531-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map_dbl</span>(x, sqrt))</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 2
 ##       x   new
 ##   &lt;dbl&gt; &lt;dbl&gt;
@@ -224,13 +224,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 2     7  2.65
 ## 3     2  1.41</code></pre>
 <p><code>map_dbl()</code> (pronounced “map-double”) took the function <code>sqrt()</code> and applied it to each element of <code>x</code>. Note that, when we passed the function <code>sqrt()</code> to <code>map_dbl()</code>, we passed in just its name, without the closing parentheses. This code fails:</p>
-<div class="sourceCode" id="cb549"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb549-1"><a href="functions.html#cb549-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb549-2"><a href="functions.html#cb549-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map_dbl</span>(x, <span class="kw">sqrt</span>()))</span></code></pre></div>
+<div class="sourceCode" id="cb533"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb533-1"><a href="functions.html#cb533-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb533-2"><a href="functions.html#cb533-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map_dbl</span>(x, <span class="kw">sqrt</span>()))</span></code></pre></div>
 <pre><code>## Error: Problem with `mutate()` input `new`.
 ## x 0 arguments passed to 'sqrt' which requires 1
 ## ℹ Input `new` is `map_dbl(x, sqrt())`.</code></pre>
 <p><code>sqrt()</code> with the parentheses is a call to the function. So, the first thing R tries to do is to run the function. Doing so fails because <code>sqrt()</code> requires an argument <code>x</code>, which is empty.</p>
-<p><label for="tufte-mn-44" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-44" class="margin-toggle"><span class="marginnote"><span style="display: block;">Lesson: When passing a function in to <code>map_*</code> functions, pass just the name.</span></span></p>
+<p><label for="tufte-mn-54" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-54" class="margin-toggle"><span class="marginnote"><span style="display: block;">Lesson: When passing a function in to <code>map_*</code> functions, pass just the name.</span></span></p>
 <p>We called these <code>map_*</code> <em>functions</em> (plural) before. If you know the expected output of your function, you can specify that kind of vector:</p>
 <ul>
 <li>
@@ -250,8 +250,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>So, since our example produces numeric output, we use <code>map_dbl()</code> instead of <code>map()</code>.</p>
 <p>Now, you may be wondering, what’s the difference between using <code>mutate()</code> and <code>map_*</code> functions? The answer lies in iteration, which is the specialization of the <strong>purrr</strong> package. <code>map_*</code> functions are powerful because of their ability to apply functions to every single element of a list, which <code>mutate()</code> cannot handle.</p>
 <p>Speaking of lists, <code>map_*</code> functions are known to take in list inputs, and sometimes even create list-columns depending on the specific <code>map_*</code> function.</p>
-<div class="sourceCode" id="cb551"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb551-1"><a href="functions.html#cb551-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb551-2"><a href="functions.html#cb551-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map</span>(x, sqrt))</span></code></pre></div>
+<div class="sourceCode" id="cb535"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb535-1"><a href="functions.html#cb535-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb535-2"><a href="functions.html#cb535-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map</span>(x, sqrt))</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 2
 ##       x new      
 ##   &lt;dbl&gt; &lt;list&gt;   
@@ -259,9 +259,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 2     7 &lt;dbl [1]&gt;
 ## 3     2 &lt;dbl [1]&gt;</code></pre>
 <p>Notice that we changed the <code>map_dbl()</code> to <code>map()</code>, which returns a list-column. You can use <code>str</code> to easily view the contents of a list-column.</p>
-<div class="sourceCode" id="cb553"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb553-1"><a href="functions.html#cb553-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb553-2"><a href="functions.html#cb553-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map</span>(x, sqrt)) <span class="op">%&gt;%</span></span>
-<span id="cb553-3"><a href="functions.html#cb553-3"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb537"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb537-1"><a href="functions.html#cb537-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb537-2"><a href="functions.html#cb537-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map</span>(x, sqrt)) <span class="op">%&gt;%</span></span>
+<span id="cb537-3"><a href="functions.html#cb537-3"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## tibble [3 × 2] (S3: tbl_df/tbl/data.frame)
 ##  $ x  : num [1:3] 3 7 2
 ##  $ new:List of 3
@@ -274,43 +274,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2>
 <span class="header-section-number">4.2</span> Lists and List-columns</h2>
 <p>Let’s quickly refresh on what lists are and functions that commonly deal with lists. Recall that a list is different from an atomic vector. Atomic vectors are familiar to us: each element of the vector has one value, and thus if an atomic vector is a column in your dataset, each observation gets a single value. Lists, however, can contain vectors as elements.</p>
-<div class="sourceCode" id="cb555"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb555-1"><a href="functions.html#cb555-1"></a>x &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>))</span>
-<span id="cb555-2"><a href="functions.html#cb555-2"></a>x</span></code></pre></div>
+<div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb539-1"><a href="functions.html#cb539-1"></a>x &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>))</span>
+<span id="cb539-2"><a href="functions.html#cb539-2"></a>x</span></code></pre></div>
 <pre><code>## [[1]]
 ## [1] 3 7 2</code></pre>
 <p>The above object, x, contains a numeric vector as an element. How do we extract the first element of the list?</p>
-<div class="sourceCode" id="cb557"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb557-1"><a href="functions.html#cb557-1"></a>x[[<span class="dv">1</span>]][<span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb541"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb541-1"><a href="functions.html#cb541-1"></a>x[[<span class="dv">1</span>]][<span class="dv">1</span>]</span></code></pre></div>
 <pre><code>## [1] 3</code></pre>
 <p>Right! Recall the example from Chapter 2 in which lists are a pepper jar that contain more pepper packets. Don’t forget the square brackets!</p>
 <p>Let’s index through more lists to make sure it works. Remember that lists can contain a multitude of data types. First, let’s create a few new lists. Pay attention to the placement of <code>list()</code>.</p>
-<div class="sourceCode" id="cb559"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb559-1"><a href="functions.html#cb559-1"></a>list_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">"Three"</span>, <span class="dv">7</span>, <span class="st">"Two"</span>)</span>
-<span id="cb559-2"><a href="functions.html#cb559-2"></a>list_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">list</span>(<span class="dv">3</span>), <span class="kw">list</span>(<span class="st">"7"</span>), <span class="kw">list</span>(<span class="dv">2</span>))</span>
-<span id="cb559-3"><a href="functions.html#cb559-3"></a></span>
-<span id="cb559-4"><a href="functions.html#cb559-4"></a>list_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb543-1"><a href="functions.html#cb543-1"></a>list_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">"Three"</span>, <span class="dv">7</span>, <span class="st">"Two"</span>)</span>
+<span id="cb543-2"><a href="functions.html#cb543-2"></a>list_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">list</span>(<span class="dv">3</span>), <span class="kw">list</span>(<span class="st">"7"</span>), <span class="kw">list</span>(<span class="dv">2</span>))</span>
+<span id="cb543-3"><a href="functions.html#cb543-3"></a></span>
+<span id="cb543-4"><a href="functions.html#cb543-4"></a>list_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## List of 3
 ##  $ : chr "Three"
 ##  $ : num 7
 ##  $ : chr "Two"</code></pre>
-<div class="sourceCode" id="cb561"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb561-1"><a href="functions.html#cb561-1"></a>list_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb545"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb545-1"><a href="functions.html#cb545-1"></a>list_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## List of 3
 ##  $ : num 3
 ##  $ : chr "7"
 ##  $ : num 2</code></pre>
-<div class="sourceCode" id="cb563"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb563-1"><a href="functions.html#cb563-1"></a>x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb547"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb547-1"><a href="functions.html#cb547-1"></a>x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## List of 1
 ##  $ : num [1:3] 3 7 2</code></pre>
 <p>As you can see, the two objects defined above are lists. It also displays the data type of each element. <code>list_1</code> is a list of length 3, with a character, a numeric, and a character. <code>list_2</code> is also a list of length 3, with a numeric, a character, and a numeric. Note that the <code>[1:3]</code> denotes a numeric vector of length 3 for <code>x</code>.</p>
 <p>Now, let’s extract the first element of each of the new lists.</p>
-<div class="sourceCode" id="cb565"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb565-1"><a href="functions.html#cb565-1"></a>list_<span class="dv">1</span>[[<span class="dv">1</span>]][<span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb549"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb549-1"><a href="functions.html#cb549-1"></a>list_<span class="dv">1</span>[[<span class="dv">1</span>]][<span class="dv">1</span>]</span></code></pre></div>
 <pre><code>## [1] "Three"</code></pre>
-<div class="sourceCode" id="cb567"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb567-1"><a href="functions.html#cb567-1"></a>list_<span class="dv">2</span>[[<span class="dv">1</span>]][<span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb551"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb551-1"><a href="functions.html#cb551-1"></a>list_<span class="dv">2</span>[[<span class="dv">1</span>]][<span class="dv">1</span>]</span></code></pre></div>
 <pre><code>## [1] 3</code></pre>
 <p>You might be wondering, how is the list <code>x</code> different from the lists <code>list_1</code> and <code>list_2</code>? Besides the contents of the lists, we wanted to demonstrate how there are various ways to create lists. You can directly input values inside <code>list()</code>, or wrap the values in <code>c()</code> first to create a vector element.</p>
 <p>There are a number of built-in R functions that output lists. For example, the <strong><em>ggplot</em></strong>s you have been making store all of the graph information in lists.</p>
 <!-- EC: Keep thing about ggplot? -->
-<div class="sourceCode" id="cb569"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb569-1"><a href="functions.html#cb569-1"></a>y &lt;-<span class="st"> </span><span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(<span class="dt">x =</span> cyl, <span class="dt">y =</span> mpg)) <span class="op">+</span></span>
-<span id="cb569-2"><a href="functions.html#cb569-2"></a><span class="st">  </span><span class="kw">geom_col</span>()</span>
-<span id="cb569-3"><a href="functions.html#cb569-3"></a>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb553"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb553-1"><a href="functions.html#cb553-1"></a>y &lt;-<span class="st"> </span><span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(<span class="dt">x =</span> cyl, <span class="dt">y =</span> mpg)) <span class="op">+</span></span>
+<span id="cb553-2"><a href="functions.html#cb553-2"></a><span class="st">  </span><span class="kw">geom_col</span>()</span>
+<span id="cb553-3"><a href="functions.html#cb553-3"></a>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## List of 9
 ##  $ data       :'data.frame':	32 obs. of  11 variables:
 ##   ..$ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
@@ -454,47 +454,47 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   ..$ y: chr "mpg"
 ##  - attr(*, "class")= chr [1:2] "gg" "ggplot"</code></pre>
 <p>Any function that returns multiple values can be used to create a list output. For example, consider the following list <code>x</code> again:</p>
-<div class="sourceCode" id="cb571"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb571-1"><a href="functions.html#cb571-1"></a>x</span></code></pre></div>
+<div class="sourceCode" id="cb555"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb555-1"><a href="functions.html#cb555-1"></a>x</span></code></pre></div>
 <pre><code>## [[1]]
 ## [1] 3 7 2</code></pre>
 <p>If we take the <code>range()</code> of <code>x</code>, we expect two values to be returned: the minimum value and the maximum value in the numeric vector.</p>
-<div class="sourceCode" id="cb573"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb573-1"><a href="functions.html#cb573-1"></a><span class="kw">range</span>(x)</span></code></pre></div>
+<div class="sourceCode" id="cb557"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb557-1"><a href="functions.html#cb557-1"></a><span class="kw">range</span>(x)</span></code></pre></div>
 <pre><code>## [1] 2 7</code></pre>
-<div class="sourceCode" id="cb575"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb575-1"><a href="functions.html#cb575-1"></a><span class="kw">class</span>(<span class="kw">range</span>(x))</span></code></pre></div>
+<div class="sourceCode" id="cb559"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb559-1"><a href="functions.html#cb559-1"></a><span class="kw">class</span>(<span class="kw">range</span>(x))</span></code></pre></div>
 <pre><code>## [1] "numeric"</code></pre>
 <p>The output of <code>range(x)</code> is a numeric vector with two values, 2 and 7. To turn the output into a list, simply wrap the line of code with <code>list()</code>.</p>
-<div class="sourceCode" id="cb577"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb577-1"><a href="functions.html#cb577-1"></a><span class="kw">list</span>(<span class="kw">range</span>(x))</span></code></pre></div>
+<div class="sourceCode" id="cb561"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb561-1"><a href="functions.html#cb561-1"></a><span class="kw">list</span>(<span class="kw">range</span>(x))</span></code></pre></div>
 <pre><code>## [[1]]
 ## [1] 2 7</code></pre>
-<div class="sourceCode" id="cb579"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb579-1"><a href="functions.html#cb579-1"></a><span class="kw">class</span>(<span class="kw">list</span>(<span class="kw">range</span>(x)))</span></code></pre></div>
+<div class="sourceCode" id="cb563"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb563-1"><a href="functions.html#cb563-1"></a><span class="kw">class</span>(<span class="kw">list</span>(<span class="kw">range</span>(x)))</span></code></pre></div>
 <pre><code>## [1] "list"</code></pre>
 <p>What if we want to create a tibble with the values of <code>range(x)</code>?</p>
-<div class="sourceCode" id="cb581"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb581-1"><a href="functions.html#cb581-1"></a><span class="kw">tibble</span>(<span class="dt">col_1 =</span> <span class="kw">list</span>(<span class="kw">range</span>(x)))</span></code></pre></div>
+<div class="sourceCode" id="cb565"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb565-1"><a href="functions.html#cb565-1"></a><span class="kw">tibble</span>(<span class="dt">col_1 =</span> <span class="kw">list</span>(<span class="kw">range</span>(x)))</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 1
 ##   col_1    
 ##   &lt;list&gt;   
 ## 1 &lt;dbl [2]&gt;</code></pre>
 <p>Notice this is a 1x1 tibble with one observation, which is a list of one element. The element is a vector of the integers 2 and 7. Voila! You have just created a *list-column**.</p>
-<p><label for="tufte-mn-45" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-45" class="margin-toggle"><span class="marginnote"><span style="display: block;">Lesson: If a function returns multiple values as a vector, like <code>range()</code> does, you can’t use it directly to obtain a list-column, but you can wrap <code>list()</code> around it in order to get the same behavior.</span></span></p>
+<p><label for="tufte-mn-55" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-55" class="margin-toggle"><span class="marginnote"><span style="display: block;">Lesson: If a function returns multiple values as a vector, like <code>range()</code> does, you can’t use it directly to obtain a list-column, but you can wrap <code>list()</code> around it in order to get the same behavior.</span></span></p>
 <!-- EC: Commenting out this sentence for now. We are now going to learn about [**list columns**](https://r4ds.had.co.nz/many-models.html#list-columns-1).^[If I were going to give a lecture on these topics, it would look like [this one](https://resources.rstudio.com/webinars/how-to-work-with-list-columns-garrett-grolemund).] -->
 <p>A list column is a column of your data which is a <a href="https://adv-r.hadley.nz/vectors-chap.html#lists">list</a> rather than an atomic vector. Like with lists, you can pipe in <code>str()</code> to read the column more easily.</p>
-<div class="sourceCode" id="cb583"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb583-1"><a href="functions.html#cb583-1"></a><span class="kw">tibble</span>(<span class="dt">col_1 =</span> <span class="kw">list</span>(<span class="kw">range</span>(x))) <span class="op">%&gt;%</span></span>
-<span id="cb583-2"><a href="functions.html#cb583-2"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb567"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb567-1"><a href="functions.html#cb567-1"></a><span class="kw">tibble</span>(<span class="dt">col_1 =</span> <span class="kw">list</span>(<span class="kw">range</span>(x))) <span class="op">%&gt;%</span></span>
+<span id="cb567-2"><a href="functions.html#cb567-2"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## tibble [1 × 1] (S3: tbl_df/tbl/data.frame)
 ##  $ col_1:List of 1
 ##   ..$ : num [1:2] 2 7</code></pre>
 <p>Note that this is a case where it is crucial to use <code>tibble()</code>, not <code>data.frame()</code>! If we had used <code>data.frame()</code> in the last example, it wouldn’t have worked how we wanted:</p>
-<div class="sourceCode" id="cb585"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb585-1"><a href="functions.html#cb585-1"></a><span class="kw">data.frame</span>(<span class="dt">col_1 =</span> <span class="kw">list</span>(<span class="kw">range</span>(x)))</span></code></pre></div>
+<div class="sourceCode" id="cb569"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb569-1"><a href="functions.html#cb569-1"></a><span class="kw">data.frame</span>(<span class="dt">col_1 =</span> <span class="kw">list</span>(<span class="kw">range</span>(x)))</span></code></pre></div>
 <pre><code>##   c.2..7.
 ## 1       2
 ## 2       7</code></pre>
 <p>Note that the output is a 2 x 1 dataframe with double observations, not one singular list.</p>
 <p>Wrapping a function with <code>list()</code> is often how we will go about creating list columns. Let’s practice with the <code>kenya</code> dataset. How could we add a column to the dataset that included the quantiles of the <code>poverty</code> variable?</p>
 <p>First, we load the necessary <code>PPBDS.data</code> library, select the relevant variables, and group by <code>block</code>. We are grouping because we are curious as to how the poverty rates look when aggregated by block, rather than as individual observations.</p>
-<div class="sourceCode" id="cb587"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb587-1"><a href="functions.html#cb587-1"></a><span class="kw">library</span>(PPBDS.data)</span>
-<span id="cb587-2"><a href="functions.html#cb587-2"></a>kenya <span class="op">%&gt;%</span></span>
-<span id="cb587-3"><a href="functions.html#cb587-3"></a><span class="st">  </span><span class="kw">select</span>(block, poverty) <span class="op">%&gt;%</span></span>
-<span id="cb587-4"><a href="functions.html#cb587-4"></a><span class="st">  </span><span class="kw">group_by</span>(block)</span></code></pre></div>
+<div class="sourceCode" id="cb571"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb571-1"><a href="functions.html#cb571-1"></a><span class="kw">library</span>(PPBDS.data)</span>
+<span id="cb571-2"><a href="functions.html#cb571-2"></a>kenya <span class="op">%&gt;%</span></span>
+<span id="cb571-3"><a href="functions.html#cb571-3"></a><span class="st">  </span><span class="kw">select</span>(block, poverty) <span class="op">%&gt;%</span></span>
+<span id="cb571-4"><a href="functions.html#cb571-4"></a><span class="st">  </span><span class="kw">group_by</span>(block)</span></code></pre></div>
 <pre><code>## # A tibble: 1,672 x 2
 ## # Groups:   block [279]
 ##    block    poverty
@@ -511,11 +511,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 10 KWALE/16   0.398
 ## # … with 1,662 more rows</code></pre>
 <p>Next, we will create a list-column by wrapping <code>quantile()</code> with <code>list()</code>. <code>quantile()</code> naturally produces a numeric vector of the quantiles of <code>poverty</code>, and wrapping with <code>list()</code> will capture this numeric vector as a list.</p>
-<div class="sourceCode" id="cb589"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb589-1"><a href="functions.html#cb589-1"></a><span class="kw">library</span>(PPBDS.data)</span>
-<span id="cb589-2"><a href="functions.html#cb589-2"></a>kenya <span class="op">%&gt;%</span></span>
-<span id="cb589-3"><a href="functions.html#cb589-3"></a><span class="st">  </span><span class="kw">select</span>(block, poverty) <span class="op">%&gt;%</span></span>
-<span id="cb589-4"><a href="functions.html#cb589-4"></a><span class="st">  </span><span class="kw">group_by</span>(block) <span class="op">%&gt;%</span></span>
-<span id="cb589-5"><a href="functions.html#cb589-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">povertyQuantile =</span> <span class="kw">list</span>(<span class="kw">quantile</span>(poverty)))</span></code></pre></div>
+<div class="sourceCode" id="cb573"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb573-1"><a href="functions.html#cb573-1"></a><span class="kw">library</span>(PPBDS.data)</span>
+<span id="cb573-2"><a href="functions.html#cb573-2"></a>kenya <span class="op">%&gt;%</span></span>
+<span id="cb573-3"><a href="functions.html#cb573-3"></a><span class="st">  </span><span class="kw">select</span>(block, poverty) <span class="op">%&gt;%</span></span>
+<span id="cb573-4"><a href="functions.html#cb573-4"></a><span class="st">  </span><span class="kw">group_by</span>(block) <span class="op">%&gt;%</span></span>
+<span id="cb573-5"><a href="functions.html#cb573-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">povertyQuantile =</span> <span class="kw">list</span>(<span class="kw">quantile</span>(poverty)))</span></code></pre></div>
 <pre><code>## # A tibble: 1,672 x 3
 ## # Groups:   block [279]
 ##    block    poverty povertyQuantile
@@ -532,11 +532,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 10 KWALE/16   0.398 &lt;dbl [5]&gt;      
 ## # … with 1,662 more rows</code></pre>
 <p>Or let’s say that we wanted 1) to subset the dataset to the those with <code>treatment == "control"</code>, 2) group by <code>block</code>, and 3) get a <code>summary()</code> of the <code>distance</code> variable by continent:</p>
-<div class="sourceCode" id="cb591"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb591-1"><a href="functions.html#cb591-1"></a>kenya <span class="op">%&gt;%</span></span>
-<span id="cb591-2"><a href="functions.html#cb591-2"></a><span class="st">  </span><span class="kw">select</span>(treatment, block, distance) <span class="op">%&gt;%</span></span>
-<span id="cb591-3"><a href="functions.html#cb591-3"></a><span class="st">  </span><span class="kw">filter</span>(treatment <span class="op">==</span><span class="st"> "control"</span>) <span class="op">%&gt;%</span></span>
-<span id="cb591-4"><a href="functions.html#cb591-4"></a><span class="st">  </span><span class="kw">group_by</span>(block) <span class="op">%&gt;%</span></span>
-<span id="cb591-5"><a href="functions.html#cb591-5"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">distSummary =</span> <span class="kw">list</span>(<span class="kw">summary</span>(distance)))</span></code></pre></div>
+<div class="sourceCode" id="cb575"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb575-1"><a href="functions.html#cb575-1"></a>kenya <span class="op">%&gt;%</span></span>
+<span id="cb575-2"><a href="functions.html#cb575-2"></a><span class="st">  </span><span class="kw">select</span>(treatment, block, distance) <span class="op">%&gt;%</span></span>
+<span id="cb575-3"><a href="functions.html#cb575-3"></a><span class="st">  </span><span class="kw">filter</span>(treatment <span class="op">==</span><span class="st"> "control"</span>) <span class="op">%&gt;%</span></span>
+<span id="cb575-4"><a href="functions.html#cb575-4"></a><span class="st">  </span><span class="kw">group_by</span>(block) <span class="op">%&gt;%</span></span>
+<span id="cb575-5"><a href="functions.html#cb575-5"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">distSummary =</span> <span class="kw">list</span>(<span class="kw">summary</span>(distance)))</span></code></pre></div>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 278 x 2
 ##    block      distSummary
@@ -557,14 +557,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="header-section-number">4.2.1</span> Using <code>map_*</code> functions to create list-columns</h3>
 <p>For this example, we will use the <code>nhanes</code> dataset from the <code>PPBDS.data</code> package to demonstrate how to use <code>map_*</code> functions to create list columns.</p>
 <p>First, let’s wrangle the data so each observation is grouped by age and gender. We’ll create a list column <code>all_weights</code> that consists of every subject’s weight, grouped by age and gender.</p>
-<div class="sourceCode" id="cb594"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb594-1"><a href="functions.html#cb594-1"></a>nhanes <span class="op">%&gt;%</span></span>
-<span id="cb594-2"><a href="functions.html#cb594-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, gender) <span class="op">%&gt;%</span></span>
-<span id="cb594-3"><a href="functions.html#cb594-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">all_weights =</span> <span class="kw">list</span>(weight))</span></code></pre></div>
+<div class="sourceCode" id="cb578"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb578-1"><a href="functions.html#cb578-1"></a>nhanes <span class="op">%&gt;%</span></span>
+<span id="cb578-2"><a href="functions.html#cb578-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, gender) <span class="op">%&gt;%</span></span>
+<span id="cb578-3"><a href="functions.html#cb578-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">all_weights =</span> <span class="kw">list</span>(weight))</span></code></pre></div>
 <p>Now that we have a list column, we can use it as the input to <code>map()</code>, outputting another list column. Let’s say we wanted a new list column, <code>log_weights</code>, which takes the logarithmic value of each weight observation.</p>
-<div class="sourceCode" id="cb595"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb595-1"><a href="functions.html#cb595-1"></a>nhanes <span class="op">%&gt;%</span></span>
-<span id="cb595-2"><a href="functions.html#cb595-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, gender) <span class="op">%&gt;%</span></span>
-<span id="cb595-3"><a href="functions.html#cb595-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">all_weights =</span> <span class="kw">list</span>(weight)) <span class="op">%&gt;%</span></span>
-<span id="cb595-4"><a href="functions.html#cb595-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">log_weights =</span> <span class="kw">map</span>(all_weights, log))</span></code></pre></div>
+<div class="sourceCode" id="cb579"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb579-1"><a href="functions.html#cb579-1"></a>nhanes <span class="op">%&gt;%</span></span>
+<span id="cb579-2"><a href="functions.html#cb579-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, gender) <span class="op">%&gt;%</span></span>
+<span id="cb579-3"><a href="functions.html#cb579-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">all_weights =</span> <span class="kw">list</span>(weight)) <span class="op">%&gt;%</span></span>
+<span id="cb579-4"><a href="functions.html#cb579-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">log_weights =</span> <span class="kw">map</span>(all_weights, log))</span></code></pre></div>
 <p>Note that we took the list column <code>all_weights</code> and, by applying an anonymous function to it with <code>map()</code>, created another list column <code>log_weights</code>. This is a very common process. It is similar to taking a tibble and piping it into a <code>dplyr</code> function (such as <code>mutate()</code>) which gives you a new tibble that you can work with.</p>
 <p>If we try to replace the <code>map()</code> function in the last line with a simple <code>mutate()</code>, we will get an error.</p>
 <pre><code>## `summarise()` regrouping output by 'age' (override with `.groups` argument)</code></pre>
@@ -574,19 +574,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ℹ The error occurred in group 1: age = 0.</code></pre>
 <p>Again, this is because the <code>mutate()</code> function is ill-equipped to handle lists. We could have avoided creating the list-columns in the first place and found the log weight of each observation, but then we would be losing out on the grouping ability of lists. Do you see how <code>map_*</code> functions are equipped to handle inputs different from <code>mutate()</code>?</p>
 <p>You can also use <code>map_*</code> functions to take a list column as an input and return an atomic vector – a column with a single value per observation – as an output. For instance, let’s say we now wanted the mean of the log weights:</p>
-<div class="sourceCode" id="cb598"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb598-1"><a href="functions.html#cb598-1"></a>nhanes <span class="op">%&gt;%</span></span>
-<span id="cb598-2"><a href="functions.html#cb598-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, gender) <span class="op">%&gt;%</span></span>
-<span id="cb598-3"><a href="functions.html#cb598-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">all_weights =</span> <span class="kw">list</span>(weight)) <span class="op">%&gt;%</span></span>
-<span id="cb598-4"><a href="functions.html#cb598-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">log_weights =</span> <span class="kw">map</span>(all_weights, log),</span>
-<span id="cb598-5"><a href="functions.html#cb598-5"></a>         <span class="dt">mean_log_weights =</span> <span class="kw">map_dbl</span>(log_weights, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb582"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb582-1"><a href="functions.html#cb582-1"></a>nhanes <span class="op">%&gt;%</span></span>
+<span id="cb582-2"><a href="functions.html#cb582-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, gender) <span class="op">%&gt;%</span></span>
+<span id="cb582-3"><a href="functions.html#cb582-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">all_weights =</span> <span class="kw">list</span>(weight)) <span class="op">%&gt;%</span></span>
+<span id="cb582-4"><a href="functions.html#cb582-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">log_weights =</span> <span class="kw">map</span>(all_weights, log),</span>
+<span id="cb582-5"><a href="functions.html#cb582-5"></a>         <span class="dt">mean_log_weights =</span> <span class="kw">map_dbl</span>(log_weights, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</span></code></pre></div>
 <p>Here, we also see that the <code>map_*</code> functions have the <code>...</code> argument, which allows <code>na.rm = TRUE</code> to be passed along to <code>mean()</code>.
 What if we wanted to extract the top five log weights per row?</p>
-<div class="sourceCode" id="cb599"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb599-1"><a href="functions.html#cb599-1"></a>nhanes <span class="op">%&gt;%</span></span>
-<span id="cb599-2"><a href="functions.html#cb599-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, gender) <span class="op">%&gt;%</span></span>
-<span id="cb599-3"><a href="functions.html#cb599-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">all_weights =</span> <span class="kw">list</span>(weight)) <span class="op">%&gt;%</span></span>
-<span id="cb599-4"><a href="functions.html#cb599-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">log_weights =</span> <span class="kw">map</span>(all_weights, log),</span>
-<span id="cb599-5"><a href="functions.html#cb599-5"></a>         <span class="dt">sorted_log_weights =</span> <span class="kw">map</span>(log_weights, <span class="op">~</span><span class="st"> </span><span class="kw">sort</span>(., <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)),</span>
-<span id="cb599-6"><a href="functions.html#cb599-6"></a>         <span class="dt">top5_log_weights =</span> <span class="kw">map</span>(sorted_log_weights, <span class="op">~</span><span class="st"> </span>.[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb583"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb583-1"><a href="functions.html#cb583-1"></a>nhanes <span class="op">%&gt;%</span></span>
+<span id="cb583-2"><a href="functions.html#cb583-2"></a><span class="st">  </span><span class="kw">group_by</span>(age, gender) <span class="op">%&gt;%</span></span>
+<span id="cb583-3"><a href="functions.html#cb583-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">all_weights =</span> <span class="kw">list</span>(weight)) <span class="op">%&gt;%</span></span>
+<span id="cb583-4"><a href="functions.html#cb583-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">log_weights =</span> <span class="kw">map</span>(all_weights, log),</span>
+<span id="cb583-5"><a href="functions.html#cb583-5"></a>         <span class="dt">sorted_log_weights =</span> <span class="kw">map</span>(log_weights, <span class="op">~</span><span class="st"> </span><span class="kw">sort</span>(., <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)),</span>
+<span id="cb583-6"><a href="functions.html#cb583-6"></a>         <span class="dt">top5_log_weights =</span> <span class="kw">map</span>(sorted_log_weights, <span class="op">~</span><span class="st"> </span>.[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]))</span></code></pre></div>
 <p>See how we chained the <code>map_*</code> functions:</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -611,8 +611,8 @@ What if we wanted to extract the top five log weights per row?</p>
 <p>We can create functions that do operations “on the fly” without bothering to give them a name. These nameless functions are called <a href="https://coolbutuseless.github.io/2019/03/13/anonymous-functions-in-r-part-1/">anonymous functions.</a></p>
 <p>You can use anonymous functions in conjunction with the <code>map_*</code> family of functions. They’re commonly used to conduct mathematical operations repeatedly.</p>
 <p>You can call an anonymous function using a <code>~</code> operator and then using a <code>.</code> to represent the current element.</p>
-<div class="sourceCode" id="cb600"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb600-1"><a href="functions.html#cb600-1"></a><span class="kw">tibble</span>(<span class="dt">old =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb600-2"><a href="functions.html#cb600-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map_dbl</span>(old, <span class="op">~</span><span class="st"> </span>(. <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb584"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb584-1"><a href="functions.html#cb584-1"></a><span class="kw">tibble</span>(<span class="dt">old =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb584-2"><a href="functions.html#cb584-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map_dbl</span>(old, <span class="op">~</span><span class="st"> </span>(. <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)))</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 2
 ##     old   new
 ##   &lt;dbl&gt; &lt;dbl&gt;
@@ -620,8 +620,8 @@ What if we wanted to extract the top five log weights per row?</p>
 ## 2     7     8
 ## 3     2     3</code></pre>
 <p>Note that the parentheses are not necessary. As long as everything after the <code>~</code> works as R code, the anonymous function should work, each time replace the <code>.</code> with the value of the <code>.x</code> variable — which is <code>old</code> in this case — with its value in that row.</p>
-<div class="sourceCode" id="cb602"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb602-1"><a href="functions.html#cb602-1"></a><span class="kw">tibble</span>(<span class="dt">old =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb602-2"><a href="functions.html#cb602-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map_dbl</span>(old, <span class="op">~</span><span class="st"> </span>. <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb586"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb586-1"><a href="functions.html#cb586-1"></a><span class="kw">tibble</span>(<span class="dt">old =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb586-2"><a href="functions.html#cb586-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new =</span> <span class="kw">map_dbl</span>(old, <span class="op">~</span><span class="st"> </span>. <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 2
 ##     old   new
 ##   &lt;dbl&gt; &lt;dbl&gt;
@@ -630,14 +630,14 @@ What if we wanted to extract the top five log weights per row?</p>
 ## 3     2     3</code></pre>
 <p>The <code>~</code> shorthand is very convenient once you get used to it. Let’s see it in an example. We’ll use the <code>weather</code> dataset in the <code>nycflights13</code> package. Let’s say that we want to return a list-column with all the recorded temperatures in a day in Celsius and basic summary statistics.</p>
 <p>First, let’s wrangle the data so each observation is a day rather than an hour. We will do so by selecting for the necessary variables and grouping by <code>origin</code>, <code>year</code>, <code>month</code>, and <code>day</code>.</p>
-<div class="sourceCode" id="cb604"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb604-1"><a href="functions.html#cb604-1"></a>weather <span class="op">%&gt;%</span></span>
-<span id="cb604-2"><a href="functions.html#cb604-2"></a><span class="st">  </span><span class="kw">select</span>(origin, year, month, day, temp) <span class="op">%&gt;%</span></span>
-<span id="cb604-3"><a href="functions.html#cb604-3"></a><span class="st">  </span><span class="kw">group_by</span>(origin, year, month, day)</span></code></pre></div>
+<div class="sourceCode" id="cb588"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb588-1"><a href="functions.html#cb588-1"></a>weather <span class="op">%&gt;%</span></span>
+<span id="cb588-2"><a href="functions.html#cb588-2"></a><span class="st">  </span><span class="kw">select</span>(origin, year, month, day, temp) <span class="op">%&gt;%</span></span>
+<span id="cb588-3"><a href="functions.html#cb588-3"></a><span class="st">  </span><span class="kw">group_by</span>(origin, year, month, day)</span></code></pre></div>
 <p>Next, we’ll create a list column <code>temps_F</code> that consists of all the temperatures recorded that day at a particular origin. Note that the temperatures are Fahrenheit by default.</p>
-<div class="sourceCode" id="cb605"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb605-1"><a href="functions.html#cb605-1"></a>weather <span class="op">%&gt;%</span></span>
-<span id="cb605-2"><a href="functions.html#cb605-2"></a><span class="st">  </span><span class="kw">select</span>(origin, year, month, day, temp) <span class="op">%&gt;%</span></span>
-<span id="cb605-3"><a href="functions.html#cb605-3"></a><span class="st">  </span><span class="kw">group_by</span>(origin, year, month, day) <span class="op">%&gt;%</span></span>
-<span id="cb605-4"><a href="functions.html#cb605-4"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">temps_F =</span> <span class="kw">list</span>(<span class="kw">c</span>(temp)))</span></code></pre></div>
+<div class="sourceCode" id="cb589"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb589-1"><a href="functions.html#cb589-1"></a>weather <span class="op">%&gt;%</span></span>
+<span id="cb589-2"><a href="functions.html#cb589-2"></a><span class="st">  </span><span class="kw">select</span>(origin, year, month, day, temp) <span class="op">%&gt;%</span></span>
+<span id="cb589-3"><a href="functions.html#cb589-3"></a><span class="st">  </span><span class="kw">group_by</span>(origin, year, month, day) <span class="op">%&gt;%</span></span>
+<span id="cb589-4"><a href="functions.html#cb589-4"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">temps_F =</span> <span class="kw">list</span>(<span class="kw">c</span>(temp)))</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by 'origin', 'year', 'month' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 1,092 x 5
 ## # Groups:   origin, year, month [36]
@@ -656,11 +656,11 @@ What if we wanted to extract the top five log weights per row?</p>
 ## # … with 1,082 more rows</code></pre>
 <p>Now that we have a list-column, we can use it as the input to <code>map()</code>, outputting another list-column. Let’s say we wanted a new list-column, <code>temps_C</code>, which records the temperature in Celsius.</p>
 <p>The formula to convert from Fahrenheit to Celsius is <span class="math inline">\(\frac{(F-32)*5}{9}\)</span>. Let’s “eyeball” the results using <code>str()</code>.</p>
-<div class="sourceCode" id="cb608"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb608-1"><a href="functions.html#cb608-1"></a>weather <span class="op">%&gt;%</span></span>
-<span id="cb608-2"><a href="functions.html#cb608-2"></a><span class="st">  </span><span class="kw">select</span>(origin, year, month, day, temp) <span class="op">%&gt;%</span></span>
-<span id="cb608-3"><a href="functions.html#cb608-3"></a><span class="st">  </span><span class="kw">group_by</span>(origin, year, month, day) <span class="op">%&gt;%</span></span>
-<span id="cb608-4"><a href="functions.html#cb608-4"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">temps_F =</span> <span class="kw">list</span>(<span class="kw">c</span>(temp))) <span class="op">%&gt;%</span></span>
-<span id="cb608-5"><a href="functions.html#cb608-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">temps_C =</span> <span class="kw">map</span>(temps_F, <span class="op">~</span><span class="st"> </span>(. <span class="op">-</span><span class="st"> </span><span class="dv">32</span>) <span class="op">*</span><span class="st"> </span><span class="dv">5</span><span class="op">/</span><span class="dv">9</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb592"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb592-1"><a href="functions.html#cb592-1"></a>weather <span class="op">%&gt;%</span></span>
+<span id="cb592-2"><a href="functions.html#cb592-2"></a><span class="st">  </span><span class="kw">select</span>(origin, year, month, day, temp) <span class="op">%&gt;%</span></span>
+<span id="cb592-3"><a href="functions.html#cb592-3"></a><span class="st">  </span><span class="kw">group_by</span>(origin, year, month, day) <span class="op">%&gt;%</span></span>
+<span id="cb592-4"><a href="functions.html#cb592-4"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">temps_F =</span> <span class="kw">list</span>(<span class="kw">c</span>(temp))) <span class="op">%&gt;%</span></span>
+<span id="cb592-5"><a href="functions.html#cb592-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">temps_C =</span> <span class="kw">map</span>(temps_F, <span class="op">~</span><span class="st"> </span>(. <span class="op">-</span><span class="st"> </span><span class="dv">32</span>) <span class="op">*</span><span class="st"> </span><span class="dv">5</span><span class="op">/</span><span class="dv">9</span>))</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by 'origin', 'year', 'month' (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 1,092 x 6
 ## # Groups:   origin, year, month [36]
@@ -678,14 +678,14 @@ What if we wanted to extract the top five log weights per row?</p>
 ## 10 EWR     2013     1    10 &lt;dbl [24]&gt; &lt;dbl [24]&gt;
 ## # … with 1,082 more rows</code></pre>
 <p>Let’s “eyeball” the first few results using <code>str()</code>.</p>
-<div class="sourceCode" id="cb611"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb611-1"><a href="functions.html#cb611-1"></a>weather <span class="op">%&gt;%</span></span>
-<span id="cb611-2"><a href="functions.html#cb611-2"></a><span class="st">  </span><span class="kw">select</span>(origin, year, month, day, temp) <span class="op">%&gt;%</span></span>
-<span id="cb611-3"><a href="functions.html#cb611-3"></a><span class="st">  </span><span class="kw">group_by</span>(origin, year, month, day) <span class="op">%&gt;%</span></span>
-<span id="cb611-4"><a href="functions.html#cb611-4"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">temps_F =</span> <span class="kw">list</span>(<span class="kw">c</span>(temp))) <span class="op">%&gt;%</span></span>
-<span id="cb611-5"><a href="functions.html#cb611-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">temps_C =</span> <span class="kw">map</span>(temps_F, <span class="op">~</span><span class="st"> </span>(. <span class="op">-</span><span class="st"> </span><span class="dv">32</span>) <span class="op">*</span><span class="st"> </span><span class="dv">5</span><span class="op">/</span><span class="dv">9</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb611-6"><a href="functions.html#cb611-6"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb611-7"><a href="functions.html#cb611-7"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span></span>
-<span id="cb611-8"><a href="functions.html#cb611-8"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb595"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb595-1"><a href="functions.html#cb595-1"></a>weather <span class="op">%&gt;%</span></span>
+<span id="cb595-2"><a href="functions.html#cb595-2"></a><span class="st">  </span><span class="kw">select</span>(origin, year, month, day, temp) <span class="op">%&gt;%</span></span>
+<span id="cb595-3"><a href="functions.html#cb595-3"></a><span class="st">  </span><span class="kw">group_by</span>(origin, year, month, day) <span class="op">%&gt;%</span></span>
+<span id="cb595-4"><a href="functions.html#cb595-4"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">temps_F =</span> <span class="kw">list</span>(<span class="kw">c</span>(temp))) <span class="op">%&gt;%</span></span>
+<span id="cb595-5"><a href="functions.html#cb595-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">temps_C =</span> <span class="kw">map</span>(temps_F, <span class="op">~</span><span class="st"> </span>(. <span class="op">-</span><span class="st"> </span><span class="dv">32</span>) <span class="op">*</span><span class="st"> </span><span class="dv">5</span><span class="op">/</span><span class="dv">9</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb595-6"><a href="functions.html#cb595-6"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb595-7"><a href="functions.html#cb595-7"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span></span>
+<span id="cb595-8"><a href="functions.html#cb595-8"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by 'origin', 'year', 'month' (override with `.groups` argument)</code></pre>
 <pre><code>## tibble [5 × 6] (S3: tbl_df/tbl/data.frame)
 ##  $ origin : chr [1:5] "EWR" "EWR" "EWR" "EWR" ...
@@ -710,39 +710,39 @@ What if we wanted to extract the top five log weights per row?</p>
 <h3>
 <span class="header-section-number">4.3.2</span> Creating your own functions</h3>
 <p>There are plenty of built-in functions in R, such as the ones mentioned above. You can also create your own custom functions, which may look something like this:</p>
-<div class="sourceCode" id="cb614"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb614-1"><a href="functions.html#cb614-1"></a>add_one_and_one &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
-<span id="cb614-2"><a href="functions.html#cb614-2"></a>  <span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb614-3"><a href="functions.html#cb614-3"></a>}</span>
-<span id="cb614-4"><a href="functions.html#cb614-4"></a><span class="kw">add_one_and_one</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb598"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb598-1"><a href="functions.html#cb598-1"></a>add_one_and_one &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
+<span id="cb598-2"><a href="functions.html#cb598-2"></a>  <span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb598-3"><a href="functions.html#cb598-3"></a>}</span>
+<span id="cb598-4"><a href="functions.html#cb598-4"></a><span class="kw">add_one_and_one</span>()</span></code></pre></div>
 <p>You just created a function! This function will return <code>1+1</code> whenever called.</p>
 <p>Now what if we wanted to leave some mystery in the function? That is to say, we want to add the number 6 to a value <code>x</code>, that the user provides for us.</p>
-<div class="sourceCode" id="cb615"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb615-1"><a href="functions.html#cb615-1"></a>add_six_to_something &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
-<span id="cb615-2"><a href="functions.html#cb615-2"></a>  x <span class="op">+</span><span class="st"> </span><span class="dv">6</span></span>
-<span id="cb615-3"><a href="functions.html#cb615-3"></a>}</span>
-<span id="cb615-4"><a href="functions.html#cb615-4"></a><span class="kw">add_six_to_something</span>(<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb599"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb599-1"><a href="functions.html#cb599-1"></a>add_six_to_something &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
+<span id="cb599-2"><a href="functions.html#cb599-2"></a>  x <span class="op">+</span><span class="st"> </span><span class="dv">6</span></span>
+<span id="cb599-3"><a href="functions.html#cb599-3"></a>}</span>
+<span id="cb599-4"><a href="functions.html#cb599-4"></a><span class="kw">add_six_to_something</span>(<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] 7</code></pre>
 <p>Congratulations! You have incorporated your first <strong>formal argument</strong>. Formal arguments in functions are additional parameters that allow the user to customize the use of your function. Instead of adding 1+1 over and over again, your function takes in a number <code>x</code> that the user defines and adds 6. Now let’s drive it home and make a function with <em>two</em> formal arguments.</p>
-<div class="sourceCode" id="cb617"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb617-1"><a href="functions.html#cb617-1"></a>add_x_to_y &lt;-<span class="st"> </span><span class="cf">function</span>(x,y) {</span>
-<span id="cb617-2"><a href="functions.html#cb617-2"></a>  x <span class="op">+</span><span class="st"> </span>y</span>
-<span id="cb617-3"><a href="functions.html#cb617-3"></a>}</span>
-<span id="cb617-4"><a href="functions.html#cb617-4"></a></span>
-<span id="cb617-5"><a href="functions.html#cb617-5"></a><span class="kw">add_x_to_y</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb601"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb601-1"><a href="functions.html#cb601-1"></a>add_x_to_y &lt;-<span class="st"> </span><span class="cf">function</span>(x,y) {</span>
+<span id="cb601-2"><a href="functions.html#cb601-2"></a>  x <span class="op">+</span><span class="st"> </span>y</span>
+<span id="cb601-3"><a href="functions.html#cb601-3"></a>}</span>
+<span id="cb601-4"><a href="functions.html#cb601-4"></a></span>
+<span id="cb601-5"><a href="functions.html#cb601-5"></a><span class="kw">add_x_to_y</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## [1] 3</code></pre>
-<div class="sourceCode" id="cb619"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb619-1"><a href="functions.html#cb619-1"></a><span class="kw">add_x_to_y</span>(<span class="dv">4</span>,<span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb603"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb603-1"><a href="functions.html#cb603-1"></a><span class="kw">add_x_to_y</span>(<span class="dv">4</span>,<span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## [1] 7</code></pre>
 <p>Great work! Now let’s create an example that we will apply to the <code>kenya</code> dataset.</p>
 <p>What if we were interested in taking the difference between the highest poverty rate and the lowest poverty rate? First, develop some working code for interactive use, using a representative input. Use the <code>poverty</code> variable. Built-in R functions that will be useful: <code>min()</code>, <code>max()</code>, <code>range()</code>.</p>
-<div class="sourceCode" id="cb621"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb621-1"><a href="functions.html#cb621-1"></a><span class="kw">min</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
+<div class="sourceCode" id="cb605"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb605-1"><a href="functions.html#cb605-1"></a><span class="kw">min</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
 <pre><code>## [1] 0.18</code></pre>
-<div class="sourceCode" id="cb623"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb623-1"><a href="functions.html#cb623-1"></a><span class="kw">max</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
+<div class="sourceCode" id="cb607"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb607-1"><a href="functions.html#cb607-1"></a><span class="kw">max</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
 <pre><code>## [1] 0.9</code></pre>
-<div class="sourceCode" id="cb625"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb625-1"><a href="functions.html#cb625-1"></a><span class="kw">range</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
+<div class="sourceCode" id="cb609"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb609-1"><a href="functions.html#cb609-1"></a><span class="kw">range</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
 <pre><code>## [1] 0.18 0.90</code></pre>
-<div class="sourceCode" id="cb627"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb627-1"><a href="functions.html#cb627-1"></a><span class="kw">max</span>(kenya<span class="op">$</span>poverty) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
+<div class="sourceCode" id="cb611"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb611-1"><a href="functions.html#cb611-1"></a><span class="kw">max</span>(kenya<span class="op">$</span>poverty) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
 <pre><code>## [1] 0.72</code></pre>
-<div class="sourceCode" id="cb629"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb629-1"><a href="functions.html#cb629-1"></a><span class="kw">range</span>(kenya<span class="op">$</span>poverty)[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span><span class="kw">range</span>(kenya<span class="op">$</span>poverty)[<span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb613"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb613-1"><a href="functions.html#cb613-1"></a><span class="kw">range</span>(kenya<span class="op">$</span>poverty)[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span><span class="kw">range</span>(kenya<span class="op">$</span>poverty)[<span class="dv">1</span>]</span></code></pre></div>
 <pre><code>## [1] 0.72</code></pre>
-<div class="sourceCode" id="cb631"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb631-1"><a href="functions.html#cb631-1"></a><span class="kw">diff</span>(<span class="kw">range</span>(kenya<span class="op">$</span>poverty))</span></code></pre></div>
+<div class="sourceCode" id="cb615"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb615-1"><a href="functions.html#cb615-1"></a><span class="kw">diff</span>(<span class="kw">range</span>(kenya<span class="op">$</span>poverty))</span></code></pre></div>
 <pre><code>## [1] 0.72</code></pre>
 <p>Internalize this “answer” because our informal testing relies on you noticing departures from this.</p>
 </div>
@@ -751,7 +751,7 @@ What if we wanted to extract the top five log weights per row?</p>
 <span class="header-section-number">4.3.3</span> Skateboard &gt;&gt; perfectly formed rear-view mirror</h3>
 <p>This image — widely attributed to the Spotify development team — conveys an important point.</p>
 <div class="figure">
-<span id="fig:unnamed-chunk-429"></span>
+<span id="fig:unnamed-chunk-428"></span>
 <p class="caption marginnote shownote">
 FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable-product-your-ultimate-guide-to-mvp-great-examples/">Your ultimate guide to Minimum Viable Product (+great examples)</a>
 </p>
@@ -767,17 +767,17 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <h3>
 <span class="header-section-number">4.3.4</span> Turn the working interactive code into a function</h3>
 <p>Add NO new functionality! Just write your very first R function.</p>
-<div class="sourceCode" id="cb633"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb633-1"><a href="functions.html#cb633-1"></a>max_minus_min &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">max</span>(x) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(x)</span>
-<span id="cb633-2"><a href="functions.html#cb633-2"></a><span class="kw">max_minus_min</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
+<div class="sourceCode" id="cb617"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb617-1"><a href="functions.html#cb617-1"></a>max_minus_min &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">max</span>(x) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(x)</span>
+<span id="cb617-2"><a href="functions.html#cb617-2"></a><span class="kw">max_minus_min</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
 <pre><code>## [1] 0.72</code></pre>
 <p>Check that you’re getting the same answer as you did with your interactive code. Test it eyeball-o-metrically at this point.</p>
 <p>One thing to note about functions is that functions have selective memory. In fact, functions only “remember” what happens within the function itself.</p>
 <p>For example, I have saved value <code>x</code> as 1.</p>
-<div class="sourceCode" id="cb635"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb635-1"><a href="functions.html#cb635-1"></a>x &lt;-<span class="st"> </span><span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb619"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb619-1"><a href="functions.html#cb619-1"></a>x &lt;-<span class="st"> </span><span class="dv">1</span></span></code></pre></div>
 <p>Defining <code>x</code> inside a function will not change its value outside of the function.</p>
-<div class="sourceCode" id="cb636"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb636-1"><a href="functions.html#cb636-1"></a><span class="cf">function</span>(x) x &lt;-<span class="st"> </span><span class="dv">2</span></span></code></pre></div>
+<div class="sourceCode" id="cb620"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb620-1"><a href="functions.html#cb620-1"></a><span class="cf">function</span>(x) x &lt;-<span class="st"> </span><span class="dv">2</span></span></code></pre></div>
 <pre><code>## function(x) x &lt;- 2</code></pre>
-<div class="sourceCode" id="cb638"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb638-1"><a href="functions.html#cb638-1"></a>x</span></code></pre></div>
+<div class="sourceCode" id="cb622"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb622-1"><a href="functions.html#cb622-1"></a>x</span></code></pre></div>
 <pre><code>## [1] 1</code></pre>
 </div>
 <div id="test-your-function" class="section level3">
@@ -787,9 +787,9 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <h4>
 <span class="header-section-number">4.3.5.1</span> Test on new inputs</h4>
 <p>Pick some new artificial inputs where you know (at least approximately) what your function should return.</p>
-<div class="sourceCode" id="cb640"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb640-1"><a href="functions.html#cb640-1"></a><span class="kw">max_minus_min</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb624"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb624-1"><a href="functions.html#cb624-1"></a><span class="kw">max_minus_min</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</span></code></pre></div>
 <pre><code>## [1] 9</code></pre>
-<div class="sourceCode" id="cb642"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb642-1"><a href="functions.html#cb642-1"></a><span class="kw">max_minus_min</span>(<span class="kw">runif</span>(<span class="dv">1000</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb626"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb626-1"><a href="functions.html#cb626-1"></a><span class="kw">max_minus_min</span>(<span class="kw">runif</span>(<span class="dv">1000</span>))</span></code></pre></div>
 <pre><code>## [1] 1</code></pre>
 <p>I know that 10 minus 1 is 9. I know that random uniform [0, 1] variates will be between 0 and 1. Therefore max - min should be less than 1. If I take LOTS of them, max - min should be pretty close to 1.</p>
 <p>It is intentional that I tested on integer input as well as floating point. Likewise, I like to use valid-but-random data for this sort of check.</p>
@@ -798,9 +798,9 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <h4>
 <span class="header-section-number">4.3.5.2</span> Test on real data but <em>different</em> real data</h4>
 <p>Back to the real world now. Two additional quantitative variables are lying around: <code>distance</code> and <code>rv13</code>. Let’s have a go.</p>
-<div class="sourceCode" id="cb644"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb644-1"><a href="functions.html#cb644-1"></a><span class="kw">max_minus_min</span>(kenya<span class="op">$</span>distance)</span></code></pre></div>
+<div class="sourceCode" id="cb628"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb628-1"><a href="functions.html#cb628-1"></a><span class="kw">max_minus_min</span>(kenya<span class="op">$</span>distance)</span></code></pre></div>
 <pre><code>## [1] 179</code></pre>
-<div class="sourceCode" id="cb646"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb646-1"><a href="functions.html#cb646-1"></a><span class="kw">max_minus_min</span>(kenya<span class="op">$</span>rv13)</span></code></pre></div>
+<div class="sourceCode" id="cb630"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb630-1"><a href="functions.html#cb630-1"></a><span class="kw">max_minus_min</span>(kenya<span class="op">$</span>rv13)</span></code></pre></div>
 <pre><code>## [1] 6764</code></pre>
 <p>Either check these results “by hand” or apply the “does that even make sense?” test.</p>
 </div>
@@ -808,26 +808,26 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <h4>
 <span class="header-section-number">4.3.5.3</span> Test on weird stuff</h4>
 <p>Now we try to break our function. Don’t get truly diabolical (yet). Just make the kind of mistakes you can imagine making at 2am when, 3 years from now, you rediscover this useful function you wrote. Give your function inputs it’s not expecting.</p>
-<div class="sourceCode" id="cb648"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb648-1"><a href="functions.html#cb648-1"></a><span class="kw">max_minus_min</span>(kenya)</span></code></pre></div>
+<div class="sourceCode" id="cb632"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb632-1"><a href="functions.html#cb632-1"></a><span class="kw">max_minus_min</span>(kenya)</span></code></pre></div>
 <pre><code>## Error in FUN(X[[i]], ...): only defined on a data frame with all numeric variables</code></pre>
-<div class="sourceCode" id="cb650"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb650-1"><a href="functions.html#cb650-1"></a><span class="co"># Hey, sometimes things "just work" on data.frames!</span></span>
-<span id="cb650-2"><a href="functions.html#cb650-2"></a></span>
-<span id="cb650-3"><a href="functions.html#cb650-3"></a><span class="kw">max_minus_min</span>(kenya<span class="op">$</span>treatment)</span></code></pre></div>
+<div class="sourceCode" id="cb634"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb634-1"><a href="functions.html#cb634-1"></a><span class="co"># Hey, sometimes things "just work" on data.frames!</span></span>
+<span id="cb634-2"><a href="functions.html#cb634-2"></a></span>
+<span id="cb634-3"><a href="functions.html#cb634-3"></a><span class="kw">max_minus_min</span>(kenya<span class="op">$</span>treatment)</span></code></pre></div>
 <pre><code>## Error in Summary.factor(structure(c(2L, 4L, 3L, 5L, 4L, 3L, 6L, 2L, 1L, : 'max' not meaningful for factors</code></pre>
-<div class="sourceCode" id="cb652"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb652-1"><a href="functions.html#cb652-1"></a><span class="co"># Factors are kind of like integer vectors, no?</span></span>
-<span id="cb652-2"><a href="functions.html#cb652-2"></a></span>
-<span id="cb652-3"><a href="functions.html#cb652-3"></a><span class="kw">max_minus_min</span>(<span class="st">"eggplants are purple"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb636"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb636-1"><a href="functions.html#cb636-1"></a><span class="co"># Factors are kind of like integer vectors, no?</span></span>
+<span id="cb636-2"><a href="functions.html#cb636-2"></a></span>
+<span id="cb636-3"><a href="functions.html#cb636-3"></a><span class="kw">max_minus_min</span>(<span class="st">"eggplants are purple"</span>)</span></code></pre></div>
 <pre><code>## Error in max(x) - min(x): non-numeric argument to binary operator</code></pre>
-<div class="sourceCode" id="cb654"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb654-1"><a href="functions.html#cb654-1"></a><span class="co"># I have no excuse for this one</span></span></code></pre></div>
+<div class="sourceCode" id="cb638"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb638-1"><a href="functions.html#cb638-1"></a><span class="co"># I have no excuse for this one</span></span></code></pre></div>
 <p>How happy are you with those error messages? You must imagine that some entire <strong>script</strong> has failed and that you were hoping to just <code>source()</code> it without re-reading it. If a colleague or future you encountered these errors, do you run screaming from the room? How hard is it to pinpoint the usage problem?</p>
 </div>
 <div id="i-will-scare-you-now" class="section level4">
 <h4>
 <span class="header-section-number">4.3.5.4</span> I will scare you now</h4>
 <p>Here are some great examples where the function <strong>should break but it does not.</strong></p>
-<div class="sourceCode" id="cb655"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb655-1"><a href="functions.html#cb655-1"></a><span class="kw">max_minus_min</span>(kenya[<span class="kw">c</span>(<span class="st">'poverty'</span>, <span class="st">'distance'</span>, <span class="st">'rv13'</span>)])</span></code></pre></div>
+<div class="sourceCode" id="cb639"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb639-1"><a href="functions.html#cb639-1"></a><span class="kw">max_minus_min</span>(kenya[<span class="kw">c</span>(<span class="st">'poverty'</span>, <span class="st">'distance'</span>, <span class="st">'rv13'</span>)])</span></code></pre></div>
 <pre><code>## [1] 6764</code></pre>
-<div class="sourceCode" id="cb657"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb657-1"><a href="functions.html#cb657-1"></a><span class="kw">max_minus_min</span>(<span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb641"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb641-1"><a href="functions.html#cb641-1"></a><span class="kw">max_minus_min</span>(<span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>))</span></code></pre></div>
 <pre><code>## [1] 1</code></pre>
 <p>In both cases, R’s eagerness to make sense of our requests is unfortunately successful. In the first case, a tibble containing just the quantitative variables is eventually coerced into numeric vector. We can compute max minus min, even though it makes absolutely no sense at all. In the second case, a logical vector is converted to zeroes and ones, which might merit an error or at least a warning.</p>
 </div>
@@ -843,19 +843,19 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <h4>
 <span class="header-section-number">4.3.6.1</span> stop if not</h4>
 <p><code>stopifnot()</code> is the entry level solution. We use it here to make sure the input <code>x</code> is a numeric vector.</p>
-<div class="sourceCode" id="cb659"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb659-1"><a href="functions.html#cb659-1"></a>mmm &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb659-2"><a href="functions.html#cb659-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(x))</span>
-<span id="cb659-3"><a href="functions.html#cb659-3"></a>  <span class="kw">max</span>(x) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(x)</span>
-<span id="cb659-4"><a href="functions.html#cb659-4"></a>}</span>
-<span id="cb659-5"><a href="functions.html#cb659-5"></a><span class="kw">mmm</span>(kenya)</span></code></pre></div>
+<div class="sourceCode" id="cb643"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb643-1"><a href="functions.html#cb643-1"></a>mmm &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb643-2"><a href="functions.html#cb643-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(x))</span>
+<span id="cb643-3"><a href="functions.html#cb643-3"></a>  <span class="kw">max</span>(x) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(x)</span>
+<span id="cb643-4"><a href="functions.html#cb643-4"></a>}</span>
+<span id="cb643-5"><a href="functions.html#cb643-5"></a><span class="kw">mmm</span>(kenya)</span></code></pre></div>
 <pre><code>## Error in mmm(kenya): is.numeric(x) is not TRUE</code></pre>
-<div class="sourceCode" id="cb661"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb661-1"><a href="functions.html#cb661-1"></a><span class="kw">mmm</span>(kenya<span class="op">$</span>treatment)</span></code></pre></div>
+<div class="sourceCode" id="cb645"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb645-1"><a href="functions.html#cb645-1"></a><span class="kw">mmm</span>(kenya<span class="op">$</span>treatment)</span></code></pre></div>
 <pre><code>## Error in mmm(kenya$treatment): is.numeric(x) is not TRUE</code></pre>
-<div class="sourceCode" id="cb663"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb663-1"><a href="functions.html#cb663-1"></a><span class="kw">mmm</span>(<span class="st">"eggplants are purple"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb647"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb647-1"><a href="functions.html#cb647-1"></a><span class="kw">mmm</span>(<span class="st">"eggplants are purple"</span>)</span></code></pre></div>
 <pre><code>## Error in mmm("eggplants are purple"): is.numeric(x) is not TRUE</code></pre>
-<div class="sourceCode" id="cb665"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb665-1"><a href="functions.html#cb665-1"></a><span class="kw">mmm</span>(kenya[<span class="kw">c</span>(<span class="st">'poverty'</span>, <span class="st">'distance'</span>, <span class="st">'rv13'</span>)])</span></code></pre></div>
+<div class="sourceCode" id="cb649"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb649-1"><a href="functions.html#cb649-1"></a><span class="kw">mmm</span>(kenya[<span class="kw">c</span>(<span class="st">'poverty'</span>, <span class="st">'distance'</span>, <span class="st">'rv13'</span>)])</span></code></pre></div>
 <pre><code>## Error in mmm(kenya[c("poverty", "distance", "rv13")]): is.numeric(x) is not TRUE</code></pre>
-<div class="sourceCode" id="cb667"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb667-1"><a href="functions.html#cb667-1"></a><span class="kw">mmm</span>(<span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb651"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb651-1"><a href="functions.html#cb651-1"></a><span class="kw">mmm</span>(<span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>))</span></code></pre></div>
 <pre><code>## Error in mmm(c(TRUE, TRUE, FALSE, TRUE, TRUE)): is.numeric(x) is not TRUE</code></pre>
 <p>And we see that it catches all of the self-inflicted damage we would like to avoid.</p>
 </div>
@@ -863,17 +863,17 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <h4>
 <span class="header-section-number">4.3.6.2</span> if then stop</h4>
 <p><code>stopifnot()</code> doesn’t provide a very good error message. The next approach is very widely used. Put your validity check inside an <code>if()</code> statement and call <code>stop()</code> yourself, with a custom error message, in the body.</p>
-<div class="sourceCode" id="cb669"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb669-1"><a href="functions.html#cb669-1"></a>mmm2 &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb669-2"><a href="functions.html#cb669-2"></a>  <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.numeric</span>(x)) {</span>
-<span id="cb669-3"><a href="functions.html#cb669-3"></a>    <span class="kw">stop</span>(<span class="st">'I am so sorry, but this function only works for numeric input!</span><span class="ch">\n</span><span class="st">'</span>,</span>
-<span id="cb669-4"><a href="functions.html#cb669-4"></a>         <span class="st">'You have provided an object of class: '</span>, <span class="kw">class</span>(x)[<span class="dv">1</span>])</span>
-<span id="cb669-5"><a href="functions.html#cb669-5"></a>  }</span>
-<span id="cb669-6"><a href="functions.html#cb669-6"></a>  <span class="kw">max</span>(x) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(x)</span>
-<span id="cb669-7"><a href="functions.html#cb669-7"></a>}</span>
-<span id="cb669-8"><a href="functions.html#cb669-8"></a><span class="kw">mmm2</span>(kenya)</span></code></pre></div>
+<div class="sourceCode" id="cb653"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb653-1"><a href="functions.html#cb653-1"></a>mmm2 &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb653-2"><a href="functions.html#cb653-2"></a>  <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.numeric</span>(x)) {</span>
+<span id="cb653-3"><a href="functions.html#cb653-3"></a>    <span class="kw">stop</span>(<span class="st">'I am so sorry, but this function only works for numeric input!</span><span class="ch">\n</span><span class="st">'</span>,</span>
+<span id="cb653-4"><a href="functions.html#cb653-4"></a>         <span class="st">'You have provided an object of class: '</span>, <span class="kw">class</span>(x)[<span class="dv">1</span>])</span>
+<span id="cb653-5"><a href="functions.html#cb653-5"></a>  }</span>
+<span id="cb653-6"><a href="functions.html#cb653-6"></a>  <span class="kw">max</span>(x) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(x)</span>
+<span id="cb653-7"><a href="functions.html#cb653-7"></a>}</span>
+<span id="cb653-8"><a href="functions.html#cb653-8"></a><span class="kw">mmm2</span>(kenya)</span></code></pre></div>
 <pre><code>## Error in mmm2(kenya): I am so sorry, but this function only works for numeric input!
 ## You have provided an object of class: tbl_df</code></pre>
-<p><label for="tufte-mn-46" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-46" class="margin-toggle"><span class="marginnote"><span style="display: block;"><strong>Non-programming uses for assertions</strong></span>
+<p><label for="tufte-mn-56" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-56" class="margin-toggle"><span class="marginnote"><span style="display: block;"><strong>Non-programming uses for assertions</strong></span>
 <span style="display: block;">Another good use of this pattern is to leave checks behind in data analytical scripts. If we were loading from file (vs. a stable data package), we might want to formalize our expectations about the number of rows and columns, the names and flavors of the variables, etc. This would alert us if the data suddenly changed, which can be a useful wake-up call in scripts that you re-run <em>ad nauseam</em> on auto-pilot or non-interactively.</span></span></p>
 <p>In addition to a gratuitous apology, the error also contains two more pieces of helpful info:</p>
 <ul>
@@ -889,7 +889,7 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <h3>
 <span class="header-section-number">4.3.7</span> Wrap-up and what’s next?</h3>
 <p>Here’s the function we’ve written as an introduction to built-in and custom functions:</p>
-<div class="sourceCode" id="cb671"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb671-1"><a href="functions.html#cb671-1"></a>mmm2</span></code></pre></div>
+<div class="sourceCode" id="cb655"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb655-1"><a href="functions.html#cb655-1"></a>mmm2</span></code></pre></div>
 <pre><code>## function(x) {
 ##   if(!is.numeric(x)) {
 ##     stop('I am so sorry, but this function only works for numeric input!\n',
@@ -911,43 +911,43 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <p>In this section, we create a new function, generalize it, and learn more technical details about R functions.</p>
 <p>Our goal is to write a function that simulates throwing dice.</p>
 <p>We will begin by creating a minimally viable function, <code>starter_die()</code>, which throws one die one time.</p>
-<div class="sourceCode" id="cb673"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb673-1"><a href="functions.html#cb673-1"></a>starter_die &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
-<span id="cb673-2"><a href="functions.html#cb673-2"></a>  <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span>)</span>
-<span id="cb673-3"><a href="functions.html#cb673-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb657"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb657-1"><a href="functions.html#cb657-1"></a>starter_die &lt;-<span class="st"> </span><span class="cf">function</span>() {</span>
+<span id="cb657-2"><a href="functions.html#cb657-2"></a>  <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span>)</span>
+<span id="cb657-3"><a href="functions.html#cb657-3"></a>}</span></code></pre></div>
 <p>From here, we can add a formal argument <code>n</code>, which requires the number of dice to be specified. However, if more than one dice is thrown, we want to make sure that any number from <code>1-6</code> has the chance of being returned. To do so, make sure the <code>replace</code> argument in <code>sample()</code> is set to <code>TRUE</code>. Now we have generalized the function <code>starter_dice()</code>!</p>
-<div class="sourceCode" id="cb674"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb674-1"><a href="functions.html#cb674-1"></a>starter_die &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
-<span id="cb674-2"><a href="functions.html#cb674-2"></a>  <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb674-3"><a href="functions.html#cb674-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb658"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb658-1"><a href="functions.html#cb658-1"></a>starter_die &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
+<span id="cb658-2"><a href="functions.html#cb658-2"></a>  <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb658-3"><a href="functions.html#cb658-3"></a>}</span></code></pre></div>
 <p>What if we wanted to add a formal argument, <code>n</code>, that would be passed into <code>sample()</code>’s n specification? Now let’s create an intermediate function <code>add_dice()</code> which throws n dice and adds the results.</p>
-<div class="sourceCode" id="cb675"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb675-1"><a href="functions.html#cb675-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
-<span id="cb675-2"><a href="functions.html#cb675-2"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb675-3"><a href="functions.html#cb675-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb659"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb659-1"><a href="functions.html#cb659-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
+<span id="cb659-2"><a href="functions.html#cb659-2"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb659-3"><a href="functions.html#cb659-3"></a>}</span></code></pre></div>
 <p>Congratulations! We have just generalized our function to take in any number of dice. But wait… is it really <em>any</em> value? Let’s add in a few checks that make sure no weird inputs break our function.</p>
-<div class="sourceCode" id="cb676"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb676-1"><a href="functions.html#cb676-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
-<span id="cb676-2"><a href="functions.html#cb676-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb676-3"><a href="functions.html#cb676-3"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb676-4"><a href="functions.html#cb676-4"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb677"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb677-1"><a href="functions.html#cb677-1"></a><span class="kw">add_dice</span>(<span class="op">-</span><span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb660"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb660-1"><a href="functions.html#cb660-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
+<span id="cb660-2"><a href="functions.html#cb660-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb660-3"><a href="functions.html#cb660-3"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb660-4"><a href="functions.html#cb660-4"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb661"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb661-1"><a href="functions.html#cb661-1"></a><span class="kw">add_dice</span>(<span class="op">-</span><span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## Error in sample.int(length(x), size, replace, prob): invalid 'size' argument</code></pre>
 <p>Oops! As you can see, we tried to use a negative number of dice, which will not fly. Let’s alter the informal checks to stop the function if <code>n</code> is negative.</p>
-<div class="sourceCode" id="cb679"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb679-1"><a href="functions.html#cb679-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
-<span id="cb679-2"><a href="functions.html#cb679-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb679-3"><a href="functions.html#cb679-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb679-4"><a href="functions.html#cb679-4"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb679-5"><a href="functions.html#cb679-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb663"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb663-1"><a href="functions.html#cb663-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</span>
+<span id="cb663-2"><a href="functions.html#cb663-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb663-3"><a href="functions.html#cb663-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
+<span id="cb663-4"><a href="functions.html#cb663-4"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb663-5"><a href="functions.html#cb663-5"></a>}</span></code></pre></div>
 <p>As you can see, we have a function that works and takes in sensible arguments. Next, let’s talk about about argument specifications and conventions.</p>
 <div id="argument-names-freedom-and-conventions" class="section level3">
 <h3>
 <span class="header-section-number">4.4.1</span> Argument names: freedom and conventions</h3>
 <p>Understand the importance of argument names. We can name my arguments almost anything we like. Proof:</p>
-<div class="sourceCode" id="cb680"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb680-1"><a href="functions.html#cb680-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(bob_ross) {</span>
-<span id="cb680-2"><a href="functions.html#cb680-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(bob_ross))</span>
-<span id="cb680-3"><a href="functions.html#cb680-3"></a>  <span class="kw">stopifnot</span>(bob_ross <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb680-4"><a href="functions.html#cb680-4"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, bob_ross, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb680-5"><a href="functions.html#cb680-5"></a>}</span>
-<span id="cb680-6"><a href="functions.html#cb680-6"></a></span>
-<span id="cb680-7"><a href="functions.html#cb680-7"></a><span class="kw">add_dice</span>(<span class="dt">bob_ross =</span> <span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## [1] 6</code></pre>
+<div class="sourceCode" id="cb664"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb664-1"><a href="functions.html#cb664-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(bob_ross) {</span>
+<span id="cb664-2"><a href="functions.html#cb664-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(bob_ross))</span>
+<span id="cb664-3"><a href="functions.html#cb664-3"></a>  <span class="kw">stopifnot</span>(bob_ross <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
+<span id="cb664-4"><a href="functions.html#cb664-4"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, bob_ross, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb664-5"><a href="functions.html#cb664-5"></a>}</span>
+<span id="cb664-6"><a href="functions.html#cb664-6"></a></span>
+<span id="cb664-7"><a href="functions.html#cb664-7"></a><span class="kw">add_dice</span>(<span class="dt">bob_ross =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## [1] 11</code></pre>
 <p>While we can name my argument after a famous painter, it’s usually a bad idea. Take all opportunities to make things more self-explanatory via meaningful names.</p>
 <p>If you are going to pass the arguments of your function as arguments of a built-in function, consider copying the argument names. Unless you have a good reason to do your own thing (some argument names are bad!), be consistent with the existing function. Again, the reason is to reduce your cognitive load.</p>
 <p>We took this detour so you could see there is no <em>structural</em> relationship between our argument (<code>n</code>) and that of <code>sample()</code> (which also includes <code>n</code>). The similarity or equivalence of the names <strong>accomplishes nothing</strong> as far as R is concerned; it is solely for the benefit of humans reading, writing, and using the code. Which is very important!</p>
@@ -956,32 +956,32 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <h3>
 <span class="header-section-number">4.4.2</span> Default values: freedom to NOT specify the arguments</h3>
 <p>What happens if we call our function but neglect to specify the probabilities?</p>
-<div class="sourceCode" id="cb682"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb682-1"><a href="functions.html#cb682-1"></a><span class="kw">add_dice</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb666"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb666-1"><a href="functions.html#cb666-1"></a><span class="kw">add_dice</span>()</span></code></pre></div>
 <pre><code>## Error in stopifnot(is.numeric(bob_ross)): argument "bob_ross" is missing, with no default</code></pre>
 <p>Oops! At the moment, this causes a fatal error. It can be nice to provide some reasonable default values for certain arguments. Setting <code>n = 1</code> is a reasonable default value.</p>
-<div class="sourceCode" id="cb684"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb684-1"><a href="functions.html#cb684-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
-<span id="cb684-2"><a href="functions.html#cb684-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb684-3"><a href="functions.html#cb684-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb684-4"><a href="functions.html#cb684-4"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb684-5"><a href="functions.html#cb684-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb668"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb668-1"><a href="functions.html#cb668-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
+<span id="cb668-2"><a href="functions.html#cb668-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb668-3"><a href="functions.html#cb668-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
+<span id="cb668-4"><a href="functions.html#cb668-4"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb668-5"><a href="functions.html#cb668-5"></a>}</span></code></pre></div>
 <p>Again we check how the function works by specifying <code>n</code> and not specifying <code>n</code>.</p>
-<div class="sourceCode" id="cb685"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb685-1"><a href="functions.html#cb685-1"></a><span class="kw">add_dice</span>()</span></code></pre></div>
-<pre><code>## [1] 2</code></pre>
-<div class="sourceCode" id="cb687"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb687-1"><a href="functions.html#cb687-1"></a><span class="kw">add_dice</span>(<span class="dv">10</span>)</span></code></pre></div>
-<pre><code>## [1] 38</code></pre>
+<div class="sourceCode" id="cb669"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb669-1"><a href="functions.html#cb669-1"></a><span class="kw">add_dice</span>()</span></code></pre></div>
+<pre><code>## [1] 5</code></pre>
+<div class="sourceCode" id="cb671"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb671-1"><a href="functions.html#cb671-1"></a><span class="kw">add_dice</span>(<span class="dv">10</span>)</span></code></pre></div>
+<pre><code>## [1] 41</code></pre>
 <p>Note that you do not necessarily need to supply the argument name. R tries its best to understand you based on the order you provide your argument values in. However, it is usually best practice to specify the argument name.</p>
 </div>
 <div id="wrap-up-and-whats-next-1" class="section level3">
 <h3>
 <span class="header-section-number">4.4.3</span> Wrap-up and what’s next?</h3>
 <p>Here’s the function we’ve written so far:</p>
-<div class="sourceCode" id="cb689"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb689-1"><a href="functions.html#cb689-1"></a>add_dice</span></code></pre></div>
+<div class="sourceCode" id="cb673"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb673-1"><a href="functions.html#cb673-1"></a>add_dice</span></code></pre></div>
 <pre><code>## function(n = 1) {
 ##   stopifnot(is.numeric(n))
 ##   stopifnot(n &gt;= 0)
 ##   sum(sample(1:6, n, replace = TRUE))
 ## }
-## &lt;bytecode: 0x7f97abc9cf58&gt;</code></pre>
+## &lt;bytecode: 0x7fe835dcb280&gt;</code></pre>
 <p>What we’ve accomplished:</p>
 <ul>
 <li>We’ve generalized our dice throwing function to take in a custom value for <code>n</code>
@@ -1002,12 +1002,12 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <p>The [testthat][testthat-web] package ([CRAN][testthat-cran]; [GitHub][testthat-github]) provides excellent facilities for this, with a distinct emphasis on automated unit testing of entire packages. However, we can take it out for a test drive even with our one measly function.</p>
 <p>We will construct a test with <code>test_that()</code> and, within it, we put one or more <em>expectations</em> that check actual against expected results. You simply harden your informal, interactive tests into formal unit tests. Here are some examples of tests and indicative expectations.</p>
 <p>Let’s keep our very first function around as a baseline.</p>
-<div class="sourceCode" id="cb691"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb691-1"><a href="functions.html#cb691-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
-<span id="cb691-2"><a href="functions.html#cb691-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb691-3"><a href="functions.html#cb691-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb691-4"><a href="functions.html#cb691-4"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb691-5"><a href="functions.html#cb691-5"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb692"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb692-1"><a href="functions.html#cb692-1"></a><span class="kw">library</span>(testthat)</span></code></pre></div>
+<div class="sourceCode" id="cb675"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb675-1"><a href="functions.html#cb675-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
+<span id="cb675-2"><a href="functions.html#cb675-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb675-3"><a href="functions.html#cb675-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
+<span id="cb675-4"><a href="functions.html#cb675-4"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb675-5"><a href="functions.html#cb675-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb676"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb676-1"><a href="functions.html#cb676-1"></a><span class="kw">library</span>(testthat)</span></code></pre></div>
 <pre><code>## 
 ## Attaching package: 'testthat'</code></pre>
 <pre><code>## The following object is masked from 'package:skimr':
@@ -1028,17 +1028,17 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <pre><code>## The following object is masked from 'package:gt':
 ## 
 ##     matches</code></pre>
-<div class="sourceCode" id="cb700"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb700-1"><a href="functions.html#cb700-1"></a><span class="kw">test_that</span>(<span class="st">'invalid args are detected'</span>, {</span>
-<span id="cb700-2"><a href="functions.html#cb700-2"></a>  <span class="kw">expect_error</span>(<span class="kw">add_dice</span>(<span class="st">"desserts are great!"</span>))</span>
-<span id="cb700-3"><a href="functions.html#cb700-3"></a>  <span class="kw">expect_error</span>(<span class="kw">add_dice</span>(kenya))</span>
-<span id="cb700-4"><a href="functions.html#cb700-4"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb684"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb684-1"><a href="functions.html#cb684-1"></a><span class="kw">test_that</span>(<span class="st">'invalid args are detected'</span>, {</span>
+<span id="cb684-2"><a href="functions.html#cb684-2"></a>  <span class="kw">expect_error</span>(<span class="kw">add_dice</span>(<span class="st">"desserts are great!"</span>))</span>
+<span id="cb684-3"><a href="functions.html#cb684-3"></a>  <span class="kw">expect_error</span>(<span class="kw">add_dice</span>(kenya))</span>
+<span id="cb684-4"><a href="functions.html#cb684-4"></a>})</span></code></pre></div>
 <p>No news is good news! Let’s see what test failure would look like. Let’s revert to a version of our function that does not check for a positive <code>n</code> value and test it. We can watch it fail.</p>
-<div class="sourceCode" id="cb701"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb701-1"><a href="functions.html#cb701-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">2</span>) {</span>
-<span id="cb701-2"><a href="functions.html#cb701-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb701-3"><a href="functions.html#cb701-3"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb701-4"><a href="functions.html#cb701-4"></a>}</span>
-<span id="cb701-5"><a href="functions.html#cb701-5"></a></span>
-<span id="cb701-6"><a href="functions.html#cb701-6"></a><span class="kw">show_failure</span>(<span class="kw">add_dice</span>(<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb685"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb685-1"><a href="functions.html#cb685-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">2</span>) {</span>
+<span id="cb685-2"><a href="functions.html#cb685-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb685-3"><a href="functions.html#cb685-3"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb685-4"><a href="functions.html#cb685-4"></a>}</span>
+<span id="cb685-5"><a href="functions.html#cb685-5"></a></span>
+<span id="cb685-6"><a href="functions.html#cb685-6"></a><span class="kw">show_failure</span>(<span class="kw">add_dice</span>(<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div>
 <pre><code>## Error in sample.int(length(x), size, replace, prob): invalid 'size' argument</code></pre>
 <p>Similar to the advice to use assertions in data analytical scripts, I recommend you use unit tests to monitor the behavior of functions you (or others) will use often. If your tests cover the function’s important behavior, then you can edit the internals freely. You’ll rest easy in the knowledge that, if you broke anything important, the tests will fail and alert you to the problem. A function that is important enough for unit tests probably also belongs in a package, where there are obvious mechanisms for running the tests as part of overall package checks.</p>
 </div>
@@ -1046,56 +1046,56 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <h3>
 <span class="header-section-number">4.5.2</span> What a function returns</h3>
 <p>By default, a function returns the result of the last line of the body. We are just letting that happen with the line <code>sum(sample(1:6, n, replace = TRUE))</code>. However, there is an explicit function for this: <code>return()</code>. We could just as easily make this the last line of my function’s body:</p>
-<div class="sourceCode" id="cb703"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb703-1"><a href="functions.html#cb703-1"></a><span class="kw">return</span>(<span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb687"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb687-1"><a href="functions.html#cb687-1"></a><span class="kw">return</span>(<span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)))</span></code></pre></div>
 <p>You absolutely must use <code>return()</code> if you want to return early based on some condition, i.e. before execution gets to the last line of the body. Otherwise, you can decide your own conventions about when you use <code>return()</code> and when you don’t.</p>
 <p>Right now, running <code>add_dice(5)</code> gives us an integer. What if we want the output to be a list of each roll outcome?</p>
-<div class="sourceCode" id="cb704"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb704-1"><a href="functions.html#cb704-1"></a>show_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">2</span>) {</span>
-<span id="cb704-2"><a href="functions.html#cb704-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb704-3"><a href="functions.html#cb704-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb704-4"><a href="functions.html#cb704-4"></a>  <span class="kw">return</span>(<span class="kw">list</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)))</span>
-<span id="cb704-5"><a href="functions.html#cb704-5"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb705"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb705-1"><a href="functions.html#cb705-1"></a><span class="kw">show_dice</span>(<span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb688"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb688-1"><a href="functions.html#cb688-1"></a>show_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">2</span>) {</span>
+<span id="cb688-2"><a href="functions.html#cb688-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb688-3"><a href="functions.html#cb688-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
+<span id="cb688-4"><a href="functions.html#cb688-4"></a>  <span class="kw">return</span>(<span class="kw">list</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)))</span>
+<span id="cb688-5"><a href="functions.html#cb688-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb689"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb689-1"><a href="functions.html#cb689-1"></a><span class="kw">show_dice</span>(<span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## [[1]]
-## [1] 5 2 3 1 6</code></pre>
+## [1] 1 2 6 2 6</code></pre>
 <p>Note that to achieve the above, we took out <code>sum()</code> and swapped it with <code>list()</code>. The new function, <code>show_dice()</code>, returns a list of <code>n</code> dice thrown.</p>
 </div>
 <div id="handling-nas" class="section level3">
 <h3>
 <span class="header-section-number">4.5.3</span> Handling <code>NA</code>s</h3>
 <p>The upside to creating our own dice-rolling function is that there have been no missing values. In real life, missing data will make your life a living hell. If you are lucky, it will be properly indicated by the special value <code>NA</code>, but don’t hold your breath. Many built-in R functions have an <code>na.rm =</code> argument through which you can specify how you want to handle <code>NA</code>s. Typically the default value is <code>na.rm = FALSE</code> and typical default behavior is to either let <code>NA</code>s propagate or to raise an error. Let’s see how <code>quantile()</code> handles <code>NA</code>s:</p>
-<div class="sourceCode" id="cb707"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb707-1"><a href="functions.html#cb707-1"></a>z &lt;-<span class="st"> </span>kenya<span class="op">$</span>poverty</span>
-<span id="cb707-2"><a href="functions.html#cb707-2"></a>z[<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="ot">NA</span></span>
-<span id="cb707-3"><a href="functions.html#cb707-3"></a><span class="kw">quantile</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
+<div class="sourceCode" id="cb691"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb691-1"><a href="functions.html#cb691-1"></a>z &lt;-<span class="st"> </span>kenya<span class="op">$</span>poverty</span>
+<span id="cb691-2"><a href="functions.html#cb691-2"></a>z[<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="ot">NA</span></span>
+<span id="cb691-3"><a href="functions.html#cb691-3"></a><span class="kw">quantile</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
 <pre><code>##   0%  25%  50%  75% 100% 
 ## 0.18 0.35 0.43 0.49 0.90</code></pre>
-<div class="sourceCode" id="cb709"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb709-1"><a href="functions.html#cb709-1"></a><span class="kw">quantile</span>(z)</span></code></pre></div>
+<div class="sourceCode" id="cb693"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb693-1"><a href="functions.html#cb693-1"></a><span class="kw">quantile</span>(z)</span></code></pre></div>
 <pre><code>## Error in quantile.default(z): missing values and NaN's not allowed if 'na.rm' is FALSE</code></pre>
-<div class="sourceCode" id="cb711"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb711-1"><a href="functions.html#cb711-1"></a><span class="kw">quantile</span>(z, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb695"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb695-1"><a href="functions.html#cb695-1"></a><span class="kw">quantile</span>(z, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>##   0%  25%  50%  75% 100% 
 ## 0.18 0.35 0.43 0.49 0.90</code></pre>
 <p>So <code>quantile()</code> simply will not operate in the presence of <code>NA</code>s unless <code>na.rm = TRUE</code>. How shall we modify our function?</p>
 <p>If we wanted to hardwire <code>na.rm = TRUE</code>, we could. Focus on our call to <code>quantile()</code> inside our definition of a new function, <code>quantile_diff()</code>.</p>
-<div class="sourceCode" id="cb713"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb713-1"><a href="functions.html#cb713-1"></a>quantile_diff &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) {</span>
-<span id="cb713-2"><a href="functions.html#cb713-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(x))</span>
-<span id="cb713-3"><a href="functions.html#cb713-3"></a>  the_quantiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(x, probs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb713-4"><a href="functions.html#cb713-4"></a>  <span class="kw">max</span>(the_quantiles) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(the_quantiles)</span>
-<span id="cb713-5"><a href="functions.html#cb713-5"></a>}</span>
-<span id="cb713-6"><a href="functions.html#cb713-6"></a><span class="kw">quantile_diff</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
+<div class="sourceCode" id="cb697"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb697-1"><a href="functions.html#cb697-1"></a>quantile_diff &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) {</span>
+<span id="cb697-2"><a href="functions.html#cb697-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(x))</span>
+<span id="cb697-3"><a href="functions.html#cb697-3"></a>  the_quantiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(x, probs, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb697-4"><a href="functions.html#cb697-4"></a>  <span class="kw">max</span>(the_quantiles) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(the_quantiles)</span>
+<span id="cb697-5"><a href="functions.html#cb697-5"></a>}</span>
+<span id="cb697-6"><a href="functions.html#cb697-6"></a><span class="kw">quantile_diff</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
 <pre><code>## [1] 0.72</code></pre>
-<div class="sourceCode" id="cb715"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb715-1"><a href="functions.html#cb715-1"></a><span class="kw">quantile_diff</span>(z)</span></code></pre></div>
+<div class="sourceCode" id="cb699"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb699-1"><a href="functions.html#cb699-1"></a><span class="kw">quantile_diff</span>(z)</span></code></pre></div>
 <pre><code>## [1] 0.72</code></pre>
 <p>This works but it is dangerous to invert the default behavior of a well-known built-in function and to provide the user with no way to override this.</p>
 <p>We could add an <code>na.rm =</code> argument to our own function. We might even enforce our preferred default – but at least we’re giving the user a way to control the behavior around <code>NA</code>s.</p>
-<div class="sourceCode" id="cb717"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb717-1"><a href="functions.html#cb717-1"></a>quantile_diff &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) {</span>
-<span id="cb717-2"><a href="functions.html#cb717-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(x))</span>
-<span id="cb717-3"><a href="functions.html#cb717-3"></a>  the_quantiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(x, probs, <span class="dt">na.rm =</span> na.rm)</span>
-<span id="cb717-4"><a href="functions.html#cb717-4"></a>  <span class="kw">max</span>(the_quantiles) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(the_quantiles)</span>
-<span id="cb717-5"><a href="functions.html#cb717-5"></a>}</span>
-<span id="cb717-6"><a href="functions.html#cb717-6"></a><span class="kw">quantile_diff</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
+<div class="sourceCode" id="cb701"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb701-1"><a href="functions.html#cb701-1"></a>quantile_diff &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) {</span>
+<span id="cb701-2"><a href="functions.html#cb701-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(x))</span>
+<span id="cb701-3"><a href="functions.html#cb701-3"></a>  the_quantiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(x, probs, <span class="dt">na.rm =</span> na.rm)</span>
+<span id="cb701-4"><a href="functions.html#cb701-4"></a>  <span class="kw">max</span>(the_quantiles) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(the_quantiles)</span>
+<span id="cb701-5"><a href="functions.html#cb701-5"></a>}</span>
+<span id="cb701-6"><a href="functions.html#cb701-6"></a><span class="kw">quantile_diff</span>(kenya<span class="op">$</span>poverty)</span></code></pre></div>
 <pre><code>## [1] 0.72</code></pre>
-<div class="sourceCode" id="cb719"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb719-1"><a href="functions.html#cb719-1"></a><span class="kw">quantile_diff</span>(z)</span></code></pre></div>
+<div class="sourceCode" id="cb703"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb703-1"><a href="functions.html#cb703-1"></a><span class="kw">quantile_diff</span>(z)</span></code></pre></div>
 <pre><code>## [1] 0.72</code></pre>
-<div class="sourceCode" id="cb721"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb721-1"><a href="functions.html#cb721-1"></a><span class="kw">quantile_diff</span>(z, <span class="dt">na.rm =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb705"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb705-1"><a href="functions.html#cb705-1"></a><span class="kw">quantile_diff</span>(z, <span class="dt">na.rm =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <pre><code>## Error in quantile.default(x, probs, na.rm = na.rm): missing values and NaN's not allowed if 'na.rm' is FALSE</code></pre>
 </div>
 <div id="the-useful-but-mysterious-...-argument" class="section level3">
@@ -1103,25 +1103,25 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <span class="header-section-number">4.5.4</span> The useful but mysterious <code>...</code> argument</h3>
 <p>You probably could have lived a long and happy life without knowing there are at least 9 different algorithms for computing quantiles. [Go read about the <code>type</code> argument][rdocs-quantile] of <code>quantile()</code>. TLDR: If a quantile is not unambiguously equal to an observed data point, you must somehow average two data points. You can weight this average different ways, depending on the rest of the data, and <code>type =</code> controls this.</p>
 <p>Let’s say we want to give the user of our function the ability to specify how the quantiles are computed, but we want to accomplish with as little fuss as possible. In fact, we don’t even want to clutter our function’s interface with this! This calls for the very special <code>...</code> argument. In English, this set of three dots is frequently called an “ellipsis”.</p>
-<div class="sourceCode" id="cb723"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb723-1"><a href="functions.html#cb723-1"></a>quantile_diff &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>, ...) {</span>
-<span id="cb723-2"><a href="functions.html#cb723-2"></a>  the_quantiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(<span class="dt">x =</span> x, <span class="dt">probs =</span> probs, <span class="dt">na.rm =</span> na.rm, ...)</span>
-<span id="cb723-3"><a href="functions.html#cb723-3"></a>  <span class="kw">max</span>(the_quantiles) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(the_quantiles)</span>
-<span id="cb723-4"><a href="functions.html#cb723-4"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb707"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb707-1"><a href="functions.html#cb707-1"></a>quantile_diff &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>, ...) {</span>
+<span id="cb707-2"><a href="functions.html#cb707-2"></a>  the_quantiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(<span class="dt">x =</span> x, <span class="dt">probs =</span> probs, <span class="dt">na.rm =</span> na.rm, ...)</span>
+<span id="cb707-3"><a href="functions.html#cb707-3"></a>  <span class="kw">max</span>(the_quantiles) <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(the_quantiles)</span>
+<span id="cb707-4"><a href="functions.html#cb707-4"></a>}</span></code></pre></div>
 <p>Thanks to [@wrathematics][twitter-wrathematics], here’s a small example where we can (barely) detect a difference due to <code>type</code>.</p>
-<div class="sourceCode" id="cb724"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb724-1"><a href="functions.html#cb724-1"></a><span class="kw">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb724-2"><a href="functions.html#cb724-2"></a>z &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">10</span>)</span>
-<span id="cb724-3"><a href="functions.html#cb724-3"></a><span class="kw">quantile</span>(z, <span class="dt">type =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb708"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb708-1"><a href="functions.html#cb708-1"></a><span class="kw">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb708-2"><a href="functions.html#cb708-2"></a>z &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">10</span>)</span>
+<span id="cb708-3"><a href="functions.html#cb708-3"></a><span class="kw">quantile</span>(z, <span class="dt">type =</span> <span class="dv">1</span>)</span></code></pre></div>
 <pre><code>##    0%   25%   50%   75%  100% 
 ## -2.35 -0.89 -0.56  0.43  1.08</code></pre>
-<div class="sourceCode" id="cb726"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb726-1"><a href="functions.html#cb726-1"></a><span class="kw">quantile</span>(z, <span class="dt">type =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb710"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb710-1"><a href="functions.html#cb710-1"></a><span class="kw">quantile</span>(z, <span class="dt">type =</span> <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>##    0%   25%   50%   75%  100% 
 ## -2.35 -1.05 -0.56  0.35  1.08</code></pre>
-<div class="sourceCode" id="cb728"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb728-1"><a href="functions.html#cb728-1"></a><span class="kw">all.equal</span>(<span class="kw">quantile</span>(z, <span class="dt">type =</span> <span class="dv">1</span>), <span class="kw">quantile</span>(z, <span class="dt">type =</span> <span class="dv">4</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb712"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb712-1"><a href="functions.html#cb712-1"></a><span class="kw">all.equal</span>(<span class="kw">quantile</span>(z, <span class="dt">type =</span> <span class="dv">1</span>), <span class="kw">quantile</span>(z, <span class="dt">type =</span> <span class="dv">4</span>))</span></code></pre></div>
 <pre><code>## [1] "Mean relative difference: 0.18"</code></pre>
 <p>Now we can call our function, requesting that quantiles be computed in different ways.</p>
-<div class="sourceCode" id="cb730"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb730-1"><a href="functions.html#cb730-1"></a><span class="kw">quantile_diff</span>(z, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>), <span class="dt">type =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb714"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb714-1"><a href="functions.html#cb714-1"></a><span class="kw">quantile_diff</span>(z, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>), <span class="dt">type =</span> <span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] 1.3</code></pre>
-<div class="sourceCode" id="cb732"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb732-1"><a href="functions.html#cb732-1"></a><span class="kw">quantile_diff</span>(z, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>), <span class="dt">type =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb716"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb716-1"><a href="functions.html#cb716-1"></a><span class="kw">quantile_diff</span>(z, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>), <span class="dt">type =</span> <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## [1] 1.4</code></pre>
 <p>While the difference may be subtle, <strong>it’s there</strong>. Marvel at the fact that we have passed <code>type = 1</code> through to <code>quantile()</code> <em>even though it was not a formal argument of our own function</em>.</p>
 <p>The special argument <code>...</code> is very useful when you want the ability to pass arbitrary arguments down to another function, but without constantly expanding the formal arguments to your function. This leaves you with a less cluttered function definition and gives you future flexibility to specify these arguments only when you need to. This is why the <code>...</code> argument is used in conjunction with <code>map_*</code> functions.</p>
@@ -1138,24 +1138,24 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 </h3>
 <p>In this section, we will be tieing in concepts on <code>map_*</code> functions, list-columns, and function writing. We’ll also be introducing some important conditional functions (<code>ifelse()</code>, <code>any()</code>, <code>all()</code>, and <code>case_when()</code>).</p>
 <p>Let’s return to our dice-throwing function, <code>add_dice()</code>.</p>
-<div class="sourceCode" id="cb734"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb734-1"><a href="functions.html#cb734-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
-<span id="cb734-2"><a href="functions.html#cb734-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb734-3"><a href="functions.html#cb734-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb734-4"><a href="functions.html#cb734-4"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb734-5"><a href="functions.html#cb734-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb718"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb718-1"><a href="functions.html#cb718-1"></a>add_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
+<span id="cb718-2"><a href="functions.html#cb718-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb718-3"><a href="functions.html#cb718-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
+<span id="cb718-4"><a href="functions.html#cb718-4"></a>  <span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb718-5"><a href="functions.html#cb718-5"></a>}</span></code></pre></div>
 <p>Next, we will create <code>roll_dice()</code>, which calls <code>add_dice(n = 2)</code> as many times as the user specifies. To do so, we will be combining the <code>rep()</code> function with <code>map_int()</code>.</p>
-<div class="sourceCode" id="cb735"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb735-1"><a href="functions.html#cb735-1"></a>roll_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
-<span id="cb735-2"><a href="functions.html#cb735-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb735-3"><a href="functions.html#cb735-3"></a>  <span class="kw">map_int</span>(<span class="kw">rep</span>(<span class="dv">2</span>, n), add_dice)</span>
-<span id="cb735-4"><a href="functions.html#cb735-4"></a>}</span>
-<span id="cb735-5"><a href="functions.html#cb735-5"></a><span class="kw">roll_dice</span>(<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb719"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb719-1"><a href="functions.html#cb719-1"></a>roll_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
+<span id="cb719-2"><a href="functions.html#cb719-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb719-3"><a href="functions.html#cb719-3"></a>  <span class="kw">map_int</span>(<span class="kw">rep</span>(<span class="dv">2</span>, n), add_dice)</span>
+<span id="cb719-4"><a href="functions.html#cb719-4"></a>}</span>
+<span id="cb719-5"><a href="functions.html#cb719-5"></a><span class="kw">roll_dice</span>(<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] 12</code></pre>
-<div class="sourceCode" id="cb737"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb737-1"><a href="functions.html#cb737-1"></a><span class="kw">roll_dice</span>(<span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb721"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb721-1"><a href="functions.html#cb721-1"></a><span class="kw">roll_dice</span>(<span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## [1] 10  9  7  9  7</code></pre>
 <p><code>rep()</code> is a useful input to <code>map_*</code> when you want to call a function with the same input multiple times. <code>rep(2, n)</code> creates a vector of length n where every element is 2. We use that as the input to <code>map_int()</code> because we want the input to <code>add_dice()</code> to be 2 every time (we are always throwing a pair of dice) and we want to perform the operation n times, chosen by the user.</p>
 <p>Create a tibble named <code>x</code> with one variable: <code>throws</code>. <code>throws</code> is a list column, each element of which is three throws of the dice pair, i.e., the result of calling <code>roll_dice(n = 3)</code>. Thus, our tibble will have ten rows and two columns.</p>
-<div class="sourceCode" id="cb739"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb739-1"><a href="functions.html#cb739-1"></a>x &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">throws =</span> <span class="kw">map</span>(<span class="kw">rep</span>(<span class="dv">3</span>, <span class="dv">10</span>), roll_dice))</span>
-<span id="cb739-2"><a href="functions.html#cb739-2"></a>x</span></code></pre></div>
+<div class="sourceCode" id="cb723"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb723-1"><a href="functions.html#cb723-1"></a>x &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">throws =</span> <span class="kw">map</span>(<span class="kw">rep</span>(<span class="dv">3</span>, <span class="dv">10</span>), roll_dice))</span>
+<span id="cb723-2"><a href="functions.html#cb723-2"></a>x</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 1
 ##    throws   
 ##    &lt;list&gt;   
@@ -1170,20 +1170,20 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 ##  9 &lt;int [3]&gt;
 ## 10 &lt;int [3]&gt;</code></pre>
 <p>Add a variable to <code>x</code> called <code>first_seven</code> which is TRUE if the first roll in <code>throws</code> is a 7.</p>
-<div class="sourceCode" id="cb741"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb741-1"><a href="functions.html#cb741-1"></a><span class="kw">library</span>(magrittr)</span>
-<span id="cb741-2"><a href="functions.html#cb741-2"></a></span>
-<span id="cb741-3"><a href="functions.html#cb741-3"></a><span class="co"># The magrittr package allows us to use %&lt;&gt;%, the compound assignment pipe</span></span>
-<span id="cb741-4"><a href="functions.html#cb741-4"></a><span class="co"># operator, which (as its name suggests) both assigns and pipes</span></span>
-<span id="cb741-5"><a href="functions.html#cb741-5"></a></span>
-<span id="cb741-6"><a href="functions.html#cb741-6"></a>x <span class="op">%&lt;&gt;%</span><span class="st"> </span></span>
-<span id="cb741-7"><a href="functions.html#cb741-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">first_seven =</span> <span class="kw">map_lgl</span>(throws, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(.[[<span class="dv">1</span>]] <span class="op">==</span><span class="st"> </span><span class="dv">7</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb725"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb725-1"><a href="functions.html#cb725-1"></a><span class="kw">library</span>(magrittr)</span>
+<span id="cb725-2"><a href="functions.html#cb725-2"></a></span>
+<span id="cb725-3"><a href="functions.html#cb725-3"></a><span class="co"># The magrittr package allows us to use %&lt;&gt;%, the compound assignment pipe</span></span>
+<span id="cb725-4"><a href="functions.html#cb725-4"></a><span class="co"># operator, which (as its name suggests) both assigns and pipes</span></span>
+<span id="cb725-5"><a href="functions.html#cb725-5"></a></span>
+<span id="cb725-6"><a href="functions.html#cb725-6"></a>x <span class="op">%&lt;&gt;%</span><span class="st"> </span></span>
+<span id="cb725-7"><a href="functions.html#cb725-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">first_seven =</span> <span class="kw">map_lgl</span>(throws, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(.[[<span class="dv">1</span>]] <span class="op">==</span><span class="st"> </span><span class="dv">7</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)))</span></code></pre></div>
 <p>We see here that <code>[[1]]</code> is how we extract the first element of a list, just like <code>[1]</code> extracts the first element of an atomic vector. <code>ifelse()</code> takes as its first argument a condition; if it is TRUE it returns the second argument (here TRUE) and if not the third (here FALSE).</p>
 <p>Add a variable to <code>x</code> called <code>a_winner</code> which is TRUE if at least one of the three throws is a 7 or an 11 and is FALSE otherwise.</p>
-<div class="sourceCode" id="cb742"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb742-1"><a href="functions.html#cb742-1"></a>x <span class="op">%&lt;&gt;%</span><span class="st"> </span></span>
-<span id="cb742-2"><a href="functions.html#cb742-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">a_winner =</span> <span class="kw">map_lgl</span>(throws, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">any</span>(<span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">11</span>) <span class="op">%in%</span><span class="st"> </span>.), <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb726"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb726-1"><a href="functions.html#cb726-1"></a>x <span class="op">%&lt;&gt;%</span><span class="st"> </span></span>
+<span id="cb726-2"><a href="functions.html#cb726-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">a_winner =</span> <span class="kw">map_lgl</span>(throws, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">any</span>(<span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">11</span>) <span class="op">%in%</span><span class="st"> </span>.), <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)))</span></code></pre></div>
 <p>Here we use <code>any()</code>: <code>any()</code> checks if any element in its input is TRUE. So, let’s say a particular throw was 4, 6, and 7: <code>c(7, 11) %in% c(4, 6, 7)</code> returns the vector <code>TRUE FALSE</code> (since 7 is in the vector but 11 isn’t); then, <code>any(c(7, 11) %in% c(4, 6, 7))</code> returns TRUE because one of the conditions is TRUE.</p>
 <p>Run <code>str()</code> on <code>x</code> and show the results.</p>
-<div class="sourceCode" id="cb743"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb743-1"><a href="functions.html#cb743-1"></a><span class="kw">str</span>(x)</span></code></pre></div>
+<div class="sourceCode" id="cb727"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb727-1"><a href="functions.html#cb727-1"></a><span class="kw">str</span>(x)</span></code></pre></div>
 <pre><code>## tibble [10 × 3] (S3: tbl_df/tbl/data.frame)
 ##  $ throws     :List of 10
 ##   ..$ : int [1:3] 8 7 7
@@ -1203,28 +1203,28 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <h3>
 <span class="header-section-number">4.6.2</span> Running Simulations</h3>
 <p>Calculate how “surprised” you should be if someone rolls three winners in a row. First, create a tibble with 10,000 rows. Include a <code>throws</code> list column with three throws of our dice, just as in part a). Second, create a column called <code>perfection</code> which is TRUE if all three of the throws are either 7 or 11.</p>
-<div class="sourceCode" id="cb745"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb745-1"><a href="functions.html#cb745-1"></a>surprised &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">throws =</span> <span class="kw">map</span>(<span class="kw">rep</span>(<span class="dv">3</span>, <span class="dv">10000</span>), roll_dice)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb745-2"><a href="functions.html#cb745-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perfection =</span> <span class="kw">map_lgl</span>(throws, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">all</span>(. <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">11</span>)), <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)))</span>
-<span id="cb745-3"><a href="functions.html#cb745-3"></a></span>
-<span id="cb745-4"><a href="functions.html#cb745-4"></a>surprised <span class="op">%&gt;%</span></span>
-<span id="cb745-5"><a href="functions.html#cb745-5"></a><span class="st">  </span><span class="kw">pull</span>(perfection) <span class="op">%&gt;%</span></span>
-<span id="cb745-6"><a href="functions.html#cb745-6"></a><span class="st">  </span><span class="kw">mean</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb729"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb729-1"><a href="functions.html#cb729-1"></a>surprised &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">throws =</span> <span class="kw">map</span>(<span class="kw">rep</span>(<span class="dv">3</span>, <span class="dv">10000</span>), roll_dice)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb729-2"><a href="functions.html#cb729-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perfection =</span> <span class="kw">map_lgl</span>(throws, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">all</span>(. <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">11</span>)), <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)))</span>
+<span id="cb729-3"><a href="functions.html#cb729-3"></a></span>
+<span id="cb729-4"><a href="functions.html#cb729-4"></a>surprised <span class="op">%&gt;%</span></span>
+<span id="cb729-5"><a href="functions.html#cb729-5"></a><span class="st">  </span><span class="kw">pull</span>(perfection) <span class="op">%&gt;%</span></span>
+<span id="cb729-6"><a href="functions.html#cb729-6"></a><span class="st">  </span><span class="kw">mean</span>()</span></code></pre></div>
 <pre><code>## [1] 0.011</code></pre>
 <p>Here, we use <code>all()</code>, which has the same structure as <code>any()</code>, but checks whether <em>all</em> the elements in the input are TRUE.</p>
 <p>Approximately 1.1% of three rolls of a pair of fair dice are all equal to either 7 or 11.</p>
 <p>Your friend proposes the following bet. You will roll a pair of fair dice 10 times. Side A gets the second highest of the first 4 rolls. Side B gets 1 plus the the median of the remaining 6 rolls. Which side is more likely to win? What’s the chance of a tie?</p>
-<div class="sourceCode" id="cb747"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb747-1"><a href="functions.html#cb747-1"></a>bet &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">throws =</span> <span class="kw">map</span>(<span class="kw">rep</span>(<span class="dv">10</span>, <span class="dv">10000</span>), roll_dice)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb747-2"><a href="functions.html#cb747-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">A =</span> <span class="kw">map_dbl</span>(throws, <span class="op">~</span><span class="st"> </span><span class="kw">sort</span>(.[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>])[<span class="dv">3</span>]),</span>
-<span id="cb747-3"><a href="functions.html#cb747-3"></a>         <span class="dt">B =</span> <span class="kw">map_dbl</span>(throws, <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">median</span>(.[<span class="dv">5</span><span class="op">:</span><span class="dv">10</span>])),</span>
-<span id="cb747-4"><a href="functions.html#cb747-4"></a>         <span class="dt">winner =</span> <span class="kw">case_when</span>(A <span class="op">&gt;</span><span class="st"> </span>B <span class="op">~</span><span class="st"> "A"</span>,</span>
-<span id="cb747-5"><a href="functions.html#cb747-5"></a>                            B <span class="op">&gt;</span><span class="st"> </span>A <span class="op">~</span><span class="st"> "B"</span>,</span>
-<span id="cb747-6"><a href="functions.html#cb747-6"></a>                            <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> "tie"</span>))</span>
-<span id="cb747-7"><a href="functions.html#cb747-7"></a></span>
-<span id="cb747-8"><a href="functions.html#cb747-8"></a><span class="kw">case_when</span>(<span class="kw">sum</span>(bet<span class="op">$</span>winner <span class="op">==</span><span class="st"> "A"</span>) <span class="op">&gt;</span><span class="st"> </span><span class="kw">sum</span>(bet<span class="op">$</span>winner <span class="op">==</span><span class="st"> "B"</span>) <span class="op">~</span><span class="st"> "A"</span>,</span>
-<span id="cb747-9"><a href="functions.html#cb747-9"></a>          <span class="kw">sum</span>(bet<span class="op">$</span>winner <span class="op">==</span><span class="st"> "B"</span>) <span class="op">&gt;</span><span class="st"> </span><span class="kw">sum</span>(bet<span class="op">$</span>winner <span class="op">==</span><span class="st"> "A"</span>) <span class="op">~</span><span class="st"> "B"</span>,</span>
-<span id="cb747-10"><a href="functions.html#cb747-10"></a>          <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> "Same # Victories"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb731"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb731-1"><a href="functions.html#cb731-1"></a>bet &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">throws =</span> <span class="kw">map</span>(<span class="kw">rep</span>(<span class="dv">10</span>, <span class="dv">10000</span>), roll_dice)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb731-2"><a href="functions.html#cb731-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">A =</span> <span class="kw">map_dbl</span>(throws, <span class="op">~</span><span class="st"> </span><span class="kw">sort</span>(.[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>])[<span class="dv">3</span>]),</span>
+<span id="cb731-3"><a href="functions.html#cb731-3"></a>         <span class="dt">B =</span> <span class="kw">map_dbl</span>(throws, <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">median</span>(.[<span class="dv">5</span><span class="op">:</span><span class="dv">10</span>])),</span>
+<span id="cb731-4"><a href="functions.html#cb731-4"></a>         <span class="dt">winner =</span> <span class="kw">case_when</span>(A <span class="op">&gt;</span><span class="st"> </span>B <span class="op">~</span><span class="st"> "A"</span>,</span>
+<span id="cb731-5"><a href="functions.html#cb731-5"></a>                            B <span class="op">&gt;</span><span class="st"> </span>A <span class="op">~</span><span class="st"> "B"</span>,</span>
+<span id="cb731-6"><a href="functions.html#cb731-6"></a>                            <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> "tie"</span>))</span>
+<span id="cb731-7"><a href="functions.html#cb731-7"></a></span>
+<span id="cb731-8"><a href="functions.html#cb731-8"></a><span class="kw">case_when</span>(<span class="kw">sum</span>(bet<span class="op">$</span>winner <span class="op">==</span><span class="st"> "A"</span>) <span class="op">&gt;</span><span class="st"> </span><span class="kw">sum</span>(bet<span class="op">$</span>winner <span class="op">==</span><span class="st"> "B"</span>) <span class="op">~</span><span class="st"> "A"</span>,</span>
+<span id="cb731-9"><a href="functions.html#cb731-9"></a>          <span class="kw">sum</span>(bet<span class="op">$</span>winner <span class="op">==</span><span class="st"> "B"</span>) <span class="op">&gt;</span><span class="st"> </span><span class="kw">sum</span>(bet<span class="op">$</span>winner <span class="op">==</span><span class="st"> "A"</span>) <span class="op">~</span><span class="st"> "B"</span>,</span>
+<span id="cb731-10"><a href="functions.html#cb731-10"></a>          <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> "Same # Victories"</span>)</span></code></pre></div>
 <pre><code>## [1] "B"</code></pre>
-<div class="sourceCode" id="cb749"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb749-1"><a href="functions.html#cb749-1"></a><span class="kw">sum</span>(bet<span class="op">$</span>winner <span class="op">==</span><span class="st"> "tie"</span>)<span class="op">/</span><span class="kw">length</span>(bet<span class="op">$</span>winner)</span></code></pre></div>
+<div class="sourceCode" id="cb733"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb733-1"><a href="functions.html#cb733-1"></a><span class="kw">sum</span>(bet<span class="op">$</span>winner <span class="op">==</span><span class="st"> "tie"</span>)<span class="op">/</span><span class="kw">length</span>(bet<span class="op">$</span>winner)</span></code></pre></div>
 <pre><code>## [1] 0.11</code></pre>
 <p>You can think of <code>case_when()</code> as a generalized <code>ifelse()</code>. The syntax is a little more complicated. Each expression is followed by <code>~</code> and what should be returned if that expression is TRUE. The final expression, TRUE, is always true, and thus is the residual category if none of the above expression are TRUE. Thus, the second <code>case_when()</code> in our above code will print “A” if A is the winner in more replications than B, “B” if B is the winner more than A, and “Same # Victories” otherwise.</p>
 <p>Side B is more likely to win.</p>
@@ -1235,44 +1235,44 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <span class="header-section-number">4.6.3</span> Making a Crooked Function</h3>
 <p>Say we are at an establishment known as the Crooked Casino. In a game of craps, you win if you roll 7 or 11 as the sum of a pair of dice. The Crooked Casino is infamous for rigging its games so that it is more difficult to obtain 7 or 11 as a sum. Our job is to write a function that mimics this behavior.</p>
 <p>First, let’s use what we have. We will add a line of code in <code>add_dice()</code> that assigns <code>sum(sample(1:6, n, replace = TRUE))</code> to a variable, <code>roll</code>, and returns <code>roll</code>.</p>
-<div class="sourceCode" id="cb751"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb751-1"><a href="functions.html#cb751-1"></a>crooked_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
-<span id="cb751-2"><a href="functions.html#cb751-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb751-3"><a href="functions.html#cb751-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb751-4"><a href="functions.html#cb751-4"></a>  roll &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb751-5"><a href="functions.html#cb751-5"></a>  <span class="kw">return</span>(roll)</span>
-<span id="cb751-6"><a href="functions.html#cb751-6"></a>}</span>
-<span id="cb751-7"><a href="functions.html#cb751-7"></a></span>
-<span id="cb751-8"><a href="functions.html#cb751-8"></a><span class="kw">crooked_dice</span>(<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb735"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb735-1"><a href="functions.html#cb735-1"></a>crooked_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
+<span id="cb735-2"><a href="functions.html#cb735-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb735-3"><a href="functions.html#cb735-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
+<span id="cb735-4"><a href="functions.html#cb735-4"></a>  roll &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb735-5"><a href="functions.html#cb735-5"></a>  <span class="kw">return</span>(roll)</span>
+<span id="cb735-6"><a href="functions.html#cb735-6"></a>}</span>
+<span id="cb735-7"><a href="functions.html#cb735-7"></a></span>
+<span id="cb735-8"><a href="functions.html#cb735-8"></a><span class="kw">crooked_dice</span>(<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## [1] 7</code></pre>
 <p>How is this any different from <code>add_dice()</code>, you may ask? It is not. We are merely assigning the outcome of the roll of a pair of dice to a variable <code>roll</code>, which will be useful in a moment. Recall that functions only “remember” what takes place within themselves. This means that each call of <code>crooked_dice()</code> creates a new variable <code>roll</code> that takes place inside the function.</p>
 <p>Now, let’s use <code>ifelse()</code> to check whether a 7 or 11 was rolled, and if so, to assign a roll of <code>2</code> instead.</p>
-<div class="sourceCode" id="cb753"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb753-1"><a href="functions.html#cb753-1"></a>crooked_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
-<span id="cb753-2"><a href="functions.html#cb753-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb753-3"><a href="functions.html#cb753-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb753-4"><a href="functions.html#cb753-4"></a>  roll &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb753-5"><a href="functions.html#cb753-5"></a>  <span class="kw">ifelse</span>(roll <span class="op">==</span><span class="st"> </span><span class="dv">7</span> <span class="op">|</span><span class="st"> </span>roll <span class="op">==</span><span class="st"> </span><span class="dv">11</span>, <span class="dv">2</span>, roll)</span>
-<span id="cb753-6"><a href="functions.html#cb753-6"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb737"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb737-1"><a href="functions.html#cb737-1"></a>crooked_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
+<span id="cb737-2"><a href="functions.html#cb737-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb737-3"><a href="functions.html#cb737-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
+<span id="cb737-4"><a href="functions.html#cb737-4"></a>  roll &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb737-5"><a href="functions.html#cb737-5"></a>  <span class="kw">ifelse</span>(roll <span class="op">==</span><span class="st"> </span><span class="dv">7</span> <span class="op">|</span><span class="st"> </span>roll <span class="op">==</span><span class="st"> </span><span class="dv">11</span>, <span class="dv">2</span>, roll)</span>
+<span id="cb737-6"><a href="functions.html#cb737-6"></a>}</span></code></pre></div>
 <p>The Crooked Casino is a bit more sly, however. They know if they have an overtly crooked game of craps that never returned 7 or 11, that no one would play. They want to be a little more subtle about their crookedness, so they determine that only half of the time a 7 or 11 is rolled will the outcome be altered.</p>
 <p>We can simulate this decision by generating a random variable using <code>runif()</code> and checking whether the result is greater than or equal to 0.5.</p>
-<div class="sourceCode" id="cb754"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb754-1"><a href="functions.html#cb754-1"></a>crooked_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
-<span id="cb754-2"><a href="functions.html#cb754-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb754-3"><a href="functions.html#cb754-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb754-4"><a href="functions.html#cb754-4"></a>  roll &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb754-5"><a href="functions.html#cb754-5"></a>  <span class="kw">ifelse</span>((roll <span class="op">==</span><span class="st"> </span><span class="dv">7</span> <span class="op">|</span><span class="st"> </span>roll <span class="op">==</span><span class="st"> </span><span class="dv">11</span>) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>) <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dv">2</span>, roll)</span>
-<span id="cb754-6"><a href="functions.html#cb754-6"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb738"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb738-1"><a href="functions.html#cb738-1"></a>crooked_dice &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
+<span id="cb738-2"><a href="functions.html#cb738-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb738-3"><a href="functions.html#cb738-3"></a>  <span class="kw">stopifnot</span>(n <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</span>
+<span id="cb738-4"><a href="functions.html#cb738-4"></a>  roll &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, n, <span class="dt">replace =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb738-5"><a href="functions.html#cb738-5"></a>  <span class="kw">ifelse</span>((roll <span class="op">==</span><span class="st"> </span><span class="dv">7</span> <span class="op">|</span><span class="st"> </span>roll <span class="op">==</span><span class="st"> </span><span class="dv">11</span>) <span class="op">&amp;&amp;</span><span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>) <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dv">2</span>, roll)</span>
+<span id="cb738-6"><a href="functions.html#cb738-6"></a>}</span></code></pre></div>
 <p>Now we can create a function named <code>crooked_craps()</code> that calls <code>crooked_dice()</code> as many times as specified.</p>
-<div class="sourceCode" id="cb755"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb755-1"><a href="functions.html#cb755-1"></a>crooked_craps &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
-<span id="cb755-2"><a href="functions.html#cb755-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
-<span id="cb755-3"><a href="functions.html#cb755-3"></a>  <span class="kw">map_dbl</span>(<span class="kw">rep</span>(<span class="dv">2</span>, n), crooked_dice)</span>
-<span id="cb755-4"><a href="functions.html#cb755-4"></a>}</span>
-<span id="cb755-5"><a href="functions.html#cb755-5"></a><span class="kw">crooked_craps</span>(<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb739"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb739-1"><a href="functions.html#cb739-1"></a>crooked_craps &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">1</span>) {</span>
+<span id="cb739-2"><a href="functions.html#cb739-2"></a>  <span class="kw">stopifnot</span>(<span class="kw">is.numeric</span>(n))</span>
+<span id="cb739-3"><a href="functions.html#cb739-3"></a>  <span class="kw">map_dbl</span>(<span class="kw">rep</span>(<span class="dv">2</span>, n), crooked_dice)</span>
+<span id="cb739-4"><a href="functions.html#cb739-4"></a>}</span>
+<span id="cb739-5"><a href="functions.html#cb739-5"></a><span class="kw">crooked_craps</span>(<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] 6</code></pre>
-<div class="sourceCode" id="cb757"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb757-1"><a href="functions.html#cb757-1"></a><span class="kw">crooked_craps</span>(<span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb741"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb741-1"><a href="functions.html#cb741-1"></a><span class="kw">crooked_craps</span>(<span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## [1]  6 10  9  4  4</code></pre>
 <p>It’s hard to tell whether <code>crooked_craps()</code> is working properly by rolling just once, or even ten times. Let’s follow the steps we took above to create a tibble of 10 observations each of 10 rolls named <code>crooked_x</code>.</p>
-<div class="sourceCode" id="cb759"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb759-1"><a href="functions.html#cb759-1"></a>crooked_x &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">throws =</span> <span class="kw">map</span>(<span class="kw">rep</span>(<span class="dv">10</span>, <span class="dv">10</span>), crooked_craps))</span>
-<span id="cb759-2"><a href="functions.html#cb759-2"></a>crooked_x <span class="op">%&gt;%</span></span>
-<span id="cb759-3"><a href="functions.html#cb759-3"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb743"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb743-1"><a href="functions.html#cb743-1"></a>crooked_x &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">throws =</span> <span class="kw">map</span>(<span class="kw">rep</span>(<span class="dv">10</span>, <span class="dv">10</span>), crooked_craps))</span>
+<span id="cb743-2"><a href="functions.html#cb743-2"></a>crooked_x <span class="op">%&gt;%</span></span>
+<span id="cb743-3"><a href="functions.html#cb743-3"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## tibble [10 × 1] (S3: tbl_df/tbl/data.frame)
 ##  $ throws:List of 10
 ##   ..$ : num [1:10] 2 8 9 8 7 6 3 4 6 5
@@ -1295,7 +1295,7 @@ FIGURE 4.1: From <a href="https://blog.fastmonkeys.com/2014/06/18/minimum-viable
 <a href="probability.html"><button class="btn btn-default">Next</button></a>
 </p>
 <p class="build-date">Page built: 
-2020-08-17
+2020-08-21
 </p>
 </div>
 </div>

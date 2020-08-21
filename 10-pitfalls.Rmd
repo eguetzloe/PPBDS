@@ -3,13 +3,11 @@ output_yaml:
   - _output.yml
 ---
 
-<!-- DK: To discuss. What belongs here? Overfitting? Type m/s errors? Diff-in-diff, RDD, et cetera? -->
+<!-- DK: To discuss. What belongs here? Overfitting? Type m/s errors? Diff-in-diff, RDD, et cetera? How to make model? -->
 
 <!-- To Do: -->
 
-<!-- 1. Read chapter 5. Set up Zoom with Vivian.   -->
-
-<!-- 2. Read the latest version of themes.Rmd. Some of it is inspired but what was in the previous version of this chapter. But it is now more serious. So, it might be that we just cut everything here and start again. -->
+<!-- 2. Read the latest version of themes.Rmd. Some of it is inspired but what was in the previous version of this chapter. But it is now more serious. So, it might be that we just cut everything here and start again. Discuss all 4 virtues and show their paintings within the qscores data set. -->
 
 <!-- Outline: -->
 

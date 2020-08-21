@@ -198,16 +198,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="header-section-number">9.1</span> Explorator Data Analysis of <code>governors</code>
 </h2>
 <p>Begin by loading the packages which we need.</p>
-<div class="sourceCode" id="cb906"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb906-1"><a href="n-parameters.html#cb906-1"></a><span class="kw">library</span>(PPBDS.data)</span>
-<span id="cb906-2"><a href="n-parameters.html#cb906-2"></a><span class="kw">library</span>(skimr)</span>
-<span id="cb906-3"><a href="n-parameters.html#cb906-3"></a><span class="kw">library</span>(broom.mixed)</span>
-<span id="cb906-4"><a href="n-parameters.html#cb906-4"></a><span class="kw">library</span>(rstanarm)</span>
-<span id="cb906-5"><a href="n-parameters.html#cb906-5"></a><span class="kw">library</span>(gtsummary)</span>
-<span id="cb906-6"><a href="n-parameters.html#cb906-6"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb889"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb889-1"><a href="n-parameters.html#cb889-1"></a><span class="kw">library</span>(PPBDS.data)</span>
+<span id="cb889-2"><a href="n-parameters.html#cb889-2"></a><span class="kw">library</span>(skimr)</span>
+<span id="cb889-3"><a href="n-parameters.html#cb889-3"></a><span class="kw">library</span>(broom.mixed)</span>
+<span id="cb889-4"><a href="n-parameters.html#cb889-4"></a><span class="kw">library</span>(rstanarm)</span>
+<span id="cb889-5"><a href="n-parameters.html#cb889-5"></a><span class="kw">library</span>(gtsummary)</span>
+<span id="cb889-6"><a href="n-parameters.html#cb889-6"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
 <!-- Talk about the data, as we usual do. Lots of interesting things. Explain how we only have data for people who are already dead. That is an interesting restriction, and effects the Preceptor Table in interesting ways. Make sure to mention all the variables we end up keeping below. Finish with some graphics which show how various things are related to our lefthand side variable: alive_post. -->
 <p>We will start off by using a subset of the <code>governors</code> data set from the <strong>PPBDS.data</strong> package. This data set looks at the lifespans candidates for governor from 1945 to 2012. It corresponds to the paper “Longevity Returns to Political Office” by Barfort, Klemmensen &amp; Larsen (2019), and aims to find out whether winning an election affects the lifespan of politicians.</p>
 <p>Let’s explore the variables and observations contained within this data set by performing an Exploratory Data Analysis (EDA). EDAs help us summarize the data, identify patterns, spot outliers or anomalies, and more. We can start by running some summarizing commands such as <code>glimpse()</code>, <code>sample_n()</code>, and <code>skim()</code>.</p>
-<div class="sourceCode" id="cb907"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb907-1"><a href="n-parameters.html#cb907-1"></a><span class="kw">glimpse</span>(governors)</span></code></pre></div>
+<div class="sourceCode" id="cb890"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb890-1"><a href="n-parameters.html#cb890-1"></a><span class="kw">glimpse</span>(governors)</span></code></pre></div>
 <pre><code>## Rows: 1,092
 ## Columns: 11
 ## $ state      &lt;chr&gt; "Alabama", "Alabama", "Alabama", "Alabama", "Alabama", "Al…
@@ -222,15 +222,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ alive_post &lt;int&gt; 14991, 773, 5319, 4871, 12069, 19924, 13096, 18622, 549, 1…
 ## $ alive_pre  &lt;int&gt; 13906, 28690, 17805, 17001, 16828, 12152, 15778, 17597, 14…</code></pre>
 <p>As we can see, there are 11 variables and 1,092 observations. In this chapter, we will only be looking at the variables <code>state</code>, <code>year</code>, <code>last_name</code>, <code>sex</code>, <code>status</code>, <code>alive_post</code>, and <code>alive_pre</code>. We will also create a new variable called <code>won</code> that is <code>TRUE</code> when the win margin is greater than 0, and <code>FALSE</code> if not.</p>
-<div class="sourceCode" id="cb909"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb909-1"><a href="n-parameters.html#cb909-1"></a>ch9_gov &lt;-<span class="st"> </span>governors <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb909-2"><a href="n-parameters.html#cb909-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">won =</span> <span class="kw">ifelse</span>(win_margin <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb909-3"><a href="n-parameters.html#cb909-3"></a><span class="st">  </span><span class="kw">select</span>(last_name, year, state, sex, status, won, alive_post, alive_pre)</span></code></pre></div>
+<div class="sourceCode" id="cb892"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb892-1"><a href="n-parameters.html#cb892-1"></a>ch9_gov &lt;-<span class="st"> </span>governors <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb892-2"><a href="n-parameters.html#cb892-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">won =</span> <span class="kw">ifelse</span>(win_margin <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb892-3"><a href="n-parameters.html#cb892-3"></a><span class="st">  </span><span class="kw">select</span>(last_name, year, state, sex, status, won, alive_post, alive_pre)</span></code></pre></div>
 <p>There are a few things to note when looking at this data. First, the data set includes the variables <code>alive_pre</code> and <code>alive_post</code>, which tell us how many days a candidate lived before the election took place and how many days a candidate lived after the election took place, respectively. Therefore, only politicians who are already deceased are included in this data set. Furthermore, candidates with unknown dates of death were not included in the dataset.</p>
 <p>Another caveat is that for a given election, only the top two candidates are included in the data set. If a politician did not receive the highest or second-highest number of votes, they are excluded.</p>
 <p>Finally, it is noted that for some observations, only the birth or death year of a candidate could be determined, in which case the date was taken as July 1st of that year.</p>
 <p>Now, let’s continue with the EDA by running <code>sample_n()</code>.</p>
-<div class="sourceCode" id="cb910"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb910-1"><a href="n-parameters.html#cb910-1"></a>ch9_gov <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb910-2"><a href="n-parameters.html#cb910-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb893"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb893-1"><a href="n-parameters.html#cb893-1"></a>ch9_gov <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb893-2"><a href="n-parameters.html#cb893-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">10</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 8
 ##    last_name  year state          sex   status     won   alive_post alive_pre
 ##    &lt;chr&gt;     &lt;int&gt; &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;      &lt;lgl&gt;      &lt;int&gt;     &lt;int&gt;
@@ -245,10 +245,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  9 Boutin     1958 New Hampshire  Male  Challenger FALSE      19285     12910
 ## 10 Hildreth   1946 Maine          Male  Challenger TRUE       15185     16044</code></pre>
 <p>Another useful command in summarizing data sets during and EDA is <code>skim()</code> from the <strong>skimr</strong> package.</p>
-<div class="sourceCode" id="cb912"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb912-1"><a href="n-parameters.html#cb912-1"></a>ch9_gov <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb912-2"><a href="n-parameters.html#cb912-2"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb895"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb895-1"><a href="n-parameters.html#cb895-1"></a>ch9_gov <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb895-2"><a href="n-parameters.html#cb895-2"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
 <p><!--
-<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-673">TABLE 9.1: </span>Data summary</span><!--</caption>--></p>
+<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-679">TABLE 9.1: </span>Data summary</span><!--</caption>--></p>
 <table><tbody>
 <tr class="odd">
 <td align="left">Name</td>
@@ -422,16 +422,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 <p>This output groups the variables together by type (character, logical, numeric, etc.). From this, we can see things like the number of unique last names, how many of the observations in our subset won versus how many lost their elections, and the mean number of days before and after a gubernatorial election that a candidate lived. We are also given histograms of the numerical data. In looking at the histogram for <code>year</code>, we see that it is skewed right, with half of the observations from election years between 1945 and 1962. This makes sense logically, because we are only looking at deceased candidates, and candidates from more recent elections are more likely to still be alive.</p>
 <p>In using this data set, our left-side variable will be <code>alive_post</code>. We want to know how the election affected the lifespan of these gubernatorial candidates. Let’s look at some graphs and plots showing the relationships between <code>alive_post</code> and some of the other variables in our subset.</p>
-<div class="sourceCode" id="cb913"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb913-1"><a href="n-parameters.html#cb913-1"></a>ch9_gov <span class="op">%&gt;%</span></span>
-<span id="cb913-2"><a href="n-parameters.html#cb913-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> alive_post)) <span class="op">+</span></span>
-<span id="cb913-3"><a href="n-parameters.html#cb913-3"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-674-1.png" width="672">
+<div class="sourceCode" id="cb896"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb896-1"><a href="n-parameters.html#cb896-1"></a>ch9_gov <span class="op">%&gt;%</span></span>
+<span id="cb896-2"><a href="n-parameters.html#cb896-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> alive_post)) <span class="op">+</span></span>
+<span id="cb896-3"><a href="n-parameters.html#cb896-3"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-680-1.png" width="672">
 Starting with the relationship between <code>alive_post</code> and <code>year</code>, we can see that the data is skewed right. Why might this be?</p>
 <!-- Add more discussion of this graph -->
-<div class="sourceCode" id="cb914"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb914-1"><a href="n-parameters.html#cb914-1"></a>ch9_gov <span class="op">%&gt;%</span></span>
-<span id="cb914-2"><a href="n-parameters.html#cb914-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> won, <span class="dt">y =</span> alive_post)) <span class="op">+</span></span>
-<span id="cb914-3"><a href="n-parameters.html#cb914-3"></a><span class="st">  </span><span class="kw">geom_boxplot</span>()</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-675-1.png" width="672">
+<div class="sourceCode" id="cb897"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb897-1"><a href="n-parameters.html#cb897-1"></a>ch9_gov <span class="op">%&gt;%</span></span>
+<span id="cb897-2"><a href="n-parameters.html#cb897-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> won, <span class="dt">y =</span> alive_post)) <span class="op">+</span></span>
+<span id="cb897-3"><a href="n-parameters.html#cb897-3"></a><span class="st">  </span><span class="kw">geom_boxplot</span>()</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-681-1.png" width="672">
 This box plot is interesting in that it takes a direct look at the relationship we are trying to learn more about: whether winning an election influences the lifespan of politicians. In looking at these box plots, we can see that there are minor differences in the width of the boxes and length of the lines. Of the candidates who won, the 25% who lived the longest after the election lived longer than the top 25% of candidates who lost the election.</p>
 <!-- Clean up and add more discussion here -->
 <!-- HV: What specific types of plots/graphs do you suggest adding? -->
@@ -448,12 +448,12 @@ This box plot is interesting in that it takes a direct look at the relationship 
 </h2>
 <!-- DK: Maybe instead of tables, we should just be showing graphics, using ggdist/tidybayes. -->
 <p>Let’s explore descriptive, not causal, models of covariates associated with how long candidates for governor live after elections.</p>
-<div class="sourceCode" id="cb915"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb915-1"><a href="n-parameters.html#cb915-1"></a>obj.gov<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
-<span id="cb915-2"><a href="n-parameters.html#cb915-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>alive_pre,</span>
-<span id="cb915-3"><a href="n-parameters.html#cb915-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
-<span id="cb915-4"><a href="n-parameters.html#cb915-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb898"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb898-1"><a href="n-parameters.html#cb898-1"></a>obj.gov<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
+<span id="cb898-2"><a href="n-parameters.html#cb898-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>alive_pre,</span>
+<span id="cb898-3"><a href="n-parameters.html#cb898-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
+<span id="cb898-4"><a href="n-parameters.html#cb898-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>)</span></code></pre></div>
 <!-- This is a simple example. Only three parameters are estimated: intercept, beta and sigma. But step through them all slowly, discussing what they mean. Not sure on the best way to display this. Maybe we just ignore sigma? Note that the intercerpt is meaningless here. How many days do you expect to live after the election if you have been alive zero days? That is nonsense. -->
-<div class="sourceCode" id="cb916"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb916-1"><a href="n-parameters.html#cb916-1"></a><span class="kw">tbl_regression</span>(obj.gov<span class="fl">.1</span>, <span class="dt">intercept =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb899"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb899-1"><a href="n-parameters.html#cb899-1"></a><span class="kw">tbl_regression</span>(obj.gov<span class="fl">.1</span>, <span class="dt">intercept =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
@@ -823,13 +823,13 @@ This box plot is interesting in that it takes a direct look at the relationship 
 </table></div>
 <!-- You could center alive_pre and then redo the regression, and then  -->
 <!-- ch9_gov <- ch9_gov %>% mutate(alive_pre_centered = alive_pre - mean(alive_pre)) -->
-<div class="sourceCode" id="cb917"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb917-1"><a href="n-parameters.html#cb917-1"></a>obj.gov<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
-<span id="cb917-2"><a href="n-parameters.html#cb917-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>sex <span class="op">-</span><span class="st"> </span><span class="dv">1</span>,</span>
-<span id="cb917-3"><a href="n-parameters.html#cb917-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
-<span id="cb917-4"><a href="n-parameters.html#cb917-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb900"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb900-1"><a href="n-parameters.html#cb900-1"></a>obj.gov<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
+<span id="cb900-2"><a href="n-parameters.html#cb900-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>sex <span class="op">-</span><span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb900-3"><a href="n-parameters.html#cb900-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
+<span id="cb900-4"><a href="n-parameters.html#cb900-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>)</span></code></pre></div>
 <!-- Make these two the first models. Just like how we ended chapter 8. But you need to do more. Follow Modern Dive section: https://moderndive.com/5-regression.html#model2. In particular, explain fitted value, residual. Show the math.  Justice. The math plus the fact that the Preceptor is descriptive, meaning only one column for Y. Read the themes document.  -->
 <!-- Do this in your preferred order. -->
-<div class="sourceCode" id="cb918"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb918-1"><a href="n-parameters.html#cb918-1"></a><span class="kw">tbl_regression</span>(obj.gov<span class="fl">.2</span>, <span class="dt">intercept =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb901"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb901-1"><a href="n-parameters.html#cb901-1"></a><span class="kw">tbl_regression</span>(obj.gov<span class="fl">.2</span>, <span class="dt">intercept =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
@@ -1204,26 +1204,26 @@ This box plot is interesting in that it takes a direct look at the relationship 
 </table></div>
 <!-- DK: Weird result, huh? Men live twice as long as women! Useful to discuss why that might be the case. -->
 <!-- Perhaps of next is to understand what the intercept is. That is, this model is identical to the previous. -->
-<div class="sourceCode" id="cb919"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb919-1"><a href="n-parameters.html#cb919-1"></a>obj.gov<span class="fl">.2</span>a &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
-<span id="cb919-2"><a href="n-parameters.html#cb919-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>sex,</span>
-<span id="cb919-3"><a href="n-parameters.html#cb919-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
-<span id="cb919-4"><a href="n-parameters.html#cb919-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb920"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb920-1"><a href="n-parameters.html#cb920-1"></a>sex_means &lt;-<span class="st"> </span></span>
-<span id="cb920-2"><a href="n-parameters.html#cb920-2"></a><span class="st">  </span>governors <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb920-3"><a href="n-parameters.html#cb920-3"></a><span class="st">  </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb920-4"><a href="n-parameters.html#cb920-4"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">avg =</span> <span class="kw">mean</span>(alive_post), <span class="dt">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb920-5"><a href="n-parameters.html#cb920-5"></a></span>
-<span id="cb920-6"><a href="n-parameters.html#cb920-6"></a>governors <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb920-7"><a href="n-parameters.html#cb920-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(sex, alive_post)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb920-8"><a href="n-parameters.html#cb920-8"></a><span class="st">    </span><span class="kw">geom_jitter</span>(<span class="dt">width =</span> <span class="fl">0.1</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb920-9"><a href="n-parameters.html#cb920-9"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data =</span> sex_means, <span class="kw">aes</span>(<span class="dt">y =</span> avg), <span class="dt">color =</span> <span class="st">"red"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-681-1.png" width="672"></p>
+<div class="sourceCode" id="cb902"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb902-1"><a href="n-parameters.html#cb902-1"></a>obj.gov<span class="fl">.2</span>a &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
+<span id="cb902-2"><a href="n-parameters.html#cb902-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>sex,</span>
+<span id="cb902-3"><a href="n-parameters.html#cb902-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
+<span id="cb902-4"><a href="n-parameters.html#cb902-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb903"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb903-1"><a href="n-parameters.html#cb903-1"></a>sex_means &lt;-<span class="st"> </span></span>
+<span id="cb903-2"><a href="n-parameters.html#cb903-2"></a><span class="st">  </span>governors <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb903-3"><a href="n-parameters.html#cb903-3"></a><span class="st">  </span><span class="kw">group_by</span>(sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb903-4"><a href="n-parameters.html#cb903-4"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">avg =</span> <span class="kw">mean</span>(alive_post), <span class="dt">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb903-5"><a href="n-parameters.html#cb903-5"></a></span>
+<span id="cb903-6"><a href="n-parameters.html#cb903-6"></a>governors <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb903-7"><a href="n-parameters.html#cb903-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(sex, alive_post)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb903-8"><a href="n-parameters.html#cb903-8"></a><span class="st">    </span><span class="kw">geom_jitter</span>(<span class="dt">width =</span> <span class="fl">0.1</span>, <span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb903-9"><a href="n-parameters.html#cb903-9"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data =</span> sex_means, <span class="kw">aes</span>(<span class="dt">y =</span> avg), <span class="dt">color =</span> <span class="st">"red"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-687-1.png" width="672"></p>
 <!-- DK: All the above happens before this -->
-<div class="sourceCode" id="cb921"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb921-1"><a href="n-parameters.html#cb921-1"></a>obj.gov<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
-<span id="cb921-2"><a href="n-parameters.html#cb921-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>alive_pre,</span>
-<span id="cb921-3"><a href="n-parameters.html#cb921-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
-<span id="cb921-4"><a href="n-parameters.html#cb921-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb922"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb922-1"><a href="n-parameters.html#cb922-1"></a><span class="kw">tbl_regression</span>(obj.gov<span class="fl">.3</span>, <span class="dt">intercept =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb904"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb904-1"><a href="n-parameters.html#cb904-1"></a>obj.gov<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
+<span id="cb904-2"><a href="n-parameters.html#cb904-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>alive_pre,</span>
+<span id="cb904-3"><a href="n-parameters.html#cb904-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
+<span id="cb904-4"><a href="n-parameters.html#cb904-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb905"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb905-1"><a href="n-parameters.html#cb905-1"></a><span class="kw">tbl_regression</span>(obj.gov<span class="fl">.3</span>, <span class="dt">intercept =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
@@ -1611,11 +1611,11 @@ This box plot is interesting in that it takes a direct look at the relationship 
 <!-- Side note: I would have thought that overlapping CIs for male/female would equate to insignificance of sex dummy when the regression includes a intercept. But that does not seem to be the case. Am I missing something? -->
 <!-- Make the graphic which shows two parallel lines, by calling two layers of geom_smooth().  -->
 <!-- With this as warm-up, we are now in a position to explore interactions. -->
-<div class="sourceCode" id="cb923"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb923-1"><a href="n-parameters.html#cb923-1"></a>obj.gov<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
-<span id="cb923-2"><a href="n-parameters.html#cb923-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>sex<span class="op">*</span>alive_pre,</span>
-<span id="cb923-3"><a href="n-parameters.html#cb923-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
-<span id="cb923-4"><a href="n-parameters.html#cb923-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb924"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb924-1"><a href="n-parameters.html#cb924-1"></a><span class="kw">tbl_regression</span>(obj.gov<span class="fl">.4</span>, <span class="dt">intercept =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb906"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb906-1"><a href="n-parameters.html#cb906-1"></a>obj.gov<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
+<span id="cb906-2"><a href="n-parameters.html#cb906-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>sex<span class="op">*</span>alive_pre,</span>
+<span id="cb906-3"><a href="n-parameters.html#cb906-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
+<span id="cb906-4"><a href="n-parameters.html#cb906-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb907"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb907-1"><a href="n-parameters.html#cb907-1"></a><span class="kw">tbl_regression</span>(obj.gov<span class="fl">.4</span>, <span class="dt">intercept =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
@@ -2010,12 +2010,12 @@ This box plot is interesting in that it takes a direct look at the relationship 
 </table></div>
 <!-- DK: Take your time explaining what this means! It is not trivial. Note that this is a non-parallel slopes model. -->
 <!-- Consider using: ch9_gov %>% filter(sex == "Female") %>% ggplot(aes(alive_pre, alive_post)) + geom_point() + geom_smooth(method = "lm") -->
-<div class="sourceCode" id="cb925"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb925-1"><a href="n-parameters.html#cb925-1"></a>obj.gov<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
-<span id="cb925-2"><a href="n-parameters.html#cb925-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>state <span class="op">+</span><span class="st"> </span>sex<span class="op">*</span>alive_pre,</span>
-<span id="cb925-3"><a href="n-parameters.html#cb925-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
-<span id="cb925-4"><a href="n-parameters.html#cb925-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>,</span>
-<span id="cb925-5"><a href="n-parameters.html#cb925-5"></a>                      <span class="dt">iter =</span> <span class="dv">10000</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb926"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb926-1"><a href="n-parameters.html#cb926-1"></a><span class="kw">tbl_regression</span>(obj.gov<span class="fl">.5</span>, <span class="dt">intercept =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb908"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb908-1"><a href="n-parameters.html#cb908-1"></a>obj.gov<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(<span class="dt">data =</span> ch9_gov,</span>
+<span id="cb908-2"><a href="n-parameters.html#cb908-2"></a>                      <span class="dt">formula =</span> alive_post <span class="op">~</span><span class="st"> </span>state <span class="op">+</span><span class="st"> </span>sex<span class="op">*</span>alive_pre,</span>
+<span id="cb908-3"><a href="n-parameters.html#cb908-3"></a>                      <span class="dt">family =</span> <span class="kw">gaussian</span>(),</span>
+<span id="cb908-4"><a href="n-parameters.html#cb908-4"></a>                      <span class="dt">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb908-5"><a href="n-parameters.html#cb908-5"></a>                      <span class="dt">iter =</span> <span class="dv">10000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb909"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb909-1"><a href="n-parameters.html#cb909-1"></a><span class="kw">tbl_regression</span>(obj.gov<span class="fl">.5</span>, <span class="dt">intercept =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
@@ -2671,7 +2671,7 @@ This box plot is interesting in that it takes a direct look at the relationship 
 </h2>
 <p>Consider a new data set, <code>shaming</code>, corresponding to an experiment carried out by Gerber, Green, and Larimer (2008) titled “Social Pressure and Voter Turnout: Evidence from a Large-Scale Field Experiment”. This experiment used several hundred thousand registered voters and a series of mailings to determine the effect of social pressure on voter turnout.</p>
 <p>Let’s now do another EDA, starting off by running <code>glimpse()</code>.</p>
-<div class="sourceCode" id="cb927"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb927-1"><a href="n-parameters.html#cb927-1"></a><span class="kw">glimpse</span>(shaming)</span></code></pre></div>
+<div class="sourceCode" id="cb910"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb910-1"><a href="n-parameters.html#cb910-1"></a><span class="kw">glimpse</span>(shaming)</span></code></pre></div>
 <pre><code>## Rows: 344,084
 ## Columns: 10
 ## $ sex         &lt;chr&gt; "Male", "Female", "Male", "Female", "Female", "Male", "Fe…
@@ -2694,8 +2694,8 @@ This box plot is interesting in that it takes a direct look at the relationship 
 <!-- HV: should I explain why we are not using any of these variables? why they are not of great use to us? --></p>
 <p>By narrowing down the set of variables we are looking at and investigating, we will find more meaningful relationships among them. However, we have not yet discussed the most important variable of them all: <code>treatment</code>. The <code>treatment</code> variable is a factor variable with 5 levels, including the control. Since we are curious as to how sending mailings affects voter turnout, the treatment variable will tell us about the impact each type of mailing can make. Let’s start off by taking a broad look at the different treatments.
 <!-- HV: Is it okay to say the first sentence of this paragraph? --></p>
-<div class="sourceCode" id="cb929"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb929-1"><a href="n-parameters.html#cb929-1"></a>shaming <span class="op">%&gt;%</span></span>
-<span id="cb929-2"><a href="n-parameters.html#cb929-2"></a><span class="st">  </span><span class="kw">count</span>(treatment)</span></code></pre></div>
+<div class="sourceCode" id="cb912"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb912-1"><a href="n-parameters.html#cb912-1"></a>shaming <span class="op">%&gt;%</span></span>
+<span id="cb912-2"><a href="n-parameters.html#cb912-2"></a><span class="st">  </span><span class="kw">count</span>(treatment)</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 2
 ##   treatment       n
 ##   &lt;fct&gt;       &lt;int&gt;
@@ -2710,15 +2710,15 @@ This box plot is interesting in that it takes a direct look at the relationship 
 <p>In the third treatment, Self, the mailing includes the recent voting record of each member of the household, placing the word “Voted” next to their name if they did in fact vote in the 2004 election or a blank space next to the name if they did not. In this mailing, the households were also told, “we intend to mail an updated chart” with the voting record of the household members after the 2006 primary. By emphasizing the public nature of voting records, this type of mailing exerts more social pressure on voting than the Hawthorne treatment.</p>
 <p>The fourth treatment, Neighbors, provides the household members’ voting records, as well as the voting records of those who live nearby. This mailing also told recipients, “we intend to mail an updated chart” of who voted in the 2006 election.</p>
 <p>For now, let’s focus on a subset of the data.</p>
-<div class="sourceCode" id="cb931"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb931-1"><a href="n-parameters.html#cb931-1"></a>ch9 &lt;-<span class="st"> </span>shaming <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb931-2"><a href="n-parameters.html#cb931-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">solo =</span> <span class="kw">ifelse</span>(hh_size <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb931-3"><a href="n-parameters.html#cb931-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age =</span> <span class="dv">2006</span> <span class="op">-</span><span class="st"> </span>birth_year) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb931-4"><a href="n-parameters.html#cb931-4"></a><span class="st">  </span><span class="kw">select</span>(primary_<span class="dv">06</span>, treatment, solo, sex, age)</span></code></pre></div>
+<div class="sourceCode" id="cb914"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb914-1"><a href="n-parameters.html#cb914-1"></a>ch9 &lt;-<span class="st"> </span>shaming <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb914-2"><a href="n-parameters.html#cb914-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">solo =</span> <span class="kw">ifelse</span>(hh_size <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb914-3"><a href="n-parameters.html#cb914-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age =</span> <span class="dv">2006</span> <span class="op">-</span><span class="st"> </span>birth_year) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb914-4"><a href="n-parameters.html#cb914-4"></a><span class="st">  </span><span class="kw">select</span>(primary_<span class="dv">06</span>, treatment, solo, sex, age)</span></code></pre></div>
 <p>We create the variable <code>solo</code>, which is TRUE for voters who live alone and FALSE for those that do not. We are curious to see if the treatment effect, if any, is the same for voters who live alone as it is for those who do not.</p>
-<div class="sourceCode" id="cb932"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb932-1"><a href="n-parameters.html#cb932-1"></a>ch9 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb932-2"><a href="n-parameters.html#cb932-2"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb915"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb915-1"><a href="n-parameters.html#cb915-1"></a>ch9 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb915-2"><a href="n-parameters.html#cb915-2"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
 <p><!--
-<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-691">TABLE 9.2: </span>Data summary</span><!--</caption>--></p>
+<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-697">TABLE 9.2: </span>Data summary</span><!--</caption>--></p>
 <table><tbody>
 <tr class="odd">
 <td align="left">Name</td>
@@ -2870,8 +2870,8 @@ This box plot is interesting in that it takes a direct look at the relationship 
 </table>
 <!-- DK: Add discussion of what you see here. No need to drop missing values since there aren't any. I think this next discussion can be dropped. --><p>While some summarizing commands such as <code>glimpse()</code> gives us a good look at the possible values for the variables, it is difficult to read it in terms of individual observations. Recall that the <em>observational unit</em> is what is being measured. With the <code>shaming</code> data set, the observational unit would be the voter respondent. To get a better sense of some respondents’ information, let’s use <code>sample_n()</code> to gather a random sample of <em>n</em> observations from the data set.
 <!-- HV: Does this belong here? --></p>
-<div class="sourceCode" id="cb933"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb933-1"><a href="n-parameters.html#cb933-1"></a>ch9 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb933-2"><a href="n-parameters.html#cb933-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb916"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb916-1"><a href="n-parameters.html#cb916-1"></a>ch9 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb916-2"><a href="n-parameters.html#cb916-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">10</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 5
 ##    primary_06 treatment  solo  sex      age
 ##         &lt;int&gt; &lt;fct&gt;      &lt;lgl&gt; &lt;chr&gt;  &lt;dbl&gt;
@@ -2888,11 +2888,11 @@ This box plot is interesting in that it takes a direct look at the relationship 
 <p>Now we have a table with 5 random observations and the respondents’ information in a regular table output. By taking a few random samples, we may start to see some patterns within the data.</p>
 <p>Now we have a table with 5 random observations and the respondents’ information in a regular table output. By taking a few random samples, we may start to see some patterns within the data. Do you notice anything in particular about the variable <code>treatment</code>?</p>
 <p>One other helpful summarizing technique we can use is <code>skim()</code>. To make the information it contains simpler, we will only be looking at three variables: <code>primary_06</code>, <code>treatment</code>, and <code>sex</code>.</p>
-<div class="sourceCode" id="cb935"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb935-1"><a href="n-parameters.html#cb935-1"></a>shaming <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb935-2"><a href="n-parameters.html#cb935-2"></a><span class="st">  </span><span class="kw">select</span>(primary_<span class="dv">06</span>, treatment, sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb935-3"><a href="n-parameters.html#cb935-3"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb918"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb918-1"><a href="n-parameters.html#cb918-1"></a>shaming <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb918-2"><a href="n-parameters.html#cb918-2"></a><span class="st">  </span><span class="kw">select</span>(primary_<span class="dv">06</span>, treatment, sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb918-3"><a href="n-parameters.html#cb918-3"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
 <p><!--
-<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-693">TABLE 9.3: </span>Data summary</span><!--</caption>--></p>
+<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-699">TABLE 9.3: </span>Data summary</span><!--</caption>--></p>
 <table><tbody>
 <tr class="odd">
 <td align="left">Name</td>
@@ -3020,17 +3020,17 @@ This box plot is interesting in that it takes a direct look at the relationship 
 <span class="header-section-number">9.4</span> Causal Effects of <code>treament</code>
 </h2>
 <p>We will now be looking into the causal effect of the treatment variable on the 2006 primary election. To start, let’s build a model using <code>stan_glm()</code> followed by a regression table.</p>
-<div class="sourceCode" id="cb936"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb936-1"><a href="n-parameters.html#cb936-1"></a><span class="co"># obj.1 &lt;- stan_glm(data = shaming, </span></span>
-<span id="cb936-2"><a href="n-parameters.html#cb936-2"></a><span class="co">#                 formula = primary_06 ~ treatment - 1, </span></span>
-<span id="cb936-3"><a href="n-parameters.html#cb936-3"></a><span class="co">#                 family = gaussian(), </span></span>
-<span id="cb936-4"><a href="n-parameters.html#cb936-4"></a><span class="co">#                 refresh = 0)</span></span></code></pre></div>
+<div class="sourceCode" id="cb919"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb919-1"><a href="n-parameters.html#cb919-1"></a><span class="co"># obj.1 &lt;- stan_glm(data = shaming, </span></span>
+<span id="cb919-2"><a href="n-parameters.html#cb919-2"></a><span class="co">#                 formula = primary_06 ~ treatment - 1, </span></span>
+<span id="cb919-3"><a href="n-parameters.html#cb919-3"></a><span class="co">#                 family = gaussian(), </span></span>
+<span id="cb919-4"><a href="n-parameters.html#cb919-4"></a><span class="co">#                 refresh = 0)</span></span></code></pre></div>
 <p>This table shows us each of the five treatments and their beta coefficients, along with a 95% Confidence Interval for these coefficients. The Control provides us with a baseline.</p>
 <!-- HV: Not exactly sure how to interpret this using causal effect... Should I be making preceptor tables here? -->
 <!-- Talk about what these results mean.  Then, create the same model but with a different structure. -->
-<div class="sourceCode" id="cb937"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb937-1"><a href="n-parameters.html#cb937-1"></a><span class="co"># obj.2 &lt;- stan_glm(data = shaming, </span></span>
-<span id="cb937-2"><a href="n-parameters.html#cb937-2"></a><span class="co">#                 formula = primary_06 ~ treatment, </span></span>
-<span id="cb937-3"><a href="n-parameters.html#cb937-3"></a><span class="co">#                 family = gaussian(), </span></span>
-<span id="cb937-4"><a href="n-parameters.html#cb937-4"></a><span class="co">#                 refresh = 0)</span></span></code></pre></div>
+<div class="sourceCode" id="cb920"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb920-1"><a href="n-parameters.html#cb920-1"></a><span class="co"># obj.2 &lt;- stan_glm(data = shaming, </span></span>
+<span id="cb920-2"><a href="n-parameters.html#cb920-2"></a><span class="co">#                 formula = primary_06 ~ treatment, </span></span>
+<span id="cb920-3"><a href="n-parameters.html#cb920-3"></a><span class="co">#                 family = gaussian(), </span></span>
+<span id="cb920-4"><a href="n-parameters.html#cb920-4"></a><span class="co">#                 refresh = 0)</span></span></code></pre></div>
 <!-- Explain how these two models are the same, except in how they define the parameters. Show us the math like Gelman does. Write down the math. For simple. -->
 <!-- Once we talk about these things --- and, again, this is exactly what we have talked about in chapter 8 --- we can do a bit more. Like discuss how we are using 99%, because there is nothing magical aboyt 95%, other than convention. I also think it would be fun to show a nice graphic of this, highlighting how the estimates for Civic and Hawthorne overlap.  -->
 <div id="interactions" class="section level3">
@@ -3038,10 +3038,10 @@ This box plot is interesting in that it takes a direct look at the relationship 
 <span class="header-section-number">9.4.1</span> Interactions</h3>
 <!-- This is new. With only two parameters, we can't really look at interaction effects. Need to discuss interaction effects in general. Also, note that heterogenous treatment effects are the same thing as interaction effects that involve a treatment effect as one of the variables.  -->
 <!-- Feel free to build up this code, and other examples, more slowly than I am doing it here. -->
-<div class="sourceCode" id="cb938"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb938-1"><a href="n-parameters.html#cb938-1"></a><span class="co"># obj.3 &lt;- stan_glm(data = shaming, </span></span>
-<span id="cb938-2"><a href="n-parameters.html#cb938-2"></a><span class="co">#                 formula = primary_06 ~ sex + treatment + sex:treatment, </span></span>
-<span id="cb938-3"><a href="n-parameters.html#cb938-3"></a><span class="co">#                 family = gaussian(), </span></span>
-<span id="cb938-4"><a href="n-parameters.html#cb938-4"></a><span class="co">#                 refresh = 0)</span></span></code></pre></div>
+<div class="sourceCode" id="cb921"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb921-1"><a href="n-parameters.html#cb921-1"></a><span class="co"># obj.3 &lt;- stan_glm(data = shaming, </span></span>
+<span id="cb921-2"><a href="n-parameters.html#cb921-2"></a><span class="co">#                 formula = primary_06 ~ sex + treatment + sex:treatment, </span></span>
+<span id="cb921-3"><a href="n-parameters.html#cb921-3"></a><span class="co">#                 family = gaussian(), </span></span>
+<span id="cb921-4"><a href="n-parameters.html#cb921-4"></a><span class="co">#                 refresh = 0)</span></span></code></pre></div>
 <!-- Takes a while to explain what all this means. -->
 <!-- Two key issues: 1) Interpreting lots of parameters in a model. interactions, heterogenous treatment effects. shaming using lm().  -->
 <!-- Treatment effect is not the same thing as a coefficient. -->
@@ -3063,10 +3063,9 @@ What problems do we face? All the things that make modeling difficult. Why is th
 <!-- cces looks perfect for this project. There are 400,000 rows, so it seems like you ought to have plenty of data for anything you want, but once you realize there are 51 states and 10 years, things get sparse fast. We only have 15 observations, for example, for Wyoming in 2007. Once you start subsetting by race and education, you have no choice but to start borrowing strength.  -->
 <!-- So, just what will we use? rstanarm(). If so (and if we have not introduced it earlier), we can begin with seeing how it is similar to lm() and then expand. This means that, in one paramter chapter, we should be doing lm( ~ 1). In two parameter, lm( ~ treatment) --- if treatment is zero one --- or, perhaps better, lm( ~ -1 + treatment) if treatment is a factor/character with two levels. We might also have introduced  -->
 
-<!-- DK: To discuss. What belongs here? Overfitting? Type m/s errors? Diff-in-diff, RDD, et cetera? -->
+<!-- DK: To discuss. What belongs here? Overfitting? Type m/s errors? Diff-in-diff, RDD, et cetera? How to make model? -->
 <!-- To Do: -->
-<!-- 1. Read chapter 5. Set up Zoom with Vivian.   -->
-<!-- 2. Read the latest version of themes.Rmd. Some of it is inspired but what was in the previous version of this chapter. But it is now more serious. So, it might be that we just cut everything here and start again. -->
+<!-- 2. Read the latest version of themes.Rmd. Some of it is inspired but what was in the previous version of this chapter. But it is now more serious. So, it might be that we just cut everything here and start again. Discuss all 4 virtues and show their paintings within the qscores data set. -->
 <!-- Outline: -->
 <!-- Preamble: Life is hard. Things were difficult in Chapter 9. Let us teach you some stuff to make your life easier! And you will get to practice in Chapters 11 and 12. Review themes.Rmd briefly, in two or three sentences. Review the key dificulties which were discussed in chapter 9: model selection, overfitting and causal inference. Finish with specific questions. A new professor is planning to teach a course. She knows the work she will assign and the enrollment. What will her Q scores be?   -->
 <!-- 1. EDA of qscores. Keep all the rows for now. Change rating to rating*100. (That will make coefficients easy to deal with later.) -->
@@ -3113,7 +3112,7 @@ Perhaps all this is enough to both fill this chapter and set the stage for 11 an
 <a href="pitfalls.html"><button class="btn btn-default">Next</button></a>
 </p>
 <p class="build-date">Page built: 
-2020-08-17
+2020-08-21
 </p>
 </div>
 </div>

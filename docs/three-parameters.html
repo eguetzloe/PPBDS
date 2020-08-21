@@ -193,12 +193,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </h2>
 <!-- DK: Still need to standardize the method we use for providing references. -->
 <p>Let’s do some exploratory data analysis (EDA) of the <code>trains</code> data set from the <strong>PPBDS.data</strong> package. Recall the discussion from Chapter <a href="rubin-causal-model.html#rubin-causal-model">3</a>. Enos (2014) randomly placed Spanish-speaking confederates on nine train platforms around Boston, Massachusetts. Exposure to Spanish-speakers – the <code>treatment</code> – influenced attitudes toward immigration. These reactions were measured through changes in answers to three survey questions. Let’s load the libraries we will need in this chapter, all of which we have used before, and look at the data.</p>
-<div class="sourceCode" id="cb855"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb855-1"><a href="three-parameters.html#cb855-1"></a><span class="kw">library</span>(PPBDS.data)</span>
-<span id="cb855-2"><a href="three-parameters.html#cb855-2"></a><span class="kw">library</span>(broom)</span>
-<span id="cb855-3"><a href="three-parameters.html#cb855-3"></a><span class="kw">library</span>(rsample)</span>
-<span id="cb855-4"><a href="three-parameters.html#cb855-4"></a><span class="kw">library</span>(skimr)</span>
-<span id="cb855-5"><a href="three-parameters.html#cb855-5"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
-<div class="sourceCode" id="cb856"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb856-1"><a href="three-parameters.html#cb856-1"></a><span class="kw">glimpse</span>(trains)</span></code></pre></div>
+<div class="sourceCode" id="cb838"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb838-1"><a href="three-parameters.html#cb838-1"></a><span class="kw">library</span>(PPBDS.data)</span>
+<span id="cb838-2"><a href="three-parameters.html#cb838-2"></a><span class="kw">library</span>(broom)</span>
+<span id="cb838-3"><a href="three-parameters.html#cb838-3"></a><span class="kw">library</span>(rsample)</span>
+<span id="cb838-4"><a href="three-parameters.html#cb838-4"></a><span class="kw">library</span>(skimr)</span>
+<span id="cb838-5"><a href="three-parameters.html#cb838-5"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb839"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb839-1"><a href="three-parameters.html#cb839-1"></a><span class="kw">glimpse</span>(trains)</span></code></pre></div>
 <pre><code>## Rows: 115
 ## Columns: 8
 ## $ gender    &lt;chr&gt; "Female", "Female", "Male", "Male", "Male", "Female", "Fema…
@@ -210,11 +210,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ treatment &lt;fct&gt; Treated, Treated, Treated, Treated, Control, Treated, Contr…
 ## $ att_end   &lt;dbl&gt; 11, 10, 5, 11, 5, 13, 13, 11, 12, 10, 9, 9, 13, 7, 8, 13, 8…</code></pre>
 <p>Here, we can see variables that indicate each respondent’s gender, political affiliations, age, and income. Additionally, we have variables that indicate whether a subject was in the control or treatment group, and their attitudes toward immigration both before (<code>att_start</code>) and after (<code>att_end</code>) the experiment. You can type <code>?trains</code> to read the help page for more information about each variable. Let’s restrict attention to a subset of the variables.</p>
-<div class="sourceCode" id="cb858"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb858-1"><a href="three-parameters.html#cb858-1"></a>ch8 &lt;-<span class="st"> </span>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb858-2"><a href="three-parameters.html#cb858-2"></a><span class="st">  </span><span class="kw">select</span>(age, att_end, party, treatment)</span></code></pre></div>
+<div class="sourceCode" id="cb841"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb841-1"><a href="three-parameters.html#cb841-1"></a>ch8 &lt;-<span class="st"> </span>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb841-2"><a href="three-parameters.html#cb841-2"></a><span class="st">  </span><span class="kw">select</span>(age, att_end, party, treatment)</span></code></pre></div>
 <p>It is always smart to look at a some random samples of the data:</p>
-<div class="sourceCode" id="cb859"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb859-1"><a href="three-parameters.html#cb859-1"></a>ch8 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb859-2"><a href="three-parameters.html#cb859-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb842"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb842-1"><a href="three-parameters.html#cb842-1"></a>ch8 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb842-2"><a href="three-parameters.html#cb842-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 4
 ##     age att_end party    treatment
 ##   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;    &lt;fct&gt;    
@@ -224,8 +224,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4    50      10 Democrat Control  
 ## 5    25       5 Democrat Treated</code></pre>
 <p><code>att_end</code> is a measure of person’s attitude toward immigration, a higher number means more conservative, i.e., a more exclusionary stance on immigration into the United States. Running <code>glimpse()</code> is another way of exploring a data set.</p>
-<div class="sourceCode" id="cb861"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb861-1"><a href="three-parameters.html#cb861-1"></a>ch8 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb861-2"><a href="three-parameters.html#cb861-2"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb844"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb844-1"><a href="three-parameters.html#cb844-1"></a>ch8 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb844-2"><a href="three-parameters.html#cb844-2"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
 <pre><code>## Rows: 115
 ## Columns: 4
 ## $ age       &lt;dbl&gt; 31, 34, 63, 45, 55, 37, 53, 36, 54, 42, 33, 50, 24, 40, 53,…
@@ -234,10 +234,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ treatment &lt;fct&gt; Treated, Treated, Treated, Treated, Control, Treated, Contr…</code></pre>
 <p>Pay attention to the variable “type.” Do they make sense? Perhaps. But there are certainly grounds for suspicion. Why are <code>age</code> and <code>att_end</code> doubles rather than integers? All the values in the data appear to be integers, so there is no benefit is having these variables be doubles. Why is <code>party</code> a character variable and <code>treament</code> a factor variable? It could be that these are intentional choices made by the creator of the tibble, i.e., us. These could be mistakes. Or, most likely, these choices are a mixture of sensible and arbitrary. Regardless, it is your responsibility to notice them. You can’t make a good model without looking closely at the data which you are using.</p>
 <p><code>skim</code> from the <strong>skimr</strong> package is the best way to get an overview of a tibble.</p>
-<div class="sourceCode" id="cb863"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb863-1"><a href="three-parameters.html#cb863-1"></a>ch8 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb863-2"><a href="three-parameters.html#cb863-2"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb846"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb846-1"><a href="three-parameters.html#cb846-1"></a>ch8 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb846-2"><a href="three-parameters.html#cb846-2"></a><span class="st">  </span><span class="kw">skim</span>()</span></code></pre></div>
 <p><!--
-<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-632">TABLE 8.1: </span>Data summary</span><!--</caption>--></p>
+<caption>--><span class="marginnote shownote"><span id="tab:unnamed-chunk-638">TABLE 8.1: </span>Data summary</span><!--</caption>--></p>
 <table><tbody>
 <tr class="odd">
 <td align="left">Name</td>
@@ -368,23 +368,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 <p><code>skim()</code> shows us what the different values of <code>treatment</code> are because it is a factor. Unfortunately, it does not do the same for character variables like <code>party</code>. The ranges for <code>age</code> and <code>att_end</code> seem reasonable. Recall that participants were asked three questions about immigration issues, each of which allowed for an answer indicated strength of agreement on a scale form 1 to 5, with higher values indicating more agreement with conservative viewpoints. <code>att_end</code> is the sum of the responses to the three questions, so the most liberal possible value is 3 and the most conservative is 15.</p>
 <p>Always plot your data.</p>
-<div class="sourceCode" id="cb864"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb864-1"><a href="three-parameters.html#cb864-1"></a>ch8 <span class="op">%&gt;%</span></span>
-<span id="cb864-2"><a href="three-parameters.html#cb864-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> party, <span class="dt">y =</span> age)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb864-3"><a href="three-parameters.html#cb864-3"></a><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">width =</span> <span class="fl">0.1</span>, <span class="dt">height =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb864-4"><a href="three-parameters.html#cb864-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"Age by Party Affiliation in Trains Dataset"</span>,</span>
-<span id="cb864-5"><a href="three-parameters.html#cb864-5"></a>       <span class="dt">subtitle =</span> <span class="st">"Where are the old Republicans?"</span>,</span>
-<span id="cb864-6"><a href="three-parameters.html#cb864-6"></a>       <span class="dt">x =</span> <span class="st">"Party"</span>,</span>
-<span id="cb864-7"><a href="three-parameters.html#cb864-7"></a>       <span class="dt">y =</span> <span class="st">"Age"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-633-1.png" width="672"></p>
+<div class="sourceCode" id="cb847"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb847-1"><a href="three-parameters.html#cb847-1"></a>ch8 <span class="op">%&gt;%</span></span>
+<span id="cb847-2"><a href="three-parameters.html#cb847-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> party, <span class="dt">y =</span> age)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb847-3"><a href="three-parameters.html#cb847-3"></a><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">width =</span> <span class="fl">0.1</span>, <span class="dt">height =</span> <span class="dv">0</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb847-4"><a href="three-parameters.html#cb847-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"Age by Party Affiliation in Trains Dataset"</span>,</span>
+<span id="cb847-5"><a href="three-parameters.html#cb847-5"></a>       <span class="dt">subtitle =</span> <span class="st">"Where are the old Republicans?"</span>,</span>
+<span id="cb847-6"><a href="three-parameters.html#cb847-6"></a>       <span class="dt">x =</span> <span class="st">"Party"</span>,</span>
+<span id="cb847-7"><a href="three-parameters.html#cb847-7"></a>       <span class="dt">y =</span> <span class="st">"Age"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-639-1.png" width="672"></p>
 <p>From this plot, we can gather that there are many more Democrats in this dataset than Republicans. Democrats also span a wider range of ages than Republicans. The mode age for Democrats appears to be 50.</p>
-<div class="sourceCode" id="cb865"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb865-1"><a href="three-parameters.html#cb865-1"></a>ch8 <span class="op">%&gt;%</span></span>
-<span id="cb865-2"><a href="three-parameters.html#cb865-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> treatment, <span class="dt">y =</span> att_end)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb865-3"><a href="three-parameters.html#cb865-3"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb865-4"><a href="three-parameters.html#cb865-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"Attitude End by Treatment in Trains Dataset"</span>,</span>
-<span id="cb865-5"><a href="three-parameters.html#cb865-5"></a>       <span class="dt">subtitle =</span> <span class="st">"Did the treatment make people more conservative?"</span>,</span>
-<span id="cb865-6"><a href="three-parameters.html#cb865-6"></a>       <span class="dt">x =</span> <span class="st">"Treatment"</span>,</span>
-<span id="cb865-7"><a href="three-parameters.html#cb865-7"></a>       <span class="dt">y =</span> <span class="st">"Attitude After Experiment"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-634-1.png" width="672"></p>
+<div class="sourceCode" id="cb848"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb848-1"><a href="three-parameters.html#cb848-1"></a>ch8 <span class="op">%&gt;%</span></span>
+<span id="cb848-2"><a href="three-parameters.html#cb848-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> treatment, <span class="dt">y =</span> att_end)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb848-3"><a href="three-parameters.html#cb848-3"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb848-4"><a href="three-parameters.html#cb848-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"Attitude End by Treatment in Trains Dataset"</span>,</span>
+<span id="cb848-5"><a href="three-parameters.html#cb848-5"></a>       <span class="dt">subtitle =</span> <span class="st">"Did the treatment make people more conservative?"</span>,</span>
+<span id="cb848-6"><a href="three-parameters.html#cb848-6"></a>       <span class="dt">x =</span> <span class="st">"Treatment"</span>,</span>
+<span id="cb848-7"><a href="three-parameters.html#cb848-7"></a>       <span class="dt">y =</span> <span class="st">"Attitude After Experiment"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-640-1.png" width="672"></p>
 <p>On a boxplot, the top and bottom borders of the box denotes the 75th and 25th percentiles, respectively. The line inside the box denotes the mean of the data. Treated individuals have a higher mean <code>att_end</code> than the control group, and a higher distribution in general, with its 25th percentile lining up with the mean of the control group. The control group has one outlier, while the treatment group has none.</p>
 </div>
 <div id="review-of-one-parameter-estimation" class="section level2">
@@ -395,9 +395,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We will once again be using the <code>bootstraps()</code> function from the <strong>rsample</strong> package. You might think that since we’re shifting to calculating two parameters, we might need to conduct the entire bootstrapping process twice, once for each parameter. However, it’s much, much easier than that. We can actually calculate as many parameters as we need to for each bootstrap sample instead of doing a separate bootstrap for each parameter we want to estimate.</p>
 <p>Let’s review the material from Chapter <a href="two-parameters.html#two-parameters">7</a> by calculating the confidence interval for both the mean and the 90th percentile of age for Boston commuters. We will build up the code section by section.</p>
 <p>First, we select out the only variable we need, with is <code>age</code>, and then create an objects of class <code>bootstraps</code>.</p>
-<div class="sourceCode" id="cb866"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb866-1"><a href="three-parameters.html#cb866-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb866-2"><a href="three-parameters.html#cb866-2"></a><span class="st">  </span><span class="kw">select</span>(age) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb866-3"><a href="three-parameters.html#cb866-3"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dv">1000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb849"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb849-1"><a href="three-parameters.html#cb849-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb849-2"><a href="three-parameters.html#cb849-2"></a><span class="st">  </span><span class="kw">select</span>(age) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb849-3"><a href="three-parameters.html#cb849-3"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## # Bootstrap sampling 
 ## # A tibble: 1,000 x 2
 ##    splits           id           
@@ -414,10 +414,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 10 &lt;split [115/40]&gt; Bootstrap0010
 ## # … with 990 more rows</code></pre>
 <p>We discussed these objects in Chapter <a href="two-parameters.html#two-parameters">7</a>. The key trick in working with them is the use of <code>analysis()</code> from the <strong>rsample</strong> package to pull out the underlying data.</p>
-<div class="sourceCode" id="cb868"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb868-1"><a href="three-parameters.html#cb868-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb868-2"><a href="three-parameters.html#cb868-2"></a><span class="st">  </span><span class="kw">select</span>(age) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb868-3"><a href="three-parameters.html#cb868-3"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb868-4"><a href="three-parameters.html#cb868-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.)))</span></code></pre></div>
+<div class="sourceCode" id="cb851"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb851-1"><a href="three-parameters.html#cb851-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb851-2"><a href="three-parameters.html#cb851-2"></a><span class="st">  </span><span class="kw">select</span>(age) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb851-3"><a href="three-parameters.html#cb851-3"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb851-4"><a href="three-parameters.html#cb851-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.)))</span></code></pre></div>
 <pre><code>## # Bootstrap sampling 
 ## # A tibble: 1,000 x 3
 ##    splits           id            boot              
@@ -434,13 +434,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 10 &lt;split [115/42]&gt; Bootstrap0010 &lt;tibble [115 × 1]&gt;
 ## # … with 990 more rows</code></pre>
 <p><code>boot</code> is now a list-column in the tibble. This workflow — keep adding new columns to the tibble created after the initial call to <code>bootstraps()</code> — is common. Let’s add three more columns.</p>
-<div class="sourceCode" id="cb870"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb870-1"><a href="three-parameters.html#cb870-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb870-2"><a href="three-parameters.html#cb870-2"></a><span class="st">  </span><span class="kw">select</span>(age) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb870-3"><a href="three-parameters.html#cb870-3"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb870-4"><a href="three-parameters.html#cb870-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.))) <span class="op">%&gt;%</span></span>
-<span id="cb870-5"><a href="three-parameters.html#cb870-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ages =</span> <span class="kw">map</span>(boot, <span class="op">~</span><span class="st"> </span><span class="kw">pull</span>(., age))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb870-6"><a href="three-parameters.html#cb870-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_mean =</span> <span class="kw">map_dbl</span>(ages, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(.))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb870-7"><a href="three-parameters.html#cb870-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_90th =</span> <span class="kw">map_dbl</span>(ages, <span class="op">~</span><span class="st"> </span><span class="kw">quantile</span>(., <span class="dt">probs =</span> <span class="fl">0.9</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb853"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb853-1"><a href="three-parameters.html#cb853-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb853-2"><a href="three-parameters.html#cb853-2"></a><span class="st">  </span><span class="kw">select</span>(age) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb853-3"><a href="three-parameters.html#cb853-3"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb853-4"><a href="three-parameters.html#cb853-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">boot =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.))) <span class="op">%&gt;%</span></span>
+<span id="cb853-5"><a href="three-parameters.html#cb853-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ages =</span> <span class="kw">map</span>(boot, <span class="op">~</span><span class="st"> </span><span class="kw">pull</span>(., age))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb853-6"><a href="three-parameters.html#cb853-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_mean =</span> <span class="kw">map_dbl</span>(ages, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(.))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb853-7"><a href="three-parameters.html#cb853-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_90th =</span> <span class="kw">map_dbl</span>(ages, <span class="op">~</span><span class="st"> </span><span class="kw">quantile</span>(., <span class="dt">probs =</span> <span class="fl">0.9</span>)))</span></code></pre></div>
 <pre><code>## # Bootstrap sampling 
 ## # A tibble: 1,000 x 6
 ##    splits           id            boot              ages       age_mean age_90th
@@ -457,30 +457,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 10 &lt;split [115/46]&gt; Bootstrap0010 &lt;tibble [115 × 1… &lt;dbl [115…     42.7     59.6
 ## # … with 990 more rows</code></pre>
 <p>We could simplify this code by combining all the <code>mutate()</code> steps into a single line, create one function which does the <code>analyst()</code>, <code>pull()</code>, <code>mean()</code> and <code>quantile()</code> steps together. However, when building up an analysis like this, we prefer to go line-by-line, at least until everything is working. We could also “feed” this pipe directly into a call to <code>ggplot()</code>. However, it is better practice to save the needed results in an object and then use that object for plotting, especially if creating the data takes some time. For replication purposes, we use <code>set.seed()</code>. We only keep the variables we need.</p>
-<div class="sourceCode" id="cb872"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb872-1"><a href="three-parameters.html#cb872-1"></a><span class="kw">set.seed</span>(<span class="dv">9</span>)</span>
-<span id="cb872-2"><a href="three-parameters.html#cb872-2"></a></span>
-<span id="cb872-3"><a href="three-parameters.html#cb872-3"></a>boot_results &lt;-<span class="st"> </span>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb872-4"><a href="three-parameters.html#cb872-4"></a><span class="st">  </span><span class="kw">select</span>(age) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb872-5"><a href="three-parameters.html#cb872-5"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb872-6"><a href="three-parameters.html#cb872-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ages =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb872-7"><a href="three-parameters.html#cb872-7"></a><span class="st">                              </span><span class="kw">pull</span>(., age))) <span class="op">%&gt;%</span></span>
-<span id="cb872-8"><a href="three-parameters.html#cb872-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_mean =</span> <span class="kw">map_dbl</span>(ages, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(.))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb872-9"><a href="three-parameters.html#cb872-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_90th =</span> <span class="kw">map_dbl</span>(ages, <span class="op">~</span><span class="st"> </span><span class="kw">quantile</span>(., <span class="dt">probs =</span> <span class="fl">0.9</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb872-10"><a href="three-parameters.html#cb872-10"></a><span class="st">  </span><span class="kw">select</span>(age_mean, age_90th)</span></code></pre></div>
+<div class="sourceCode" id="cb855"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb855-1"><a href="three-parameters.html#cb855-1"></a><span class="kw">set.seed</span>(<span class="dv">9</span>)</span>
+<span id="cb855-2"><a href="three-parameters.html#cb855-2"></a></span>
+<span id="cb855-3"><a href="three-parameters.html#cb855-3"></a>boot_results &lt;-<span class="st"> </span>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb855-4"><a href="three-parameters.html#cb855-4"></a><span class="st">  </span><span class="kw">select</span>(age) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb855-5"><a href="three-parameters.html#cb855-5"></a><span class="st">  </span><span class="kw">bootstraps</span>(<span class="dv">1000</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb855-6"><a href="three-parameters.html#cb855-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ages =</span> <span class="kw">map</span>(splits, <span class="op">~</span><span class="st"> </span><span class="kw">analysis</span>(.) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb855-7"><a href="three-parameters.html#cb855-7"></a><span class="st">                              </span><span class="kw">pull</span>(., age))) <span class="op">%&gt;%</span></span>
+<span id="cb855-8"><a href="three-parameters.html#cb855-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_mean =</span> <span class="kw">map_dbl</span>(ages, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(.))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb855-9"><a href="three-parameters.html#cb855-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_90th =</span> <span class="kw">map_dbl</span>(ages, <span class="op">~</span><span class="st"> </span><span class="kw">quantile</span>(., <span class="dt">probs =</span> <span class="fl">0.9</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb855-10"><a href="three-parameters.html#cb855-10"></a><span class="st">  </span><span class="kw">select</span>(age_mean, age_90th)</span></code></pre></div>
 <p>We no longer need to re-run this code each time we adjust the plot.</p>
-<div class="sourceCode" id="cb873"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb873-1"><a href="three-parameters.html#cb873-1"></a>boot_results <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb873-2"><a href="three-parameters.html#cb873-2"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
-<span id="cb873-3"><a href="three-parameters.html#cb873-3"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age_mean), <span class="dt">binwidth =</span> <span class="fl">.1</span>, <span class="dt">fill =</span> <span class="st">"red"</span>) <span class="op">+</span></span>
-<span id="cb873-4"><a href="three-parameters.html#cb873-4"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age_90th), <span class="dt">binwidth =</span> <span class="fl">.1</span>, <span class="dt">fill =</span> <span class="st">"blue"</span>) <span class="op">+</span></span>
-<span id="cb873-5"><a href="three-parameters.html#cb873-5"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Estimate in Years"</span>,</span>
-<span id="cb873-6"><a href="three-parameters.html#cb873-6"></a>        <span class="dt">title =</span> <span class="st">"Posterior Distribution for the Mean and the 90th Percentile of </span></span>
-<span id="cb873-7"><a href="three-parameters.html#cb873-7"></a><span class="st">         Age for Boston Commuters"</span>)</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-639-1.png" width="672"></p>
+<div class="sourceCode" id="cb856"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb856-1"><a href="three-parameters.html#cb856-1"></a>boot_results <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb856-2"><a href="three-parameters.html#cb856-2"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb856-3"><a href="three-parameters.html#cb856-3"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age_mean), <span class="dt">binwidth =</span> <span class="fl">.1</span>, <span class="dt">fill =</span> <span class="st">"red"</span>) <span class="op">+</span></span>
+<span id="cb856-4"><a href="three-parameters.html#cb856-4"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> age_90th), <span class="dt">binwidth =</span> <span class="fl">.1</span>, <span class="dt">fill =</span> <span class="st">"blue"</span>) <span class="op">+</span></span>
+<span id="cb856-5"><a href="three-parameters.html#cb856-5"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Estimate in Years"</span>,</span>
+<span id="cb856-6"><a href="three-parameters.html#cb856-6"></a>        <span class="dt">title =</span> <span class="st">"Posterior Distribution for the Mean and the 90th Percentile of </span></span>
+<span id="cb856-7"><a href="three-parameters.html#cb856-7"></a><span class="st">         Age for Boston Commuters"</span>)</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-645-1.png" width="672"></p>
 <p>Remember that some parameters, like the mean, are easy to calculate with built in functions like <code>lm()</code> while others require the use of the bootstrap. Note how similar the <code>lm()</code> solution is:</p>
-<div class="sourceCode" id="cb874"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb874-1"><a href="three-parameters.html#cb874-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb874-2"><a href="three-parameters.html#cb874-2"></a><span class="st">  </span><span class="kw">lm</span>(age <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> .) <span class="op">%&gt;%</span></span>
-<span id="cb874-3"><a href="three-parameters.html#cb874-3"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb874-4"><a href="three-parameters.html#cb874-4"></a><span class="st">  </span><span class="kw">select</span>(conf.low, estimate, conf.high)</span></code></pre></div>
+<div class="sourceCode" id="cb857"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb857-1"><a href="three-parameters.html#cb857-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb857-2"><a href="three-parameters.html#cb857-2"></a><span class="st">  </span><span class="kw">lm</span>(age <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> .) <span class="op">%&gt;%</span></span>
+<span id="cb857-3"><a href="three-parameters.html#cb857-3"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb857-4"><a href="three-parameters.html#cb857-4"></a><span class="st">  </span><span class="kw">select</span>(conf.low, estimate, conf.high)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##   conf.low estimate conf.high
 ##      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
@@ -492,10 +492,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Before considering the questions we want to answer with our model of mean height, let’s step back and look at the big picture. All modeling problems look the same:</p>
 <p><span class="math display">\[outcome = model + stuff\]</span>
 There is an outcome we care about. In this case, it is heights. But it could be anything. This is the thing that we are trying to understand. In order to understand it, we build a model. That takes time and trouble, so much so that we will sometimes forget that no model explains every outcome. There will always be other “stuff” which affects outcomes, influences that our model does not account for, <em>unmodeled variation</em>. Consider a sample from our dataset, augmented with other variables:</p>
-<div class="sourceCode" id="cb876"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb876-1"><a href="three-parameters.html#cb876-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb876-2"><a href="three-parameters.html#cb876-2"></a><span class="st">  </span><span class="kw">lm</span>(age <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> .) <span class="op">%&gt;%</span></span>
-<span id="cb876-3"><a href="three-parameters.html#cb876-3"></a><span class="st">  </span><span class="kw">augment</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb876-4"><a href="three-parameters.html#cb876-4"></a><span class="st">  </span><span class="kw">select</span>(age, .fitted, .resid)</span></code></pre></div>
+<div class="sourceCode" id="cb859"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb859-1"><a href="three-parameters.html#cb859-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb859-2"><a href="three-parameters.html#cb859-2"></a><span class="st">  </span><span class="kw">lm</span>(age <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> .) <span class="op">%&gt;%</span></span>
+<span id="cb859-3"><a href="three-parameters.html#cb859-3"></a><span class="st">  </span><span class="kw">augment</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb859-4"><a href="three-parameters.html#cb859-4"></a><span class="st">  </span><span class="kw">select</span>(age, .fitted, .resid)</span></code></pre></div>
 <pre><code>## # A tibble: 115 x 3
 ##      age .fitted  .resid
 ##    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
@@ -512,22 +512,22 @@ There is an outcome we care about. In this case, it is heights. But it could be 
 ## # … with 105 more rows</code></pre>
 <p>These three columns capture the three key components of any approach: the outcome (<code>age</code>), the model (<code>.fitted</code>) and the stuff (<code>.resid</code>). The residual is often referred to as the error term, although calling everything we don’t understand an “error” is the height of hubris, as if the fault might in the world, rather than in our own ignorance.</p>
 <p>Graphically, we have:</p>
-<div class="sourceCode" id="cb878"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb878-1"><a href="three-parameters.html#cb878-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb878-2"><a href="three-parameters.html#cb878-2"></a><span class="st">  </span><span class="kw">lm</span>(age <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> .) <span class="op">%&gt;%</span></span>
-<span id="cb878-3"><a href="three-parameters.html#cb878-3"></a><span class="st">  </span><span class="kw">augment</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb878-4"><a href="three-parameters.html#cb878-4"></a><span class="st">  </span><span class="kw">select</span>(age, .fitted, .resid) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb878-5"><a href="three-parameters.html#cb878-5"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">everything</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb878-6"><a href="three-parameters.html#cb878-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">panels =</span> <span class="kw">factor</span>(name, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">"age"</span>, <span class="st">".fitted"</span>, <span class="st">".resid"</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb878-7"><a href="three-parameters.html#cb878-7"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
-<span id="cb878-8"><a href="three-parameters.html#cb878-8"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value), <span class="dt">bins =</span> <span class="dv">30</span>) <span class="op">+</span></span>
-<span id="cb878-9"><a href="three-parameters.html#cb878-9"></a><span class="st">    </span><span class="kw">facet_grid</span>(<span class="dt">cols =</span> <span class="kw">vars</span>(panels))</span></code></pre></div>
-<p><img src="book_temp_files/figure-html/unnamed-chunk-642-1.png" width="672"></p>
+<div class="sourceCode" id="cb861"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb861-1"><a href="three-parameters.html#cb861-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb861-2"><a href="three-parameters.html#cb861-2"></a><span class="st">  </span><span class="kw">lm</span>(age <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> .) <span class="op">%&gt;%</span></span>
+<span id="cb861-3"><a href="three-parameters.html#cb861-3"></a><span class="st">  </span><span class="kw">augment</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb861-4"><a href="three-parameters.html#cb861-4"></a><span class="st">  </span><span class="kw">select</span>(age, .fitted, .resid) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb861-5"><a href="three-parameters.html#cb861-5"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">everything</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb861-6"><a href="three-parameters.html#cb861-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">panels =</span> <span class="kw">factor</span>(name, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">"age"</span>, <span class="st">".fitted"</span>, <span class="st">".resid"</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb861-7"><a href="three-parameters.html#cb861-7"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb861-8"><a href="three-parameters.html#cb861-8"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value), <span class="dt">bins =</span> <span class="dv">30</span>) <span class="op">+</span></span>
+<span id="cb861-9"><a href="three-parameters.html#cb861-9"></a><span class="st">    </span><span class="kw">facet_grid</span>(<span class="dt">cols =</span> <span class="kw">vars</span>(panels))</span></code></pre></div>
+<p><img src="book_temp_files/figure-html/unnamed-chunk-648-1.png" width="672"></p>
 <!-- DK: Clean up this plot and make it much prettier. Add labels to connect with both the outcome, model, stuff formulation above and with the $y$, $\hat{u}$, $\epsilon$ notation. Should also add a nice caption explaining it all again.  -->
 <p>In order to answer questions with this model, we need to use the <code>simulate()</code> function.</p>
-<div class="sourceCode" id="cb879"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb879-1"><a href="three-parameters.html#cb879-1"></a>lm.obj &lt;-<span class="st"> </span>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb879-2"><a href="three-parameters.html#cb879-2"></a><span class="st">  </span><span class="kw">lm</span>(age <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> .) </span>
-<span id="cb879-3"><a href="three-parameters.html#cb879-3"></a></span>
-<span id="cb879-4"><a href="three-parameters.html#cb879-4"></a><span class="co"># simulate(lm.obj, seed = 9)</span></span></code></pre></div>
+<div class="sourceCode" id="cb862"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb862-1"><a href="three-parameters.html#cb862-1"></a>lm.obj &lt;-<span class="st"> </span>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb862-2"><a href="three-parameters.html#cb862-2"></a><span class="st">  </span><span class="kw">lm</span>(age <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> .) </span>
+<span id="cb862-3"><a href="three-parameters.html#cb862-3"></a></span>
+<span id="cb862-4"><a href="three-parameters.html#cb862-4"></a><span class="co"># simulate(lm.obj, seed = 9)</span></span></code></pre></div>
 <!-- DK: Should also add a "validity" or "representativeness" discussion about what population this estimate applies to. All people? All people in Boston? All Boston commuters? Do we need to get into prediction stuff? Discuss the weird appearance of the plot for the 90th percentile? -->
 </div>
 </div>
@@ -537,9 +537,9 @@ There is an outcome we care about. In this case, it is heights. But it could be 
 </h2>
 <p>But what if, instead of having no other information about our sample beyond their ages, we also knew their political party? How would we make a model which included this other information? This is a model for prediction, rather than a model for causal inference, because <code>age</code> can not be changed regardless what happens to <code>party</code>. That is, someone’s age is the same regardless of the party of which they are a member.</p>
 <p>The simplest model would be to guess that a person’s age, conditional on their party membership, is equal to the mean age of people in that party.</p>
-<div class="sourceCode" id="cb880"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb880-1"><a href="three-parameters.html#cb880-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb880-2"><a href="three-parameters.html#cb880-2"></a><span class="st">  </span><span class="kw">group_by</span>(party) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb880-3"><a href="three-parameters.html#cb880-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">age_average =</span> <span class="kw">mean</span>(age))</span></code></pre></div>
+<div class="sourceCode" id="cb863"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb863-1"><a href="three-parameters.html#cb863-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb863-2"><a href="three-parameters.html#cb863-2"></a><span class="st">  </span><span class="kw">group_by</span>(party) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb863-3"><a href="three-parameters.html#cb863-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">age_average =</span> <span class="kw">mean</span>(age))</span></code></pre></div>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 2 x 2
 ##   party      age_average
@@ -548,8 +548,8 @@ There is an outcome we care about. In this case, it is heights. But it could be 
 ## 2 Republican        41.2</code></pre>
 <p>If a new Boston commuter named Jake showed up at the station, what would be a good guess as to their age? If you don’t know anything else about this person, then guessing the mean age of the sample, 42.4 makes sense, as we learned in Chapter <a href="two-parameters.html#two-parameters">7</a>. But, if we know that the person is a Republican, than this guess would be (slightly) too high. Among the population of Boston commuters, (it seems that) Republican’s are younger than average. So, conditional on knowing that Jake is a Republican, we should guess that his age is 41.2.</p>
 <p>However, instead of calculating these averages by hand, it is more convenient to use <code>lm()</code>, a function for creating linear statistical models. Start by estimating a simple model:</p>
-<div class="sourceCode" id="cb883"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb883-1"><a href="three-parameters.html#cb883-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb883-2"><a href="three-parameters.html#cb883-2"></a><span class="st">  </span><span class="kw">lm</span>(<span class="dt">data =</span> ., age <span class="op">~</span><span class="st"> </span>party <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb866"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb866-1"><a href="three-parameters.html#cb866-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb866-2"><a href="three-parameters.html#cb866-2"></a><span class="st">  </span><span class="kw">lm</span>(<span class="dt">data =</span> ., age <span class="op">~</span><span class="st"> </span>party <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = age ~ party - 1, data = .)
@@ -2044,19 +2044,19 @@ Once you do this, you have a complete equation.</p>
 <h3>
 <span class="header-section-number">8.3.2</span> Parameter Uncertainty</h3>
 <p>How uncertain are our estimates for age? Again, we use the same tools we have used before:</p>
-<div class="sourceCode" id="cb885"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb885-1"><a href="three-parameters.html#cb885-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb885-2"><a href="three-parameters.html#cb885-2"></a><span class="st">  </span><span class="kw">lm</span>(<span class="dt">data =</span> ., age <span class="op">~</span><span class="st"> </span>party <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb885-3"><a href="three-parameters.html#cb885-3"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb885-4"><a href="three-parameters.html#cb885-4"></a><span class="st">  </span><span class="kw">select</span>(term, conf.low, estimate, conf.high)</span></code></pre></div>
+<div class="sourceCode" id="cb868"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb868-1"><a href="three-parameters.html#cb868-1"></a>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb868-2"><a href="three-parameters.html#cb868-2"></a><span class="st">  </span><span class="kw">lm</span>(<span class="dt">data =</span> ., age <span class="op">~</span><span class="st"> </span>party <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb868-3"><a href="three-parameters.html#cb868-3"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb868-4"><a href="three-parameters.html#cb868-4"></a><span class="st">  </span><span class="kw">select</span>(term, conf.low, estimate, conf.high)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 4
 ##   term            conf.low estimate conf.high
 ##   &lt;chr&gt;              &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 partyDemocrat       40.1     42.6      45.1
 ## 2 partyRepublican     35.6     41.2      46.7</code></pre>
 <p>The confidence intervals that we’ve generated display the upper and lower bounds of the mean age of Democrat and Republican commuters on this train platform. This touches on the idea of <strong>parameter uncertainty</strong>: even if a model is constructed in a logical way, we are unable to know our parameters exactly, the parameters in this case being the mean ages of the two parties. Confidence intervals are one way to capture this uncertainty, so that we don’t over-confidently put forward one value rather than a range.</p>
-<div class="sourceCode" id="cb887"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb887-1"><a href="three-parameters.html#cb887-1"></a>trains <span class="op">%&gt;%</span></span>
-<span id="cb887-2"><a href="three-parameters.html#cb887-2"></a><span class="st">  </span><span class="kw">group_by</span>(party) <span class="op">%&gt;%</span></span>
-<span id="cb887-3"><a href="three-parameters.html#cb887-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">n</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb870"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb870-1"><a href="three-parameters.html#cb870-1"></a>trains <span class="op">%&gt;%</span></span>
+<span id="cb870-2"><a href="three-parameters.html#cb870-2"></a><span class="st">  </span><span class="kw">group_by</span>(party) <span class="op">%&gt;%</span></span>
+<span id="cb870-3"><a href="three-parameters.html#cb870-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">n</span>())</span></code></pre></div>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code>## # A tibble: 2 x 2
 ##   party      `n()`
@@ -2113,7 +2113,7 @@ Once you do this, you have a complete equation.</p>
 </h2>
 <p>Let’s establish the two types of models we’ve studied thus far. What we explored above was a predictive model: with someone’s party affiliation, we can make a better guess as to what their age is. In this example, we’ll explore a causal model, looking for the casual effect of randomly assigned treatments on att_end.</p>
 <p>Here’s the model using lm():</p>
-<div class="sourceCode" id="cb890"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb890-1"><a href="three-parameters.html#cb890-1"></a><span class="kw">lm</span>(<span class="dt">data =</span> trains, att_end <span class="op">~</span><span class="st"> </span>treatment <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, )</span></code></pre></div>
+<div class="sourceCode" id="cb873"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb873-1"><a href="three-parameters.html#cb873-1"></a><span class="kw">lm</span>(<span class="dt">data =</span> trains, att_end <span class="op">~</span><span class="st"> </span>treatment <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, )</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = att_end ~ treatment - 1, data = trains)
@@ -2127,10 +2127,10 @@ Once you do this, you have a complete equation.</p>
 <span class="header-section-number">8.6.1</span> Model Structure</h3>
 <p>Our predictive model helped us make guesses as to what an individual’s age is. However, that’s just about all we can do with this relationship. Recall that the trains dataset was originally introduced in the context of the Rubin Causal Model back in Chapter <a href="rubin-causal-model.html#rubin-causal-model">3</a>. That model cannot be applied to the relationship between party and income because these values were independently decided outside the experiment — although we were able to identify correlations between those two variables, the combinations of party and income were predetermined and not randomly assigned in a way that allows us to establish a causal relationship. If an individual suddenly decided to change party affiliations, we wouldn’t suddenly expect his or her income to spike or plummet.</p>
 <p>In conclusion, while we can explore correlations or trends between party and income, we cannot label these correlations or trends as causal. However, <code>treatment</code> was a variable that was randomly assigned to subjects, and we have a variable that was measured after this random assignment, <code>att_end</code>. With this setup, we can calculate the Average Treatment Effect, or the average difference in <code>att_end</code> for treated subjects and control subjects.</p>
-<div class="sourceCode" id="cb892"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb892-1"><a href="three-parameters.html#cb892-1"></a>mean_ends &lt;-<span class="st"> </span>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb892-2"><a href="three-parameters.html#cb892-2"></a><span class="st">  </span><span class="kw">group_by</span>(treatment) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb892-3"><a href="three-parameters.html#cb892-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_att_end =</span> <span class="kw">mean</span>(att_end))</span></code></pre></div>
-<div class="sourceCode" id="cb893"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb893-1"><a href="three-parameters.html#cb893-1"></a>ATE &lt;-<span class="st"> </span>mean_ends<span class="op">$</span>mean_att_end[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span>mean_ends<span class="op">$</span>mean_att_end[<span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb875"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb875-1"><a href="three-parameters.html#cb875-1"></a>mean_ends &lt;-<span class="st"> </span>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb875-2"><a href="three-parameters.html#cb875-2"></a><span class="st">  </span><span class="kw">group_by</span>(treatment) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb875-3"><a href="three-parameters.html#cb875-3"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_att_end =</span> <span class="kw">mean</span>(att_end))</span></code></pre></div>
+<div class="sourceCode" id="cb876"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb876-1"><a href="three-parameters.html#cb876-1"></a>ATE &lt;-<span class="st"> </span>mean_ends<span class="op">$</span>mean_att_end[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span>mean_ends<span class="op">$</span>mean_att_end[<span class="dv">1</span>]</span></code></pre></div>
 <p>Now, let’s make a Preceptor Table for this data:</p>
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
@@ -2619,28 +2619,28 @@ When the individual is treated (<span class="math inline">\(x_t\)</span>=1 and <
 <span class="math display">\[ y_i = \hat{b_1}x_r + \hat{b_2} x_d + \epsilon_i \]</span>
 Note that the math for both the predictive model we worked on earlier and this model is <em>identical</em>. It is not the calculations for the residual, fitted value, or parameter estimates that differ between these two model types; rather, it is how one uses and interprets these numbers. While predictive models are simply used for predicting another variable’s value (in the previous case, age), we can use these numbers to calculate the effect of one variable (treatment) on another (att_end) for each individual observation.</p>
 <p>Now, we’ll create a Rubin Causal Model table of possible outcomes, as we did back in ch3. We’ll do this using 7 random observations from the trains dataset.</p>
-<div class="sourceCode" id="cb894"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb894-1"><a href="three-parameters.html#cb894-1"></a><span class="co">#Adding question marks where necessary</span></span>
-<span id="cb894-2"><a href="three-parameters.html#cb894-2"></a></span>
-<span id="cb894-3"><a href="three-parameters.html#cb894-3"></a>trains_RCM &lt;-<span class="st"> </span>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb894-4"><a href="three-parameters.html#cb894-4"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> treatment, <span class="dt">values_from =</span> att_end) <span class="op">%&gt;%</span></span>
-<span id="cb894-5"><a href="three-parameters.html#cb894-5"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>) <span class="op">%&gt;%</span></span>
-<span id="cb894-6"><a href="three-parameters.html#cb894-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">subject =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>) <span class="op">%&gt;%</span></span>
-<span id="cb894-7"><a href="three-parameters.html#cb894-7"></a><span class="st">  </span><span class="kw">replace_na</span>(<span class="kw">list</span>(<span class="dt">Treated =</span> <span class="st">"?"</span>, <span class="dt">Control =</span> <span class="st">"?"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb894-8"><a href="three-parameters.html#cb894-8"></a><span class="st">  </span><span class="kw">select</span>(subject, Control, Treated)</span>
-<span id="cb894-9"><a href="three-parameters.html#cb894-9"></a></span>
-<span id="cb894-10"><a href="three-parameters.html#cb894-10"></a>trains_RCM<span class="op">$</span>subject &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"7"</span>, <span class="st">"6,041"</span>, <span class="st">"67"</span>, <span class="st">"40,080"</span>, <span class="st">"758"</span>, <span class="st">"32"</span>, <span class="st">"8,809"</span>)</span>
-<span id="cb894-11"><a href="three-parameters.html#cb894-11"></a></span>
-<span id="cb894-12"><a href="three-parameters.html#cb894-12"></a><span class="co">#Mathematical notation</span></span>
-<span id="cb894-13"><a href="three-parameters.html#cb894-13"></a></span>
-<span id="cb894-14"><a href="three-parameters.html#cb894-14"></a>trains_RCM <span class="op">%&gt;%</span></span>
-<span id="cb894-15"><a href="three-parameters.html#cb894-15"></a><span class="st">  </span><span class="kw">gt</span>() <span class="op">%&gt;%</span></span>
-<span id="cb894-16"><a href="three-parameters.html#cb894-16"></a><span class="st">  </span><span class="kw">cols_label</span>(<span class="dt">subject =</span> <span class="kw">md</span>(<span class="st">"**Subject**"</span>),</span>
-<span id="cb894-17"><a href="three-parameters.html#cb894-17"></a>                <span class="dt">Control =</span> <span class="kw">md</span>(<span class="st">"**$$Y_c(u)$$**"</span>),</span>
-<span id="cb894-18"><a href="three-parameters.html#cb894-18"></a>                <span class="dt">Treated =</span> <span class="kw">md</span>(<span class="st">"**$$Y_t(u)$$**"</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb894-19"><a href="three-parameters.html#cb894-19"></a><span class="st">  </span><span class="kw">tab_style</span>(<span class="kw">cell_borders</span>(<span class="dt">sides =</span> <span class="st">"right"</span>),</span>
-<span id="cb894-20"><a href="three-parameters.html#cb894-20"></a>            <span class="dt">location =</span> <span class="kw">cells_body</span>(<span class="dt">columns =</span> <span class="kw">vars</span>(subject))) <span class="op">%&gt;%</span></span>
-<span id="cb894-21"><a href="three-parameters.html#cb894-21"></a><span class="st">  </span><span class="kw">cols_align</span>(<span class="dt">align =</span> <span class="st">"center"</span>, <span class="dt">columns =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb894-22"><a href="three-parameters.html#cb894-22"></a><span class="st">  </span><span class="kw">tab_header</span>(<span class="dt">title =</span> <span class="st">"Ending Attitudes on Immigration of 7 Random Respondents"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb877"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb877-1"><a href="three-parameters.html#cb877-1"></a><span class="co">#Adding question marks where necessary</span></span>
+<span id="cb877-2"><a href="three-parameters.html#cb877-2"></a></span>
+<span id="cb877-3"><a href="three-parameters.html#cb877-3"></a>trains_RCM &lt;-<span class="st"> </span>trains <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb877-4"><a href="three-parameters.html#cb877-4"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> treatment, <span class="dt">values_from =</span> att_end) <span class="op">%&gt;%</span></span>
+<span id="cb877-5"><a href="three-parameters.html#cb877-5"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>) <span class="op">%&gt;%</span></span>
+<span id="cb877-6"><a href="three-parameters.html#cb877-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">subject =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>) <span class="op">%&gt;%</span></span>
+<span id="cb877-7"><a href="three-parameters.html#cb877-7"></a><span class="st">  </span><span class="kw">replace_na</span>(<span class="kw">list</span>(<span class="dt">Treated =</span> <span class="st">"?"</span>, <span class="dt">Control =</span> <span class="st">"?"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb877-8"><a href="three-parameters.html#cb877-8"></a><span class="st">  </span><span class="kw">select</span>(subject, Control, Treated)</span>
+<span id="cb877-9"><a href="three-parameters.html#cb877-9"></a></span>
+<span id="cb877-10"><a href="three-parameters.html#cb877-10"></a>trains_RCM<span class="op">$</span>subject &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"7"</span>, <span class="st">"6,041"</span>, <span class="st">"67"</span>, <span class="st">"40,080"</span>, <span class="st">"758"</span>, <span class="st">"32"</span>, <span class="st">"8,809"</span>)</span>
+<span id="cb877-11"><a href="three-parameters.html#cb877-11"></a></span>
+<span id="cb877-12"><a href="three-parameters.html#cb877-12"></a><span class="co">#Mathematical notation</span></span>
+<span id="cb877-13"><a href="three-parameters.html#cb877-13"></a></span>
+<span id="cb877-14"><a href="three-parameters.html#cb877-14"></a>trains_RCM <span class="op">%&gt;%</span></span>
+<span id="cb877-15"><a href="three-parameters.html#cb877-15"></a><span class="st">  </span><span class="kw">gt</span>() <span class="op">%&gt;%</span></span>
+<span id="cb877-16"><a href="three-parameters.html#cb877-16"></a><span class="st">  </span><span class="kw">cols_label</span>(<span class="dt">subject =</span> <span class="kw">md</span>(<span class="st">"**Subject**"</span>),</span>
+<span id="cb877-17"><a href="three-parameters.html#cb877-17"></a>                <span class="dt">Control =</span> <span class="kw">md</span>(<span class="st">"**$$Y_c(u)$$**"</span>),</span>
+<span id="cb877-18"><a href="three-parameters.html#cb877-18"></a>                <span class="dt">Treated =</span> <span class="kw">md</span>(<span class="st">"**$$Y_t(u)$$**"</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb877-19"><a href="three-parameters.html#cb877-19"></a><span class="st">  </span><span class="kw">tab_style</span>(<span class="kw">cell_borders</span>(<span class="dt">sides =</span> <span class="st">"right"</span>),</span>
+<span id="cb877-20"><a href="three-parameters.html#cb877-20"></a>            <span class="dt">location =</span> <span class="kw">cells_body</span>(<span class="dt">columns =</span> <span class="kw">vars</span>(subject))) <span class="op">%&gt;%</span></span>
+<span id="cb877-21"><a href="three-parameters.html#cb877-21"></a><span class="st">  </span><span class="kw">cols_align</span>(<span class="dt">align =</span> <span class="st">"center"</span>, <span class="dt">columns =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb877-22"><a href="three-parameters.html#cb877-22"></a><span class="st">  </span><span class="kw">tab_header</span>(<span class="dt">title =</span> <span class="st">"Ending Attitudes on Immigration of 7 Random Respondents"</span>)</span></code></pre></div>
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
@@ -3820,19 +3820,19 @@ Note that the math for both the predictive model we worked on earlier and this m
 <h3>
 <span class="header-section-number">8.6.2</span> Parameter Uncertainty</h3>
 <p>Here, we see that the average treatment effect is -1.55; this is the average change in att_end caused by treatment (if this statistic looks unfamiliar, refer back to chapter 3 for a refresher on ATE). But how confident are we in this ATE? We can use <code>lm()</code> again to generate confidence intervals for our parameters and for this value:</p>
-<div class="sourceCode" id="cb896"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb896-1"><a href="three-parameters.html#cb896-1"></a><span class="co">#This is necessary so we can see the offset as caused by treatmentTreated, not treatmentControl.</span></span>
-<span id="cb896-2"><a href="three-parameters.html#cb896-2"></a></span>
-<span id="cb896-3"><a href="three-parameters.html#cb896-3"></a>trains<span class="op">$</span>treatment &lt;-<span class="kw">fct_relevel</span>(trains<span class="op">$</span>treatment, <span class="st">"Control"</span>, <span class="st">"Treated"</span>)</span>
-<span id="cb896-4"><a href="three-parameters.html#cb896-4"></a></span>
-<span id="cb896-5"><a href="three-parameters.html#cb896-5"></a><span class="kw">lm</span>(<span class="dt">data =</span> trains, att_end <span class="op">~</span><span class="st"> </span>treatment <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb896-6"><a href="three-parameters.html#cb896-6"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb896-7"><a href="three-parameters.html#cb896-7"></a><span class="st">  </span><span class="kw">select</span>(term, estimate, conf.low, conf.high)</span></code></pre></div>
+<div class="sourceCode" id="cb879"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb879-1"><a href="three-parameters.html#cb879-1"></a><span class="co">#This is necessary so we can see the offset as caused by treatmentTreated, not treatmentControl.</span></span>
+<span id="cb879-2"><a href="three-parameters.html#cb879-2"></a></span>
+<span id="cb879-3"><a href="three-parameters.html#cb879-3"></a>trains<span class="op">$</span>treatment &lt;-<span class="kw">fct_relevel</span>(trains<span class="op">$</span>treatment, <span class="st">"Control"</span>, <span class="st">"Treated"</span>)</span>
+<span id="cb879-4"><a href="three-parameters.html#cb879-4"></a></span>
+<span id="cb879-5"><a href="three-parameters.html#cb879-5"></a><span class="kw">lm</span>(<span class="dt">data =</span> trains, att_end <span class="op">~</span><span class="st"> </span>treatment <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb879-6"><a href="three-parameters.html#cb879-6"></a><span class="st">  </span><span class="kw">tidy</span>(<span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb879-7"><a href="three-parameters.html#cb879-7"></a><span class="st">  </span><span class="kw">select</span>(term, estimate, conf.low, conf.high)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 4
 ##   term             estimate conf.low conf.high
 ##   &lt;chr&gt;               &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 treatmentControl     8.45     7.77      9.14
 ## 2 treatmentTreated    10.       9.23     10.8</code></pre>
-<div class="sourceCode" id="cb898"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb898-1"><a href="three-parameters.html#cb898-1"></a><span class="kw">summary</span>(<span class="kw">lm</span>(<span class="dt">data =</span> trains, att_end <span class="op">~</span><span class="st"> </span>treatment <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb881"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb881-1"><a href="three-parameters.html#cb881-1"></a><span class="kw">summary</span>(<span class="kw">lm</span>(<span class="dt">data =</span> trains, att_end <span class="op">~</span><span class="st"> </span>treatment <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = att_end ~ treatment - 1, data = trains)
@@ -3877,10 +3877,10 @@ Note that the math for both the predictive model we worked on earlier and this m
 <!-- Should we make an explicit connection to the probability chapter by adding another dimension to that work? We have two coins, each with their own p. Build the joint distribution for them, with one on the x-axis and one on the y-axis. You need a near graphic for each value of the H number of heads total that you get from flipping them each N times. Then, you run the experiment, and you select the correct graphic. That shows you the best guess joint distribution. This is confusing!  -->
 <!-- Do we want to play the prediction game? If so, how? -->
 <p>We will introduce a new function here, <code>predict()</code>, which takes in a model as input and, given a specified parameter, will predict the value and confidence intervals of any given data point:</p>
-<div class="sourceCode" id="cb900"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb900-1"><a href="three-parameters.html#cb900-1"></a>trains.lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> trains, income <span class="op">~</span><span class="st"> </span>party)</span>
-<span id="cb900-2"><a href="three-parameters.html#cb900-2"></a>newdata &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">party =</span> <span class="kw">c</span>(<span class="st">"Republican"</span>, <span class="st">"Democrat"</span>))</span>
-<span id="cb900-3"><a href="three-parameters.html#cb900-3"></a></span>
-<span id="cb900-4"><a href="three-parameters.html#cb900-4"></a><span class="kw">predict</span>(trains.lm, newdata, <span class="dt">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb883"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb883-1"><a href="three-parameters.html#cb883-1"></a>trains.lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> trains, income <span class="op">~</span><span class="st"> </span>party)</span>
+<span id="cb883-2"><a href="three-parameters.html#cb883-2"></a>newdata &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">party =</span> <span class="kw">c</span>(<span class="st">"Republican"</span>, <span class="st">"Democrat"</span>))</span>
+<span id="cb883-3"><a href="three-parameters.html#cb883-3"></a></span>
+<span id="cb883-4"><a href="three-parameters.html#cb883-4"></a><span class="kw">predict</span>(trains.lm, newdata, <span class="dt">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div>
 <pre><code>##      fit    lwr    upr
 ## 1 167368  17113 317624
 ## 2 136755 -10456 283967</code></pre>
@@ -3888,17 +3888,17 @@ Note that the math for both the predictive model we worked on earlier and this m
 <p>Recall our discussion regarding the wider confidence intervals for Republican subjects than Democrat subjects (<em>would like to attach a link here that takes reader up to that part of the chapter</em>). Although the Republican and Democrat average incomes had vastly different confidence intervals — the Republican convidence intervals were much wider — they have very similar prediction intervals. Although the <em>parameter uncertainty</em> of these two parameters were very different, the <em>unmodeled variation</em> for both parameters was roughly the same. Even though the data points were equally spread out for both Democrat and Republican income, were were able to more confidently pinpoint a true value for democrat income because we had more data to work with.</p>
 <p>In many cases, the most important use of a model is for prediction. We use them to make predictions about data which we have not yet seen.</p>
 <p>Recall our earlier conversation regarding the difference between confidence intervals. An argument could be made that, taking individual variation into account, prediction intervals would be more accurate indicators of uncertainty than confidence intervals. We can construct the above table using prediction intervals instead, generated using the <code>predict()</code> function:</p>
-<div class="sourceCode" id="cb902"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb902-1"><a href="three-parameters.html#cb902-1"></a><span class="kw">lm</span>(<span class="dt">data =</span> trains, att_end <span class="op">~</span><span class="st"> </span>treatment) <span class="op">%&gt;%</span></span>
-<span id="cb902-2"><a href="three-parameters.html#cb902-2"></a><span class="kw">predict</span>(<span class="kw">tibble</span>(<span class="dt">treatment =</span> <span class="kw">c</span>(<span class="st">"Treated"</span>, <span class="st">"Control"</span>)), </span>
-<span id="cb902-3"><a href="three-parameters.html#cb902-3"></a>        <span class="dt">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb885"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb885-1"><a href="three-parameters.html#cb885-1"></a><span class="kw">lm</span>(<span class="dt">data =</span> trains, att_end <span class="op">~</span><span class="st"> </span>treatment) <span class="op">%&gt;%</span></span>
+<span id="cb885-2"><a href="three-parameters.html#cb885-2"></a><span class="kw">predict</span>(<span class="kw">tibble</span>(<span class="dt">treatment =</span> <span class="kw">c</span>(<span class="st">"Treated"</span>, <span class="st">"Control"</span>)), </span>
+<span id="cb885-3"><a href="three-parameters.html#cb885-3"></a>        <span class="dt">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div>
 <pre><code>##    fit lwr upr
 ## 1 10.0 4.4  16
 ## 2  8.5 2.9  14</code></pre>
 <p>And we can reconstruct the table by filling in the unknowns with the predictions (note that these are unchanged) and their associated levels of uncertainty (which HAVE changed to accomodate for individual variation within the data):</p>
-<div class="sourceCode" id="cb904"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb904-1"><a href="three-parameters.html#cb904-1"></a>trains.lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> trains, att_end <span class="op">~</span><span class="st"> </span>treatment)</span>
-<span id="cb904-2"><a href="three-parameters.html#cb904-2"></a>newdata &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">treatment =</span> <span class="kw">c</span>(<span class="st">"Treated"</span>, <span class="st">"Control"</span>))</span>
-<span id="cb904-3"><a href="three-parameters.html#cb904-3"></a></span>
-<span id="cb904-4"><a href="three-parameters.html#cb904-4"></a><span class="kw">predict</span>(trains.lm, newdata, <span class="dt">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb887"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb887-1"><a href="three-parameters.html#cb887-1"></a>trains.lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> trains, att_end <span class="op">~</span><span class="st"> </span>treatment)</span>
+<span id="cb887-2"><a href="three-parameters.html#cb887-2"></a>newdata &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">treatment =</span> <span class="kw">c</span>(<span class="st">"Treated"</span>, <span class="st">"Control"</span>))</span>
+<span id="cb887-3"><a href="three-parameters.html#cb887-3"></a></span>
+<span id="cb887-4"><a href="three-parameters.html#cb887-4"></a><span class="kw">predict</span>(trains.lm, newdata, <span class="dt">interval =</span> <span class="st">"prediction"</span>)</span></code></pre></div>
 <pre><code>##    fit lwr upr
 ## 1 10.0 4.4  16
 ## 2  8.5 2.9  14</code></pre>
@@ -4300,7 +4300,7 @@ Note that the math for both the predictive model we worked on earlier and this m
 <a href="n-parameters.html"><button class="btn btn-default">Next</button></a>
 </p>
 <p class="build-date">Page built: 
-2020-08-17
+2020-08-21
 </p>
 </div>
 </div>

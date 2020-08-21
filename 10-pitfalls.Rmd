@@ -118,10 +118,14 @@ library(tidyverse)
 library(PPBDS.data)
 library(broom)
 library(broom.mixed)
+library(parsnip)
 library(skimr)
 library(gapminder)
 library(rstanarm)
+library(rsample)
 library(tidybayes)
+library(tune)
+library(yardstick)
 ```
 
 
@@ -386,3 +390,668 @@ qscores_ch10 %>%
 The line in the resulting figure is called a "regression line." The regression line \index{regression!line} is a visual summary of the relationship between two numerical variables, in our case the outcome variable `rating` and the explanatory variable `hours`. The positive slope of the blue line is consistent with our earlier observed correlation coefficient of `r cor_ch10` suggesting that there is a negative relationship between these two variables: as students report higher average weekly workloads for music classes, courses receive lower teaching evaluations. We'll see later, however, that while the correlation coefficient and the slope of a regression line always have the same sign (positive or negative), they typically do not have the same value.
 
 Furthermore, a regression line is "best-fitting" in that it minimizes some mathematical criteria. We present these mathematical criteria in Section \@ref(leastsquares), but we suggest you read this subsection only after first reading the rest of this section on regression with one numerical explanatory variable.
+
+# Machine Learning {#machine-learning}
+
+<!-- AR: I used material from this blog post: https://alison.rbind.io/post/2020-02-27-better-tidymodels/#tidymodels-101
+and from this github:
+https://github.com/rstudio-conf-2020/applied-ml
+Should be added to the Acknowledgements section -->
+
+<!-- Model Review: Not for this week, but maybe for next week. Add a section which reviews how we can re-estime all these models using tidymodels. (I know that you do some of that in chapter 13, but now we are more formal and thorough.) This also provides a nice occasion to review what we have learned, to see the larger framework. We don't start with a model. We start with the data. The type of Y variable we have guides our model choice. Maybe we should add another model which can be used on continuos data. Maybe random forests? Would be nice to compare two models for continuous data and three for categorical data. Not this week! -->
+
+<!-- Other tutorials: -->
+<!-- https://github.com/rstudio-conf-2020/applied-ml -->
+<!-- https://dnield.com/posts/tidymodels-intro/ -->
+<!-- https://alison.rbind.io/post/2020-02-27-better-tidymodels/#tidymodels-101 -->
+
+<!-- A much better book is: https://bradleyboehmke.github.io/HOML/. But that won't be open for another year. And, it is too advanced. And it does not quite use all the latest machine learning approaches in R. But the style is nice, and perhaps worth emulating. A related issue is tying this work back to the last three weeks. After all, in each of the last three weeks we fitted hundreds of models. Isn't that what machine learning is? Sort of! Big difference is that, previously, the separate models have shared no data with each other. With machine learning, they will! How can we teach this in a way which is closest to the approaches they have learned? Hmmm. -->
+
+Now that we have spent some time exploring these Q scores, it is time to dive in deeper and investigate interesting relationships within the data. Thus far, we have learned four models: linear regression, logistic regression, CART, and random forest. But there are hundreds more! We need a consistent way to try lots of models and to compare them. Hence, we introduced in the last chapter the **tidymodels** collection of packages.
+
+But with so many models to choose from, how do we know which models are best? Recall that we came up with several different models for each of our example data sets. Which one should we use? The framework of **machine learning** helps.
+
+Perhaps the most popular data science methodologies come from the field of machine learning.  Machine learning is the study and application of algorithms that learn from and make predictions on data. From search results to self-driving cars, it has manifested itself in all areas of our lives and is one of the most exciting and fast-growing fields of research in the world of data science. Machine learning success stories include the handwritten zip code readers implemented by the postal service, speech recognition technology such as Apple's Siri, movie recommendation systems, spam and malware detectors, housing price predictors, and driverless cars.
+
+There are a wide variety of machine learning algorithms, including the models we have learned so far.  We won't introduce new models this chapter.  Rather, we'll use linear regression as an example for how to apply machine learning techniques to improve your predictive modeling.
+
+## The process of machine learning
+
+In machine learning, modeling is a *process*, not a single step.  Common steps during model building are:
+
+- Estimating model parameters (i.e. training models)
+- Determining the values of tuning parameters that cannot be directly calculated from the data
+- Model selection (within a model type) and model comparison (between types)
+- Calculating the performance of the final model that will generalize to new data
+
+Many books and courses portray predictive modeling as a short sprint. A better analogy would be a marathon or campaign (depending on how hard the problem is). 
+
+We often think of the model as the only real data analysis step in this process.  However, there are other procedures that are often applied before or after the model fit that are data-driven and have an impact.  If we only think of the model as being important, we might end up accidentally *overfitting* to the data in-hand. This is very similar to the problems of "the garden of forking paths" and "[p-hacking](http://www.stat.columbia.edu/~gelman/research/unpublished/p_hacking.pdf)." 
+
+Let's conceptualize a process or *workflow* that involves all of the steps where the data are analyzed in a significant way. This includes the model but might also include other *estimation* steps. Admittedly, there is some grey area here.  This includes data preparation steps (e.g., imputation, encoding, transformations) and selection of which terms go into the model.
+
+This concept of a "modeling workflow" will become important when we talk about measuring performance of the modeling process. Ultimately, when we evaluate models, we are evaluating the whole process.  All the steps involved in the process can affect the performance of the final model.
+
+## What does it mean for a model to be "good?"
+
+Before we start describing machine learning approaches to optimize the way we build models, we first need to define what we mean when we say one approach is better than another. In this section, we focus on describing ways in which machine learning algorithms are evaluated. Specifically, we need to quantify what we mean by "better."
+
+### Training and test sets
+
+Ultimately, a machine learning algorithm should be evaluated on how it performs in the real world with completely new datasets. However, when developing an algorithm, we usually have a dataset for which we know the outcomes. Therefore, to mimic the ultimate evaluation process, we typically split the data into two parts and act as if we don't know the outcome for one of these. We stop pretending we don't know the outcome to evaluate the algorithm, but only *after* we are done constructing it. We refer to the group for which we know the outcome, and use to develop the algorithm, as the _training_ set. We refer to the group for which we pretend we don't know the outcome as the _test_ set.   A standard way of generating the training and test sets is by randomly splitting the data.
+
+- Training Set: these data are used to estimate model parameters and to pick the values of the complexity parameter(s) for the model.
+- Test Set: these data can be used to get an independent assessment of model efficacy. They should not be used during model training.
+
+We then develop an algorithm using **only** the training set. Once we are done developing the algorithm, we will _freeze_ it and evaluate it using the test set.  But remember, **it is important that we optimize the model using only the training set**: the test set is only for evaluation. Evaluating an algorithm on the training set can lead to _overfitting_, which often results in dangerously over-optimistic assessments. 
+
+### The loss function {#loss-function}
+
+The general approach to defining "best" in machine learning is to define a _loss function_.  This concept can be applied to both categorical and continuous data. 
+
+The most commonly used loss function is the *squared loss function*.^[Note that there are loss functions other than the squared loss. For example, the _Mean Absolute Error_  uses absolute values, $|\hat{Y}_i - Y_i|$ instead of squaring the errors $(\hat{Y}_i - Y_i)^2$. However, in this chapter we focus on minimizing square loss since it is the most widely used.] If $\hat{y}$ is our predictor and $y$ is the observed outcome, the squared loss function is simply:
+
+$$
+(\hat{y} - y)^2
+$$
+
+Because we often have a test set with many observations, say $N$, we use the mean squared error (MSE):
+
+$$
+MSE = \frac{1}{N}\sum_{i=1}^N (\hat{y}_i - y_i)^2
+$$
+
+In practice, we often report the root mean squared error (RMSE), which is $\sqrt{\mbox{MSE}}$, because it is in the same units as the outcomes.^[Doing the math is often easier with the MSE and it is therefore more commonly used in textbooks, since these usually describe theoretical properties of algorithms.]
+
+If the outcomes are binary, both RMSE and MSE are equivalent to accuracy, since $(\hat{y} - y)^2$ is 0 if the prediction was correct and 1 otherwise. In general, our goal is to build an algorithm that minimizes the loss so it is as close to 0 as possible.
+
+## Data: Cooperative Congressional Election Study (CCES)
+
+Now that we have a way to evaluate models, we're almost ready to start going through the modeling process using **tidymodels**.  However, we'll first need some data! We will continue to use the data from our earlier EDA, but this time extend our focus to the entire dataset rather than simply the scores for the Music department.
+
+Imagine that you are a professional data scientist. A Harvard professor comes to you and says that she wants to increase the average Q Guide scores of the courses she teaches. As a result, she asks you to build a model that will predict the most important factors in influencing higher Q Guide scores. But with so many potential models at your disposal, which ought you to choose? How can you decide which variables you should include in your analysis? How can you be certain that this model will accurately predict the most important factors correlated with higher Q Guide scores? All of these questions can be addressed by using tidymodels, as we will do now.
+
+Let's start by taking a look at the `qscores` object:
+
+```{r}
+qscores
+```
+
+We have a lot of observations (more than 700), each of which corresponds to a single course at Harvard.
+
+The outcome we'll focus on, as we did before, is *rating*. 
+
+Let's `select()` the variables we'll be using and `glimpse()` our tibble:
+
+```{r}
+
+qscores <- qscores %>%
+  mutate(division = ifelse(department %in% c("AFRAMER", "AFRIKAAN", "AMSTDIES", "ANTHRO", "ECON", "ESPP", "GHHP", "GOV", "HIST", "HISTSCI", "JAMAICAN", "PSY", "SOCIOL", "WSTAFRCN", "ZULU"), "Social Sciences", department),
+         division = ifelse(department %in% c("APCOMP", "APMTH", "APPHY", "ASTRON", "BE", "BIOPHYS", "BIOSTAT", "CELLBIO", "CHEM", "COMPSCI",  "E-PSCI", "ENG-SCI", "ESE", "HBTM", "HEB", "IMMUN", "LIFESCI", "LPS", "MATH", "MBB", "MCB", "PHYSCI", "PHYSICS", "NEURO", "OEB", "SCRB", "STAT"), "SEAS", department),
+         division = ifelse(department %in% c("ARABIC", "ANE", "CELTIC", "CHNSE", "CHNSHIS", "CLS-STDY", "COMPLIT", "EAFM", "EASTD", "ENGLISH", "FOLKMYTH", "FRENCH", "HAA", "HIND-URD", "HIST-LIT", "HUMAN", "ISLAMCIV", "JAPAN", "JAPANLIT", "KOREAN", "LATIN", "LING", "MUSIC", "PHIL", "ROM-STD", "RUSS", "SAS", "SLAVIC", "SPANSH", "SWEDISH", "TDM", "VES", "WOMGEN"), "Arts and Humanities", department),
+         division = ifelse(department %in% c("AESTHINT", "CULTBLF", "EMREAS", "ETHRSON", "SCILIVSY", "SCIPHUNV", "SOCWORLD", "US-WORLD"), "General Education", department),
+         division = ifelse(department %in% c("EXPOS", "FRSEMR"), "First-Year Courses", department)) %>%
+  select(rating, hours, department, enrollment, term, division)
+# Two of the four Humanities courses, which I included in Arts and Humanities, are first-year exclusive courses. Should I exclude Humanities entirely?
+glimpse(qscores)
+
+```
+
+Now we have one outcome (`rating`, which ranges from 1 to 5) and three potential predictors:
+
+- `hours`
+- `department`
+- `enrollment`
+- `term`
+- `division`
+
+In past chapters, we've shown example models with one or two predictors, perhaps with an interaction.  When you have more variables in your dataset, how can you decide which predictors to include?  The techniques of machine learning can help answer this question.
+
+For this chapter, we'll consider x possible models. Let's consider the following combinations:
+<!--EG: Which interactions should be performed? -->
+1. `hours` alone
+1. `hours`, `enrollment`, `department`, `term`, and `division`
+1.  Same as above plus `enrollment`interacted with `department`
+1.  ?
+1.  The kitchen sink: ?
+
+Of course, these are a small subset of the possible models we could consider, either with the variables we have selected or with the larger set of all the variables in the qscores.  But we'll use these as examples for the machine learning techniques in this chapter; if you'd like, you can use the methods we learn here to test additional models.
+
+Let's save these as `formula` objects in R, so we can easily access them later.  We'll start with the simplest model we'll consider, as `basic_form`:
+
+```{r}
+basic_form <- formula(rating ~ hours)
+```
+
+Next, we can use `update()` to create the more complicated formulas.  `update()` takes as its first argument a formula and as its second argument the additions you want to make.  To keep all the predictors from the first formula and add more, you will start with `~ . + ` and then add more predictors, like so:
+
+```{r}
+adding_terms <- update(basic_form,
+                    ~ enrollment + department + division + term)
+
+adding_interaction <- update(adding_enrollment,
+                    ~ enrollment * department)
+
+# more_interactions <- 
+```
+
+<!-- EG: Commenting out for the moment until I figure out exactly which models to use: "Since the last model is the same as `more_interactions` but with `ideo5 * pres_gop` added, we'll use `update(demo_interact_form)` rather than `update(basic_form)` here:" -->
+
+```{r}
+# full_form <- 
+```
+
+Now we have five `formula` objects we can use to fit models.
+
+So we can access them easily, we'll save them in a tibble and give them easy-to-remember names:
+
+```{r}
+qscores_formulas <- tibble(formula = c(basic_form,
+                                    adding_terms,
+                                    adding_interaction),
+                                    #more_interactions,
+                                    #full_form),
+                       group = c("Basic model",
+                                 "Multiple terms model",
+                                 "Single interaction model"))
+                                 #"Multiple interactions model",
+                                 #"Full model"))
+```
+
+
+## The modeling process using **tidymodels**
+
+If you are using **tidymodels**, many machine learning tasks are simplified, since you can use the same kind of code as the building blocks for any predictive modeling pipeline.
+
+### **parsnip**: build the model
+
+This step is really three, using only the [**parsnip** package](https://tidymodels.github.io/parsnip/). In this setp, we can choose the *model*, the *engine* to run the model in R, and, for some models, the *mode*.  Here, our model will be linear regression, the engine `lm`, and the mode "regression" (the only possible mode for a linear regression).
+
+```{r}
+lm_spec <- 
+  
+  # Pick model
+  
+  linear_reg() %>%
+  
+  # Set engine
+  
+  set_engine("lm") %>%
+  
+  # Set mode
+  
+  set_mode("regression") 
+
+lm_spec
+```
+
+To keep things simple, we'll only be evaluating linear regressions in this chapter, although there are many other modeling choices one could make for predicting Q Guide ratings, some of which may be superior.^[For instance, linear regression allows for predicted values which are below 1 and above 5, which are theoretically forbidden.  Furthermore, linear regression assumes that the distance between each response category is the same, since the distance between 1 and 2 is the same as 2 and 3, and so on, but there may be real world "breakpoints," for instance if it is more important to go from neutral to somewhat approval than from somewhat approval to strong approval.  However, for the purposes of this chapter, we will proceed with linear regression.]  Note that you could evaluate the performances of those other models using the same building blocks of code that we show you here.
+
+Things that are missing: data (we haven’t touched it yet) and a formula (no data, no variables, no twiddle ~). This is an abstract model specification. See other possible parsnip models [here](https://tidymodels.github.io/parsnip/articles/articles/Models.html).
+
+### **recipes**: not happening here, folks
+
+This is where one would normally insert some code for *feature engineering* using the **recipes** package.  Feature engineering involves transforming your data to create different predictors, such as by taking log transformations, turning numerical variables into factors or vise versa, and so on.  We engaged in some rudimentary feature engineering when we `mutate`d the CCES at the beginning of this chapter.  But for the purposes of this chapter, we will treat our data as-is.
+
+### **rsample**: initial split
+
+We’ll use the [**rsample** package](https://tidymodels.github.io/rsample/) to split the qscores data up into two datasets: training and testing. The `initial_split()` function takes a dataset and splits it into a training and test set.  By default, 75% of the data is kept in the training set and the rest are allocated to the test set.  This can be changed with the `prop` argument -- we'll set it at 0.8.  Because the split is done at random, we need to use `set.seed()` to ensure our results are replicable.
+
+```{r}
+set.seed(1234)
+
+qscores_split <- initial_split(qscores, prop = 0.8)
+qscores_train <- training(qscores_split)
+qscores_test <- testing(qscores_split)
+```
+
+### Fitting the model once
+
+Fitting a single model once is... not *exactly* the hardest part.
+
+First, we can get the fitted model using the `fit()` function:
+
+```{r}
+lm_spec %>%
+  fit(basic_form, data = qscores_train)
+```
+
+Note that we can use `tidy()`, just like we did in previous chapters, to take a look at the results:
+
+```{r}
+lm_spec %>%
+  fit(basic_form, data = qscores_train) %>%
+  tidy(conf.int = TRUE) %>%
+  select(term, estimate, conf.low, conf.high)
+```
+
+Based on this training data, there is a weakly negative correlation between average hourly workload per week and Q scores.
+
+Now that we have fit a model on the *training* set, is it time to make predictions on the *test* set? In general, we would **not** want to predict the test set at this point, although we will do so to illustrate how the code works.  In a real scenario, we would use *resampling* methods (e.g., cross-validation, bootstrapping) to evaluate how well the model is doing. **tidymodels** has a great infrastructure to do this with **rsample**, and we will talk about this soon to demonstrate how we should really evaluate models. 
+
+To make predictions, we'll use the `predict()` function.  We will use the argument `new_data = qscores_test` to make predictions on the test set.
+
+```{r}
+lm_spec %>%
+  
+  # Train: get fitted model
+  
+  fit(basic_form, data = qscores_train) %>%
+  
+  # Test: get predictions
+  
+  predict(new_data = qscores_test)
+```
+
+Now we have a tibble of predictions.  How can we evaluate it? The **yardstick** package is a tidy interface for computing measures of performance, with individual functions for specific metrics (e.g., `accuracy()`, `rmse()`).  The `rmse()` function in the **yardstick** package will compute the RMSE for us, as long as we have the actual values.   So we'll `bind_cols()` to the test data and use `rmse()` to evaluate our model.  `rmse()` requires that we give it the `truth` (here, `pres_approval`) and the our `estimate` (here, `.pred`):
+
+```{r}
+lm_spec %>%
+  
+  # Train: get fitted model
+  
+  fit(basic_form, data = qscores_train) %>%
+  
+  # Test: get predictions
+  
+  predict(new_data = qscores_test) %>%
+  
+  # Compare: get metrics
+  
+  bind_cols(qscores_test) %>%
+  rmse(truth = rating, estimate = .pred)
+```
+
+### Fitting many models using `map()`
+
+If you squint, you might see that we could make this process into a function like the one below below:
+
+```{r}
+fit_lm_split <- function(formula, train, test) {
+  lm_spec %>%
+    fit(formula, data = train) %>%
+    predict(new_data = test) %>%
+    bind_cols(test)
+}
+```
+
+This function takes a `formula` object and fits it a linear regression on the training data.  It returns the test data with a new column (`.pred`) that contains predictions from the model that we fit on the training data.
+
+It's not a great leap to can then create a tibble that has all the predictions for every specification in `qscores_formualas`, using our old friend `map()`:
+
+```{r}
+qscores_test_preds <- qscores_formulas %>%
+  mutate(preds = map(formula, ~ fit_lm_split(., qscores_train, qscores_test))) %>%
+  unnest(preds)
+#not working at the moment
+```
+
+Finally, we can use the `rmse()` function to compare our five specifications.
+
+```{r}
+qscores_test_preds %>%
+  group_by(group) %>%
+  rmse(truth = rating, estimate = .pred)
+```
+
+<!-- EG: Will change predictions once the code above is working again. "Here we see that adding ideology to the model above and beyond partisanship makes the predictions worse.  The two demographic models perform similarly.  Interestingly, adding back in ideology to the demographic model with interactions performs the best on the test set." -->
+
+But, unfortunately, we shouldn’t be predicting with the test set over and over again like this. It isn’t good practice to predict with the test set more than one time. What is a good predictive modeler to do? We should be saving (holding out) the test set and use it to generate predictions exactly once, at the very end — after we’ve compared different models, selected features, and tuned hyperparameters. How do you do this? You do [cross-validation](https://sebastianraschka.com/blog/2016/model-evaluation-selection-part3.html) with the training set, and you leave the testing set for [*the very last fit you do*](https://tidymodels.github.io/tune/reference/last_fit.html).
+
+## Cross validation {#cross-validation}
+
+In this section we introduce cross validation, one of the most important ideas in machine learning. 
+
+In Section \@ref(loss-function), we described that a common goal of machine learning is to find an algorithm that produces predictors $\hat{Y}$ for an outcome $Y$ that minimizes the MSE:
+
+$$
+MSE = \frac{1}{N}\sum_{i=1}^N (\hat{y}_i - y_i)^2
+$$
+There are two important characteristics of the MSE we should always keep in mind:
+
+1. We can think our estimate of the MSE is a random variable. For example, the dataset we have may be a random sample from a larger population. An algorithm may have a lower apparent error than another algorithm due to luck.
+
+2. If we train an algorithm on the same dataset that we use to compute the MSE, we might be overtraining. In general, when we do this, the apparent error will be an underestimate of the true error.
+
+Cross validation is a technique that permits us to alleviate both these problems. To understand cross validation, it helps to think of the *true error*, a theoretical quantity, as the average of many *apparent errors* obtained by applying the algorithm to new random samples of the data, none of them used to train the algorithm. 
+
+However, we only have available one set of outcomes: the ones we actually observed. Cross validation is based on the idea of generating a series of different random samples on which to apply our algorithm. There are several approaches we can use, but the general idea for all of them is to randomly generate smaller datasets that are not used for training, and instead used to estimate the true error.
+
+### K-fold cross validation
+
+
+```{r, include=FALSE}
+if(knitr::is_html_output()){
+  knitr::opts_chunk$set(out.width = "500px",
+                        out.extra='style="display: block; margin-left: auto; margin-right: auto; background-color: #000; padding:3px;"')
+} else{
+  knitr::opts_chunk$set(out.width = "35%")
+}
+```
+
+The first approach we describe is _K-fold cross validation_. 
+
+Generally speaking, a machine learning challenge starts with a dataset (blue in the image below). We need to build an algorithm using this dataset that will eventually be used in completely independent datasets (yellow).
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/cv-1.png")
+```
+
+But we don't get to see these independent datasets. 
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/cv-2.png")
+```
+
+So to imitate this situation, we carve out a piece of our dataset and pretend it is an independent dataset: we divide the dataset into a _training set_ (blue) and a _test set_ (red). We will train our algorithm exclusively on the training set and use the test set only for evaluation purposes.
+
+We usually try to select a small piece of the dataset so that we have as much data as possible to train. However, we also want the test set to be large so that we obtain a stable estimate of the loss without fitting an impractical number of models. The `initial_split()` function reserves 25% of the data for testing by default. 
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/cv-3.png")
+```
+
+Let's reiterate that it is indispensable that we not use the test set at all: not for filtering out rows, not for selecting predictors, nothing! 
+
+Now this presents a new problem because for most machine learning algorithms we need to select parameters. We need to optimize algorithm parameters without using our test set and we know that if we optimize and evaluate on the same dataset, we will overtrain.  This is where cross validation is most useful.
+
+For each set of algorithm parameters being considered, we want an estimate of the MSE and then we will choose the parameters with the smallest MSE. Cross validation provides this estimate.
+
+Let's start by describing how to construct the first "fold": we simply pick $M=N/K$ observations at random (we round if $M$ is not a round number) and think of these as a random sample. We call this the *validation set*:
+
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/cv-4.png")
+```
+
+Now we can fit the model in the training set, then compute the MSE on the validation set.  Note that this is just one sample and will therefore return a noisy estimate of the true error. This is why we take $K$ samples, not just one. In K-cross validation, we randomly split the observations into $K$ non-overlapping sets:
+
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/cv-5.png")
+```
+
+Then, for our final estimate, we compute the average MSE across our $K$ samples.
+
+We have described how to use cross validation to optimize parameters. However, we now have to take into account the fact that the optimization occurred on the training data and therefore we need an estimate of our final algorithm based on data that was not used to optimize the choice. Here is where we use the test set we separated early on:
+
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/cv-6.png")
+```
+
+Once we are satisfied with this model and want to make it available to others, we could refit the model on the entire dataset, without changing the optimized parameters.
+
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/cv-8.png")
+```
+
+Now how do we pick the cross validation $K$? Large values of $K$ are preferable because the training data better imitates the original dataset. However, larger values of $K$ will have much slower computation time: for example, 100-fold cross validation will be 10 times slower than 10-fold cross validation. For this reason, the choices of $K=5$ and $K=10$ are popular.
+
+### Implementing cross-validation using **rsample**
+
+Now let's add cross-validation to our **tidymodels** workflow!  To do this, we’ll use a function called `vfold_cv()` in the **rsample** package.  The argument `v` sets the number of folds, which is 10 by default.  We'll do 5-fold cross-validation in this example.
+
+```{r}
+set.seed(1234)
+
+qscores_folds <- qscores_train %>%
+  vfold_cv(v = 5)
+```
+
+How can we work with the `qscores_folds` object?  **tidymodels** makes it easy by using the `fit_resamples()` function in the **tune** package.  (**Note**: make sure you have at least version 0.1.0 of the **tune** package installed, as the following code uses new syntax.)  The `fit_resamples()` function takes as its first argument a model specification (such as `lm_spec`), then a formula as its second argument, called `preprocessor`.^[Or a recipe, if you delve more deeply into **tidymodels**.]  Finally, the `resamples` argument is where you input the cross-validation dataset.
+
+```{r}
+lm_spec %>%
+  fit_resamples(preprocessor = basic_form,
+                resamples = qscores_folds)
+```
+
+To inspect the average metrics across all the folds, we can use the `collect_metrics()` function:
+
+```{r}
+lm_spec %>%
+  fit_resamples(preprocessor = basic_form,
+                resamples = qscores_folds) %>%
+  collect_metrics()
+```
+
+It's not that hard to extend this to all of our formulas using `map()`.
+
+```{r, message = FALSE}
+folds_metrics <- qscores_formulas %>%
+  mutate(metrics = map(formula, ~ fit_resamples(lm_spec,
+                                                preprocessor = .,
+                                                resamples = qscores_folds) %>%
+                         collect_metrics()))
+```
+
+(Note that `fit_resamples()` currently gives the warning message "prediction from a rank-deficient fit may be misleading" whenever a factor or character variable is used as a predictor; this does not necessarily mean that the fit was actually rank-deficient.)
+
+<!-- AR: this annoying behavior appears to be because they want you to use
+recipes and then step_dummy() the factor variables -->
+
+Let's present the results stored in our `folds_metrics` object:
+
+```{r}
+folds_metrics %>%
+  mutate(mean_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(mean)),
+         se_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(std_err))) %>%
+  select(group, mean_rmse, se_rmse)
+```
+
+### Bootstrap
+
+One way we can improve the variance of our final estimate is to take more samples. To do this, we would no longer require the training set to be partitioned into non-overlapping sets. Instead, we would just pick $K$ sets of some size at random.
+
+One popular version of this technique, at each fold, picks observations at random with replacement (which means the same observation can appear twice) -- our old friend the *bootstrap*.
+
+In **rsample**, we can do that using the `boostraps()` function.  The `times` argument states how many bootstrap samples you want to take:
+
+```{r}
+set.seed(1234)
+
+qscores_boots <- qscores_train %>%
+  bootstraps(times = 25)
+```
+
+Now we can use `fit_resample()` just like we did with `qscores_folds`.  Here's how we do it with one formula:
+
+```{r}
+lm_spec %>%
+  fit_resamples(preprocessor = basic_form,
+                resamples = qscores_boots) %>%
+  collect_metrics()
+```
+
+And we can also adapt our code to run this for every formula in `qscores_formulas`:
+
+```{r, eval = FALSE}
+boots_metrics <- qscores_formulas %>%
+  mutate(metrics = map(formula, ~ fit_resamples(lm_spec,
+                                                preprocessor = .,
+                                                resamples = qscores_boots) %>%
+                         collect_metrics()))
+
+boots_metrics %>%
+  mutate(mean_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(mean)),
+         se_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(std_err))) %>%
+  select(group, mean_rmse, se_rmse)
+```
+
+
+<!-- AR: this takes a while, so I saved the result, but be sure to uncomment
+this if you need to run this code again -->
+
+```{r, echo = FALSE, message = FALSE}
+# boots_metrics <- qscores_formulas %>%
+#   mutate(metrics = map(formula, ~ fit_resamples(lm_spec,
+#                                                 preprocessor = .,
+#                                                 resamples = qscores_boots) %>%
+#                          collect_metrics()))
+# 
+# boots_metrics %>%
+#   write_rds(path = "data/boots_metrics.rds")
+
+boots_metrics <- read_rds(path = "data/boots_metrics.rds")
+
+boots_metrics %>%
+  mutate(mean_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(mean)),
+         se_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(std_err))) %>%
+  select(group, mean_rmse, se_rmse)
+```
+
+Cross-validation and the bootstrap lead to similar estimates of the RMSE, but note that the standard error of the RMSE goes down using the bootstrap method, since more samples were taken.  However, the trade-off is that the more samples you take, the more computing time you'll use.
+
+## Machine learning and classification
+
+<!-- EG: What binary variable could I use here? What would make most sense with the qscores dataset? -->
+
+**tidymodels** makes it easy for us to adapt the code we used above for a continuous dependent variable for a binary dependent variable.  Let's grab the variable for a respondent's House vote.  We'll make a new variable, `dem_house_vote`, that takes on two values: 1 if the respondent voted for a Democrat, 0 if not.
+
+We'll also `mutate()` and `select()` some other variables as predictors.  Most of these are the same as we used when predicting presidential approval, but we'll add variables for approval of the respondent's current representative and whether the current representative is a Democrat.
+
+```{r, echo = FALSE, message = FALSE}
+cces_house <- read_rds("data/cumulative_2006_2018.rds") %>%
+  mutate(
+    
+    # Dependent variable: did respondent vote for the Democratic House candidate?
+    
+    dem_house_vote = 1 * (voted_rep_party == "Democratic"),
+    dem_house_vote = factor(dem_house_vote),
+    
+    # Approval of current representative
+    
+    approval_rep = as.numeric(approval_rep),
+    approval_rep5 = case_when(
+      approval_rep == 1 ~ 5,
+      approval_rep == 2 ~ 4,
+      approval_rep %in% c(5:7) ~ 3,
+      approval_rep == 3 ~ 2,
+      approval_rep == 4 ~ 1,
+      TRUE ~ NA_real_
+    ),
+    
+    # Is current representative a Democrat?
+    
+    dem_representative = 1 * str_ends(rep_current, coll("(D)")),
+    
+    # Combine "not sure" and "independent" on party identification scale
+    
+    pid7 = ifelse(pid7 == 8, 4, pid7),
+    
+    # Combine "not sure" and "moderate" on ideology scale
+    
+    ideo5 = ifelse(ideo5 == "Not Sure", 3, as.numeric(ideo5)),
+    
+    # Create "female" variable
+    
+    female = 1 * (gender == 2),
+    
+    # Turn race into a character variable
+    
+    race = as_factor(race),
+    
+    # Simplify race categories (because some categories appear rarely)
+    
+    race = fct_lump_n(race, 4)
+  ) %>%
+  select(dem_house_vote, approval_rep5, dem_representative, pid7, ideo5, race, female, age, educ) %>%
+  filter(complete.cases(.))
+```
+
+Next, let's some up with some candidate formulas to test.  Here are five:
+
+1. The "approval model": Predicting `dem_house_vote` with `approval_rep5` (approval of the current representative), `dem_representative` (whether the current representative is a Democrat), and the interaction between the two
+1. The "party and ideology model": Predicting `dem_house_vote` with party identification and ideology
+1. The "demographic model": Predicting `dem_house_vote` with the demographic variables
+1. The "approval, party, and ideology model": A combination of 1 and 2.
+1. The "full model": All predictors.
+
+We'll save these formulas in a tibble called `house_formulas`:
+
+```{r}
+house_formulas <- tibble(formula = c(dem_house_vote ~ approval_rep5 * dem_representative,
+                                     dem_house_vote ~ pid7 + ideo5,
+                                     dem_house_vote ~ race + female + age + educ,
+                                     dem_house_vote ~ approval_rep5 * dem_representative + 
+                                       pid7 + ideo5,
+                                     dem_house_vote ~ approval_rep5 * dem_representative +
+                                       pid7 + ideo5 +
+                                       race + female + age + educ),
+                         group = c("Approval model",
+                                   "Party and ideology model",
+                                   "Demographic model",
+                                   "Approval, party, and ideology model",
+                                   "Full model"))
+```
+
+We'll then divide our data into a training and test set:
+
+```{r}
+set.seed(1234)
+
+cces_house_split <- initial_split(cces_house, prop = 0.8)
+cces_house_train <- training(cces_house_split)
+cces_house_test <- testing(cces_house_split)
+```
+
+Using our training data, we can employ 5-fold cross validation:
+
+```{r}
+cces_house_folds <- cces_house_train %>%
+  vfold_cv(v = 5)
+```
+
+We'll run a logistic regression here, but note that we can use CART and random forest as well if we'd like to test those:
+
+```{r}
+logistic_spec <- 
+  
+  # Pick model
+  
+  logistic_reg() %>%
+  
+  # Set engine
+  
+  set_engine("glm") %>%
+  
+  # Set mode
+  
+  set_mode("classification") 
+```
+
+We'll use `map_()` to `fit_resamples()` for all five models.
+
+```{r, message = FALSE}
+folds_metrics <- house_formulas %>%
+  mutate(metrics = map(formula, ~ fit_resamples(logistic_spec,
+                                                preprocessor = .,
+                                                resamples = cces_house_folds) %>%
+                         collect_metrics()))
+```
+
+We'll look at accuracy, which is equivalent to the RMSE.
+
+```{r}
+folds_metrics %>%
+  mutate(mean_acc = map_dbl(metrics, ~ filter(., .metric == "accuracy") %>% pull(mean)),
+         se_acc = map_dbl(metrics, ~ filter(., .metric == "accuracy") %>% pull(std_err))) %>%
+  select(group, mean_acc, se_acc)
+```
+
+The best performing model is the full model, although the model with approval, party, and ideology does almost as well, suggesting that demographic variables are not especially predictive once you take into account these other factors.  Interestingly, party and ideology predict vote choice better than approval.
+
+## Conclusion
+
+In this chapter, as in the Primer as a whole, we have been making models to better understand the world. But we need to act, as well as to understand.
+
+We've given you tools to construct models and to evaluate features of these models, such as the causal effects of variables of interest and predicted values of the outcome.  We've also shown you how to construct measures of uncertainty around these measures.
+
+Once you have this information, what should you do?  Remember that all models are meant to simplify some real-world phenomenon.  Ultimately, you have to use the informations from the models to make a decision.  For example, let's say that you construct a model to evaluate the benefits of a hypertension drug.  Should you prescribe the drug?  You can take the estimates of the likely drug from the model to help with that decision.  The model won't make the decision for you, however -- you'll also want to incorporate other information, such as the costs of the drug.  
+
+From the other perspective, you should always make models while keeping in mind what unknown features of the real world you need to estimate.  Maybe you are trying to estimate a single value, such as a mean (how many adults are in the United States right now?)  Maybe you want to predict the future value of some variable (how many adults will be in the United States ten years from now?). Or maybe you want to estimate the relationship between two variables (how do changes in immigration policy affect the U.S. adult population?).
+
+We've given you tools to help answer all these questions.  Now it's up to you to use those tools to help make decisions in real life!
+

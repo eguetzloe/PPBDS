@@ -389,7 +389,15 @@ The line in the resulting figure is called a "regression line." The regression l
 
 Furthermore, a regression line is "best-fitting" in that it minimizes some mathematical criteria. We present these mathematical criteria in Section \@ref(leastsquares), but we suggest you read this subsection only after first reading the rest of this section on regression with one numerical explanatory variable.
 
+<<<<<<< HEAD
 # Machine Learning {#machine-learning}
+=======
+### Prudence
+
+
+
+## Machine Learning {#machine-learning}
+>>>>>>> master
 
 <!-- AR: I used material from this blog post: https://alison.rbind.io/post/2020-02-27-better-tidymodels/#tidymodels-101
 and from this github:
@@ -463,7 +471,11 @@ In practice, we often report the root mean squared error (RMSE), which is $\sqrt
 
 If the outcomes are binary, both RMSE and MSE are equivalent to accuracy, since $(\hat{y} - y)^2$ is 0 if the prediction was correct and 1 otherwise. In general, our goal is to build an algorithm that minimizes the loss so it is as close to 0 as possible.
 
+<<<<<<< HEAD
 ## Data: Q Scores for Harvard Academic Year 2018-2019
+=======
+## Data: Cooperative Congressional Election Study (CCES)
+>>>>>>> master
 
 Now that we have a way to evaluate models, we're almost ready to start going through the modeling process using **tidymodels**.  However, we'll first need some data! We will continue to use the data from our earlier EDA, but this time extend our focus to the entire dataset rather than simply the scores for the Music department.
 
@@ -527,7 +539,11 @@ Next, we can use `update()` to create the more complicated formulas.  `update()`
 adding_terms <- update(basic_form,
                     ~ enrollment + department + division + term)
 
+<<<<<<< HEAD
 adding_interaction <- update(adding_terms,
+=======
+adding_interaction <- update(adding_enrollment,
+>>>>>>> master
                     ~ enrollment * department)
 
 # more_interactions <- 
@@ -556,6 +572,14 @@ qscores_formulas <- tibble(formula = c(basic_form,
                                  #"Full model"))
 ```
 
+<<<<<<< HEAD
+=======
+### Justice
+
+<!-- Preceptor Table. This data is for 2018/2019.  -->
+
+<!-- math formula -->
+>>>>>>> master
 
 ## The modeling process using **tidymodels**
 
@@ -696,6 +720,13 @@ qscores_test_preds %>%
 
 But, unfortunately, we shouldn’t be predicting with the test set over and over again like this. It isn’t good practice to predict with the test set more than one time. What is a good predictive modeler to do? We should be saving (holding out) the test set and use it to generate predictions exactly once, at the very end — after we’ve compared different models, selected features, and tuned hyperparameters. How do you do this? You do [cross-validation](https://sebastianraschka.com/blog/2016/model-evaluation-selection-part3.html) with the training set, and you leave the testing set for [*the very last fit you do*](https://tidymodels.github.io/tune/reference/last_fit.html).
 
+<<<<<<< HEAD
+=======
+### Fortitude
+
+
+
+>>>>>>> master
 ## Cross validation {#cross-validation}
 
 In this section we introduce cross validation, one of the most important ideas in machine learning. 
@@ -902,6 +933,7 @@ boots_metrics %>%
 
 Cross-validation and the bootstrap lead to similar estimates of the RMSE, but note that the standard error of the RMSE goes down using the bootstrap method, since more samples were taken.  However, the trade-off is that the more samples you take, the more computing time you'll use.
 
+<<<<<<< HEAD
 ## Machine learning and classification
 
 <!-- EG: What binary variable could I use here? What would make most sense with the qscores dataset? -->
@@ -1040,6 +1072,11 @@ folds_metrics %>%
 ```
 
 The best performing model is the full model, although the model with approval, party, and ideology does almost as well, suggesting that demographic variables are not especially predictive once you take into account these other factors.  Interestingly, party and ideology predict vote choice better than approval.
+=======
+### Temperance
+
+
+>>>>>>> master
 
 ## Conclusion
 

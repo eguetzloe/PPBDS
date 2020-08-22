@@ -397,7 +397,6 @@ Furthermore, a regression line is "best-fitting" in that it minimizes some mathe
 
 
 ## Machine Learning {#machine-learning}
->>>>>>> master
 
 <!-- AR: I used material from this blog post: https://alison.rbind.io/post/2020-02-27-better-tidymodels/#tidymodels-101
 and from this github:
@@ -471,11 +470,7 @@ In practice, we often report the root mean squared error (RMSE), which is $\sqrt
 
 If the outcomes are binary, both RMSE and MSE are equivalent to accuracy, since $(\hat{y} - y)^2$ is 0 if the prediction was correct and 1 otherwise. In general, our goal is to build an algorithm that minimizes the loss so it is as close to 0 as possible.
 
-<<<<<<< HEAD
 ## Data: Q Scores for Harvard Academic Year 2018-2019
-=======
-## Data: Cooperative Congressional Election Study (CCES)
->>>>>>> master
 
 Now that we have a way to evaluate models, we're almost ready to start going through the modeling process using **tidymodels**.  However, we'll first need some data! We will continue to use the data from our earlier EDA, but this time extend our focus to the entire dataset rather than simply the scores for the Music department.
 
@@ -539,11 +534,7 @@ Next, we can use `update()` to create the more complicated formulas.  `update()`
 adding_terms <- update(basic_form,
                     ~ enrollment + department + division + term)
 
-<<<<<<< HEAD
 adding_interaction <- update(adding_terms,
-=======
-adding_interaction <- update(adding_enrollment,
->>>>>>> master
                     ~ enrollment * department)
 
 # more_interactions <- 
@@ -572,14 +563,11 @@ qscores_formulas <- tibble(formula = c(basic_form,
                                  #"Full model"))
 ```
 
-<<<<<<< HEAD
-=======
 ### Justice
 
 <!-- Preceptor Table. This data is for 2018/2019.  -->
 
 <!-- math formula -->
->>>>>>> master
 
 ## The modeling process using **tidymodels**
 
@@ -702,31 +690,28 @@ This function takes a `formula` object and fits it a linear regression on the tr
 It's not a great leap to can then create a tibble that has all the predictions for every specification in `qscores_formualas`, using our old friend `map()`:
 
 ```{r}
-qscores_test_preds <- qscores_formulas %>%
-  mutate(preds = map(formula, ~ fit_lm_split(., qscores_train, qscores_test))) %>%
-  unnest(preds)
+#qscores_test_preds <- qscores_formulas %>%
+ # mutate(preds = map(formula, ~ fit_lm_split(., qscores_train, qscores_test))) %>%
+ # unnest(preds)
 #not working at the moment
 ```
 
 Finally, we can use the `rmse()` function to compare our five specifications.
 
 ```{r}
-qscores_test_preds %>%
-  group_by(group) %>%
-  rmse(truth = rating, estimate = .pred)
+#qscores_test_preds %>%
+  #group_by(group) %>%
+  #rmse(truth = rating, estimate = .pred)
 ```
 
 <!-- EG: Will change predictions once the code above is working again. "Here we see that adding ideology to the model above and beyond partisanship makes the predictions worse.  The two demographic models perform similarly.  Interestingly, adding back in ideology to the demographic model with interactions performs the best on the test set." -->
 
 But, unfortunately, we shouldn’t be predicting with the test set over and over again like this. It isn’t good practice to predict with the test set more than one time. What is a good predictive modeler to do? We should be saving (holding out) the test set and use it to generate predictions exactly once, at the very end — after we’ve compared different models, selected features, and tuned hyperparameters. How do you do this? You do [cross-validation](https://sebastianraschka.com/blog/2016/model-evaluation-selection-part3.html) with the training set, and you leave the testing set for [*the very last fit you do*](https://tidymodels.github.io/tune/reference/last_fit.html).
 
-<<<<<<< HEAD
-=======
 ### Fortitude
 
 
 
->>>>>>> master
 ## Cross validation {#cross-validation}
 
 In this section we introduce cross validation, one of the most important ideas in machine learning. 
@@ -763,13 +748,13 @@ The first approach we describe is _K-fold cross validation_.
 Generally speaking, a machine learning challenge starts with a dataset (blue in the image below). We need to build an algorithm using this dataset that will eventually be used in completely independent datasets (yellow).
 
 ```{r, echo=FALSE}
-knitr::include_graphics("images/cv-1.png")
+#knitr::include_graphics("images/cv-1.png")
 ```
 
 But we don't get to see these independent datasets. 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("images/cv-2.png")
+#knitr::include_graphics("images/cv-2.png")
 ```
 
 So to imitate this situation, we carve out a piece of our dataset and pretend it is an independent dataset: we divide the dataset into a _training set_ (blue) and a _test set_ (red). We will train our algorithm exclusively on the training set and use the test set only for evaluation purposes.
@@ -777,7 +762,7 @@ So to imitate this situation, we carve out a piece of our dataset and pretend it
 We usually try to select a small piece of the dataset so that we have as much data as possible to train. However, we also want the test set to be large so that we obtain a stable estimate of the loss without fitting an impractical number of models. The `initial_split()` function reserves 25% of the data for testing by default. 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("images/cv-3.png")
+#knitr::include_graphics("images/cv-3.png")
 ```
 
 Let's reiterate that it is indispensable that we not use the test set at all: not for filtering out rows, not for selecting predictors, nothing! 
@@ -790,14 +775,14 @@ Let's start by describing how to construct the first "fold": we simply pick $M=N
 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("images/cv-4.png")
+#knitr::include_graphics("images/cv-4.png")
 ```
 
 Now we can fit the model in the training set, then compute the MSE on the validation set.  Note that this is just one sample and will therefore return a noisy estimate of the true error. This is why we take $K$ samples, not just one. In K-cross validation, we randomly split the observations into $K$ non-overlapping sets:
 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("images/cv-5.png")
+#knitr::include_graphics("images/cv-5.png")
 ```
 
 Then, for our final estimate, we compute the average MSE across our $K$ samples.
@@ -806,14 +791,14 @@ We have described how to use cross validation to optimize parameters. However, w
 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("images/cv-6.png")
+#knitr::include_graphics("images/cv-6.png")
 ```
 
 Once we are satisfied with this model and want to make it available to others, we could refit the model on the entire dataset, without changing the optimized parameters.
 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("images/cv-8.png")
+#knitr::include_graphics("images/cv-8.png")
 ```
 
 Now how do we pick the cross validation $K$? Large values of $K$ are preferable because the training data better imitates the original dataset. However, larger values of $K$ will have much slower computation time: for example, 100-fold cross validation will be 10 times slower than 10-fold cross validation. For this reason, the choices of $K=5$ and $K=10$ are popular.
@@ -849,11 +834,11 @@ lm_spec %>%
 It's not that hard to extend this to all of our formulas using `map()`.
 
 ```{r, message = FALSE}
-folds_metrics <- qscores_formulas %>%
-  mutate(metrics = map(formula, ~ fit_resamples(lm_spec,
-                                                preprocessor = .,
-                                                resamples = qscores_folds) %>%
-                         collect_metrics()))
+#folds_metrics <- qscores_formulas %>%
+ # mutate(metrics = map(formula, ~ fit_resamples(lm_spec,
+                                               # preprocessor = .,
+                                              #  resamples = qscores_folds) %>%
+                        # collect_metrics()))
 ```
 
 (Note that `fit_resamples()` currently gives the warning message "prediction from a rank-deficient fit may be misleading" whenever a factor or character variable is used as a predictor; this does not necessarily mean that the fit was actually rank-deficient.)
@@ -864,10 +849,10 @@ recipes and then step_dummy() the factor variables -->
 Let's present the results stored in our `folds_metrics` object:
 
 ```{r}
-folds_metrics %>%
-  mutate(mean_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(mean)),
-         se_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(std_err))) %>%
-  select(group, mean_rmse, se_rmse)
+#folds_metrics %>%
+  #mutate(mean_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(mean)),
+        # se_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(std_err))) %>%
+  #select(group, mean_rmse, se_rmse)
 ```
 
 ### Bootstrap
@@ -897,16 +882,16 @@ lm_spec %>%
 And we can also adapt our code to run this for every formula in `qscores_formulas`:
 
 ```{r, eval = FALSE}
-boots_metrics <- qscores_formulas %>%
-  mutate(metrics = map(formula, ~ fit_resamples(lm_spec,
-                                                preprocessor = .,
-                                                resamples = qscores_boots) %>%
-                         collect_metrics()))
+#boots_metrics <- qscores_formulas %>%
+  #mutate(metrics = map(formula, ~ fit_resamples(lm_spec,
+                                                #preprocessor = .,
+                                                #resamples = qscores_boots) %>%
+                         #collect_metrics()))
 
-boots_metrics %>%
-  mutate(mean_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(mean)),
-         se_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(std_err))) %>%
-  select(group, mean_rmse, se_rmse)
+#boots_metrics %>%
+  #mutate(mean_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(mean)),
+         #se_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(std_err))) %>%
+  #select(group, mean_rmse, se_rmse)
 ```
 
 
@@ -923,160 +908,19 @@ this if you need to run this code again -->
 # boots_metrics %>%
 #   write_rds(path = "data/boots_metrics.rds")
 
-boots_metrics <- read_rds(path = "data/boots_metrics.rds")
+#boots_metrics <- read_rds(path = "data/boots_metrics.rds")
 
-boots_metrics %>%
-  mutate(mean_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(mean)),
-         se_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(std_err))) %>%
-  select(group, mean_rmse, se_rmse)
+#boots_metrics %>%
+ # mutate(mean_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(mean)),
+         #se_rmse = map_dbl(metrics, ~ filter(., .metric == "rmse") %>% pull(std_err))) %>%
+  #select(group, mean_rmse, se_rmse)
 ```
 
 Cross-validation and the bootstrap lead to similar estimates of the RMSE, but note that the standard error of the RMSE goes down using the bootstrap method, since more samples were taken.  However, the trade-off is that the more samples you take, the more computing time you'll use.
 
-<<<<<<< HEAD
-## Machine learning and classification
-
-<!-- EG: What binary variable could I use here? What would make most sense with the qscores dataset? -->
-
-**tidymodels** makes it easy for us to adapt the code we used above for a continuous dependent variable for a binary dependent variable.  Let's grab the variable for a respondent's House vote.  We'll make a new variable, `dem_house_vote`, that takes on two values: 1 if the respondent voted for a Democrat, 0 if not.
-
-We'll also `mutate()` and `select()` some other variables as predictors.  Most of these are the same as we used when predicting presidential approval, but we'll add variables for approval of the respondent's current representative and whether the current representative is a Democrat.
-
-```{r, echo = FALSE, message = FALSE}
-cces_house <- read_rds("data/cumulative_2006_2018.rds") %>%
-  mutate(
-    
-    # Dependent variable: did respondent vote for the Democratic House candidate?
-    
-    dem_house_vote = 1 * (voted_rep_party == "Democratic"),
-    dem_house_vote = factor(dem_house_vote),
-    
-    # Approval of current representative
-    
-    approval_rep = as.numeric(approval_rep),
-    approval_rep5 = case_when(
-      approval_rep == 1 ~ 5,
-      approval_rep == 2 ~ 4,
-      approval_rep %in% c(5:7) ~ 3,
-      approval_rep == 3 ~ 2,
-      approval_rep == 4 ~ 1,
-      TRUE ~ NA_real_
-    ),
-    
-    # Is current representative a Democrat?
-    
-    dem_representative = 1 * str_ends(rep_current, coll("(D)")),
-    
-    # Combine "not sure" and "independent" on party identification scale
-    
-    pid7 = ifelse(pid7 == 8, 4, pid7),
-    
-    # Combine "not sure" and "moderate" on ideology scale
-    
-    ideo5 = ifelse(ideo5 == "Not Sure", 3, as.numeric(ideo5)),
-    
-    # Create "female" variable
-    
-    female = 1 * (gender == 2),
-    
-    # Turn race into a character variable
-    
-    race = as_factor(race),
-    
-    # Simplify race categories (because some categories appear rarely)
-    
-    race = fct_lump_n(race, 4)
-  ) %>%
-  select(dem_house_vote, approval_rep5, dem_representative, pid7, ideo5, race, female, age, educ) %>%
-  filter(complete.cases(.))
-```
-
-Next, let's some up with some candidate formulas to test.  Here are five:
-
-1. The "approval model": Predicting `dem_house_vote` with `approval_rep5` (approval of the current representative), `dem_representative` (whether the current representative is a Democrat), and the interaction between the two
-1. The "party and ideology model": Predicting `dem_house_vote` with party identification and ideology
-1. The "demographic model": Predicting `dem_house_vote` with the demographic variables
-1. The "approval, party, and ideology model": A combination of 1 and 2.
-1. The "full model": All predictors.
-
-We'll save these formulas in a tibble called `house_formulas`:
-
-```{r}
-house_formulas <- tibble(formula = c(dem_house_vote ~ approval_rep5 * dem_representative,
-                                     dem_house_vote ~ pid7 + ideo5,
-                                     dem_house_vote ~ race + female + age + educ,
-                                     dem_house_vote ~ approval_rep5 * dem_representative + 
-                                       pid7 + ideo5,
-                                     dem_house_vote ~ approval_rep5 * dem_representative +
-                                       pid7 + ideo5 +
-                                       race + female + age + educ),
-                         group = c("Approval model",
-                                   "Party and ideology model",
-                                   "Demographic model",
-                                   "Approval, party, and ideology model",
-                                   "Full model"))
-```
-
-We'll then divide our data into a training and test set:
-
-```{r}
-set.seed(1234)
-
-cces_house_split <- initial_split(cces_house, prop = 0.8)
-cces_house_train <- training(cces_house_split)
-cces_house_test <- testing(cces_house_split)
-```
-
-Using our training data, we can employ 5-fold cross validation:
-
-```{r}
-cces_house_folds <- cces_house_train %>%
-  vfold_cv(v = 5)
-```
-
-We'll run a logistic regression here, but note that we can use CART and random forest as well if we'd like to test those:
-
-```{r}
-logistic_spec <- 
-  
-  # Pick model
-  
-  logistic_reg() %>%
-  
-  # Set engine
-  
-  set_engine("glm") %>%
-  
-  # Set mode
-  
-  set_mode("classification") 
-```
-
-We'll use `map_()` to `fit_resamples()` for all five models.
-
-```{r, message = FALSE}
-folds_metrics <- house_formulas %>%
-  mutate(metrics = map(formula, ~ fit_resamples(logistic_spec,
-                                                preprocessor = .,
-                                                resamples = cces_house_folds) %>%
-                         collect_metrics()))
-```
-
-We'll look at accuracy, which is equivalent to the RMSE.
-
-```{r}
-folds_metrics %>%
-  mutate(mean_acc = map_dbl(metrics, ~ filter(., .metric == "accuracy") %>% pull(mean)),
-         se_acc = map_dbl(metrics, ~ filter(., .metric == "accuracy") %>% pull(std_err))) %>%
-  select(group, mean_acc, se_acc)
-```
-
-The best performing model is the full model, although the model with approval, party, and ideology does almost as well, suggesting that demographic variables are not especially predictive once you take into account these other factors.  Interestingly, party and ideology predict vote choice better than approval.
-=======
 ### Temperance
 
 
->>>>>>> master
 
 ## Conclusion
 

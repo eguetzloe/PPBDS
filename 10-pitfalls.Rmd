@@ -463,7 +463,7 @@ In practice, we often report the root mean squared error (RMSE), which is $\sqrt
 
 If the outcomes are binary, both RMSE and MSE are equivalent to accuracy, since $(\hat{y} - y)^2$ is 0 if the prediction was correct and 1 otherwise. In general, our goal is to build an algorithm that minimizes the loss so it is as close to 0 as possible.
 
-## Data: Cooperative Congressional Election Study (CCES)
+## Data: Q Scores for Harvard Academic Year 2018-2019
 
 Now that we have a way to evaluate models, we're almost ready to start going through the modeling process using **tidymodels**.  However, we'll first need some data! We will continue to use the data from our earlier EDA, but this time extend our focus to the entire dataset rather than simply the scores for the Music department.
 
@@ -527,7 +527,7 @@ Next, we can use `update()` to create the more complicated formulas.  `update()`
 adding_terms <- update(basic_form,
                     ~ enrollment + department + division + term)
 
-adding_interaction <- update(adding_enrollment,
+adding_interaction <- update(adding_terms,
                     ~ enrollment * department)
 
 # more_interactions <- 
